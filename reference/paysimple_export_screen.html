@@ -1,0 +1,264 @@
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--navy:#1B4F72;--steel:#2E86C1;--slate:#2C3E50;--concrete:#F2F4F5;--warm-white:#FAFBFC;--green:#27AE60;--amber:#F39C12;--red:#E74C3C;--gold:#D4A843}
+body{font-family:'Segoe UI',system-ui,sans-serif;color:var(--slate)}
+.app{display:flex;flex-direction:column;min-height:780px;background:var(--concrete)}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:var(--navy);border-bottom:2px solid rgba(46,134,193,0.3)}
+.topbar-logo{font-weight:600;font-size:15px;color:#fff;letter-spacing:-0.3px}
+.topbar-logo span{color:var(--steel)}
+.topbar-bc{font-size:12px;color:rgba(255,255,255,0.5)}
+.topbar-bc b{color:rgba(255,255,255,0.85);font-weight:500}
+.step-bar{display:flex;align-items:center;gap:0;padding:0 20px;background:var(--warm-white);border-bottom:0.5px solid #ddd;height:40px}
+.stp{display:flex;align-items:center;gap:6px;padding:0 16px;font-size:11px;font-weight:500;color:#999}
+.stp.done{color:var(--green)}.stp.active{color:var(--navy)}
+.stp-n{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;border:1.5px solid #ccc;color:#999;background:#fff}
+.stp.done .stp-n{background:var(--green);border-color:var(--green);color:#fff}
+.stp.active .stp-n{background:var(--navy);border-color:var(--navy);color:#fff}
+.stp-l{width:40px;height:1.5px;background:#ddd}.stp-l.done{background:var(--green)}
+
+.main{flex:1;padding:24px 20px;display:flex;gap:20px}
+
+.left{flex:1;display:flex;flex-direction:column;gap:14px}
+.section-title{font-size:11px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+
+.export-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.export-card{background:#fff;border-radius:10px;border:0.5px solid #e4e4e4;padding:18px 16px;cursor:pointer;transition:all 0.2s;position:relative}
+.export-card:hover{border-color:var(--steel);transform:translateY(-1px)}
+.export-card.selected{border:2px solid var(--steel);background:rgba(46,134,193,0.02)}
+.ec-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:10px}
+.ec-title{font-size:13px;font-weight:700;color:var(--slate);margin-bottom:3px}
+.ec-desc{font-size:11px;color:#999;line-height:1.5}
+.ec-badge{position:absolute;top:10px;right:10px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:8px}
+.ec-badge.pop{background:rgba(46,134,193,0.1);color:var(--steel)}
+.ec-badge.new{background:rgba(39,174,96,0.1);color:var(--green)}
+.ec-check{position:absolute;top:10px;right:10px;width:20px;height:20px;border-radius:50%;background:var(--steel);color:#fff;display:none;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.export-card.selected .ec-check{display:flex}
+.export-card.selected .ec-badge{display:none}
+
+.share-section{background:#fff;border-radius:10px;border:0.5px solid #e4e4e4;padding:16px}
+.share-title{font-size:13px;font-weight:700;color:var(--slate);margin-bottom:10px}
+.share-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.share-input{flex:1;height:34px;border-radius:7px;border:1px solid #ddd;padding:0 10px;font-size:12px;color:var(--slate);background:var(--concrete);font-family:inherit}
+.share-btn{height:34px;padding:0 14px;border-radius:7px;border:none;background:var(--navy);color:#fff;font-size:11px;font-weight:600;cursor:pointer}
+.share-btn:hover{background:#164060}
+.share-note{font-size:10px;color:#aaa;line-height:1.45}
+.share-perms{display:flex;gap:6px;margin-top:8px}
+.sp-tag{font-size:10px;padding:3px 10px;border-radius:6px;border:1px solid #ddd;background:#fff;color:#888;cursor:pointer;font-weight:500}
+.sp-tag.active{background:var(--concrete);border-color:#bbb;color:var(--slate)}
+
+.notify-section{background:#fff;border-radius:10px;border:0.5px solid #e4e4e4;padding:16px}
+.notify-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0}
+.notify-row:not(:last-child){border-bottom:0.5px solid #f0f0f0}
+.nr-left{display:flex;align-items:center;gap:8px}
+.nr-icon{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px}
+.nr-text{font-size:11px;color:#666}.nr-sub{font-size:10px;color:#bbb}
+.toggle{width:34px;height:18px;border-radius:9px;background:#ddd;position:relative;cursor:pointer;transition:background 0.2s}
+.toggle.on{background:var(--green)}
+.toggle-dot{width:14px;height:14px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:left 0.2s}
+.toggle.on .toggle-dot{left:18px}
+
+.right{width:340px;display:flex;flex-direction:column;gap:14px}
+.preview-card{background:#fff;border-radius:10px;border:0.5px solid #e4e4e4;overflow:hidden;flex:1;display:flex;flex-direction:column}
+.prev-head{padding:10px 14px;border-bottom:0.5px solid #eee;display:flex;align-items:center;justify-content:space-between}
+.prev-title{font-size:12px;font-weight:700;color:var(--slate)}
+.prev-format{font-size:10px;color:#999;font-weight:500}
+.prev-body{flex:1;padding:14px;background:var(--concrete);display:flex;align-items:center;justify-content:center}
+.pdf-mock{width:220px;background:#fff;border-radius:4px;padding:16px 14px;box-shadow:0 2px 12px rgba(0,0,0,0.08)}
+.pdf-header{text-align:center;margin-bottom:10px;padding-bottom:8px;border-bottom:1.5px solid var(--navy)}
+.pdf-logo{font-size:11px;font-weight:700;color:var(--navy);letter-spacing:-0.3px}
+.pdf-logo span{color:var(--steel)}
+.pdf-doc-title{font-size:8px;color:#999;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px}
+.pdf-row{display:flex;justify-content:space-between;padding:3px 0;font-size:7.5px;border-bottom:0.5px solid #f0f0f0}
+.pdf-row:last-child{border-bottom:none}
+.pdf-row .l{color:#999}.pdf-row .v{color:var(--slate);font-weight:600;font-family:'SF Mono','Consolas',monospace}
+.pdf-section{font-size:7px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:0.5px;margin:8px 0 4px;padding-top:6px;border-top:0.5px solid #eee}
+.pdf-section:first-of-type{margin-top:6px}
+.pdf-table{width:100%;margin-top:4px;font-size:6.5px;border-collapse:collapse}
+.pdf-table th{background:var(--navy);color:#fff;padding:3px 4px;text-align:left;font-weight:600}
+.pdf-table th.r{text-align:right}
+.pdf-table td{padding:2.5px 4px;border-bottom:0.5px solid #f0f0f0;color:#555}
+.pdf-table td.r{text-align:right;font-family:'SF Mono','Consolas',monospace;font-size:6px}
+.pdf-table td.bold{font-weight:700;color:var(--slate)}
+.pdf-table tr.hl td{background:rgba(39,174,96,0.05)}
+.pdf-footer{margin-top:8px;padding-top:6px;border-top:1px solid var(--navy);font-size:6px;color:#bbb;text-align:center}
+
+.summary-card{background:#fff;border-radius:10px;border:0.5px solid #e4e4e4;padding:14px}
+.sc-title{font-size:11px;font-weight:700;color:var(--slate);margin-bottom:8px}
+.sc-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f0f0f0;font-size:11px}
+.sc-row:last-child{border-bottom:none}
+.sc-row .label{color:#999}.sc-row .val{font-weight:600;color:var(--slate)}
+.sc-row .val.green{color:var(--green)}.sc-row .val.amber{color:var(--amber)}
+
+.dl-btn{width:100%;padding:12px;border-radius:9px;border:none;background:var(--navy);color:#fff;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:0.2px;transition:background 0.15s}
+.dl-btn:hover{background:#164060}
+.dl-sub{font-size:10px;color:#aaa;text-align:center;margin-top:6px}
+
+.bottom-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:#fff;border-top:0.5px solid #ddd}
+.bottom-info{font-size:11px;color:#999}
+.bottom-info b{color:var(--slate);font-weight:600}
+.btn{font-size:12px;padding:7px 16px;border-radius:7px;border:1px solid #ddd;background:#fff;color:var(--slate);cursor:pointer;font-weight:500}
+.btn:hover{border-color:#bbb}
+</style>
+
+<div class="app">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:20px">
+      <div class="topbar-logo">Pay<span>Simple</span></div>
+      <div class="topbar-bc">My projects / <b>Riverside Office Complex</b> / Export</div>
+    </div>
+  </div>
+  <div class="step-bar">
+    <div class="stp done"><div class="stp-n">&#10003;</div> Upload</div><div class="stp-l done"></div>
+    <div class="stp done"><div class="stp-n">&#10003;</div> Review extraction</div><div class="stp-l done"></div>
+    <div class="stp done"><div class="stp-n">&#10003;</div> Payment schedule</div><div class="stp-l done"></div>
+    <div class="stp done"><div class="stp-n">&#10003;</div> Compliance</div><div class="stp-l done"></div>
+    <div class="stp active"><div class="stp-n">5</div> Export</div>
+  </div>
+
+  <div class="main">
+    <div class="left">
+      <div>
+        <div class="section-title">Export format</div>
+        <div class="export-grid">
+          <div class="export-card selected" onclick="selectExport(this,'pdf')">
+            <div class="ec-check">&#10003;</div>
+            <div class="ec-badge pop">Popular</div>
+            <div class="ec-icon" style="background:rgba(231,76,60,0.08);color:#c0392b;">&#128196;</div>
+            <div class="ec-title">PDF schedule</div>
+            <div class="ec-desc">Formatted like AIA G702/G703. Print-ready for project files, lender draw requests, and owner reviews.</div>
+          </div>
+          <div class="export-card" onclick="selectExport(this,'csv')">
+            <div class="ec-check">&#10003;</div>
+            <div class="ec-badge new">QuickBooks</div>
+            <div class="ec-icon" style="background:rgba(39,174,96,0.08);color:var(--green);">&#128200;</div>
+            <div class="ec-title">CSV spreadsheet</div>
+            <div class="ec-desc">Import directly into QuickBooks, Sage, or Excel. Includes all line items, retainage, and lien waiver columns.</div>
+          </div>
+          <div class="export-card" onclick="selectExport(this,'ics')">
+            <div class="ec-check">&#10003;</div>
+            <div class="ec-badge"></div>
+            <div class="ec-icon" style="background:rgba(46,134,193,0.08);color:var(--steel);">&#128197;</div>
+            <div class="ec-title">Calendar events</div>
+            <div class="ec-desc">ICS file with payment due dates, lien waiver deadlines, and milestone dates. Works with Google Calendar, Outlook, Apple.</div>
+          </div>
+          <div class="export-card" onclick="selectExport(this,'report')">
+            <div class="ec-check">&#10003;</div>
+            <div class="ec-badge"></div>
+            <div class="ec-icon" style="background:rgba(142,68,173,0.08);color:#8E44AD;">&#128203;</div>
+            <div class="ec-title">Compliance report</div>
+            <div class="ec-desc">Full risk assessment with flag details, recommendations, and pre-payment checklist. Ideal for project kickoff meetings.</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title">Share with your team</div>
+        <div class="share-section">
+          <div class="share-title">Shareable project link</div>
+          <div class="share-row">
+            <input class="share-input" value="https://paysimple.app/share/rvc-2026-f8a3d2" readonly />
+            <button class="share-btn" onclick="this.textContent='Copied!';setTimeout(()=>this.textContent='Copy link',1500)">Copy link</button>
+          </div>
+          <div class="share-note">Anyone with this link can view the payment schedule and compliance summary. They cannot edit or download raw contract data.</div>
+          <div class="share-perms">
+            <div class="sp-tag active">View only</div>
+            <div class="sp-tag">Can comment</div>
+            <div class="sp-tag">Full access</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title">Notifications</div>
+        <div class="notify-section">
+          <div class="notify-row">
+            <div class="nr-left">
+              <div class="nr-icon" style="background:rgba(46,134,193,0.08);color:var(--steel);">&#9993;</div>
+              <div><div class="nr-text">Payment due reminders</div><div class="nr-sub">Email 7 and 3 days before each due date</div></div>
+            </div>
+            <div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-dot"></div></div>
+          </div>
+          <div class="notify-row">
+            <div class="nr-left">
+              <div class="nr-icon" style="background:rgba(243,156,18,0.08);color:var(--amber);">&#9888;</div>
+              <div><div class="nr-text">Lien waiver collection alerts</div><div class="nr-sub">Remind 5 business days before application date</div></div>
+            </div>
+            <div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-dot"></div></div>
+          </div>
+          <div class="notify-row">
+            <div class="nr-left">
+              <div class="nr-icon" style="background:rgba(212,168,67,0.08);color:var(--gold);">&#9733;</div>
+              <div><div class="nr-text">Milestone approaching</div><div class="nr-sub">Alert 30 days before substantial completion</div></div>
+            </div>
+            <div class="toggle" onclick="this.classList.toggle('on')"><div class="toggle-dot"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="preview-card">
+        <div class="prev-head">
+          <div class="prev-title">Export preview</div>
+          <div class="prev-format" id="prev-format">PDF &middot; 2 pages</div>
+        </div>
+        <div class="prev-body">
+          <div class="pdf-mock">
+            <div class="pdf-header">
+              <div class="pdf-logo">Pay<span>Simple</span></div>
+              <div class="pdf-doc-title">Payment schedule &mdash; Riverside Office Complex</div>
+            </div>
+            <div class="pdf-row"><span class="l">Owner</span><span class="v">Riverside Development LLC</span></div>
+            <div class="pdf-row"><span class="l">Contractor</span><span class="v">Fisher Construction Co.</span></div>
+            <div class="pdf-row"><span class="l">Contract sum</span><span class="v">$4,250,000.00</span></div>
+            <div class="pdf-row"><span class="l">Contract type</span><span class="v">AIA A101-2017</span></div>
+            <div class="pdf-section">Payment schedule</div>
+            <table class="pdf-table">
+              <thead><tr><th>#</th><th>Date</th><th>Description</th><th class="r">Net</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>Apr 25, 2026</td><td>Progress #1</td><td class="r">$306,000</td></tr>
+                <tr><td>2</td><td>May 25, 2026</td><td>Progress #2</td><td class="r">$306,000</td></tr>
+                <tr><td>3</td><td>Jun 25, 2026</td><td>Progress #3</td><td class="r">$306,000</td></tr>
+                <tr><td colspan="3" style="color:#aaa;font-style:italic;">... 8 more payments</td><td></td></tr>
+                <tr class="hl"><td class="bold">12</td><td class="bold">Mar 15, 2027</td><td class="bold">Substantial compl.</td><td class="r bold">$209,000</td></tr>
+                <tr class="hl"><td class="bold">13</td><td class="bold">Mar 25, 2027</td><td class="bold" style="color:var(--green);">Retainage release</td><td class="r bold" style="color:var(--green);">+$281,000</td></tr>
+                <tr><td class="bold">14</td><td class="bold">Jun 15, 2027</td><td class="bold">Final payment</td><td class="r bold">$375,500</td></tr>
+              </tbody>
+            </table>
+            <div class="pdf-footer">Generated by PaySimple &middot; paysimple.app &middot; Mar 20, 2026</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="sc-title">Export summary</div>
+        <div class="sc-row"><span class="label">Project</span><span class="val">Riverside Office Complex</span></div>
+        <div class="sc-row"><span class="label">Payments</span><span class="val">14 line items</span></div>
+        <div class="sc-row"><span class="label">Compliance</span><span class="val amber">75/100 (2 open flags)</span></div>
+        <div class="sc-row"><span class="label">Checklist</span><span class="val green">7 of 12 complete</span></div>
+        <div class="sc-row"><span class="label">Format</span><span class="val" id="sel-format">PDF schedule</span></div>
+      </div>
+
+      <button class="dl-btn" onclick="this.textContent='Downloading...';setTimeout(()=>this.textContent='Download PDF schedule',1200)">Download PDF schedule</button>
+      <div class="dl-sub">Also available: email a copy to yourself or your team</div>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <div class="bottom-info"><b>Project complete.</b> Your payment schedule is ready to export and share.</div>
+    <button class="btn" onclick="sendPrompt('Go back to the compliance dashboard')">&#8592; Back to compliance</button>
+  </div>
+</div>
+
+<script>
+function selectExport(card, type) {
+  document.querySelectorAll('.export-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  const map = { pdf: ['PDF schedule', 'PDF \u00b7 2 pages'], csv: ['CSV spreadsheet', 'CSV \u00b7 14 rows'], ics: ['Calendar events', 'ICS \u00b7 16 events'], report: ['Compliance report', 'PDF \u00b7 4 pages'] };
+  document.getElementById('sel-format').textContent = map[type][0];
+  document.getElementById('prev-format').textContent = map[type][1];
+  const names = { pdf: 'Download PDF schedule', csv: 'Download CSV file', ics: 'Download calendar file', report: 'Download compliance report' };
+  document.querySelector('.dl-btn').textContent = names[type];
+}
+</script>

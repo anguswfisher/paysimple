@@ -9,6 +9,25 @@ create table public.profiles (
   updated_at timestamptz default now()
 );
 
+-- Function to create profile for new users
+create or replace function public.handle_new_user()
+returns trigger as $$
+begin
+  insert into public.profiles (id, name, company_name)
+  values (
+    new.id,
+    new.raw_user_meta_data->>'name',
+    new.raw_user_meta_data->>'company'
+  );
+  return new;
+end;
+$$ language plpgsql security definer;
+
+-- Trigger to create profile on user signup
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute procedure public.handle_new_user();
+
 create table public.projects (
   id uuid default gen_random_uuid() primary key,
   user_id uuid references public.profiles(id) on delete cascade not null,
@@ -89,3 +108,5 @@ create policy "Users can view own flags" on public.compliance_flags for select u
 create policy "Users can manage own flags" on public.compliance_flags for all using (
   project_id in (select id from public.projects where user_id = auth.uid())
 );
+-- Allow users to insert their own profile (needed for the trigger)
+create policy "Users can insert own profile" on public.profiles for insert with check (auth.uid() = id);

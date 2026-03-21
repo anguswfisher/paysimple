@@ -44,9 +44,18 @@ export interface Database {
           id: string
           user_id: string
           name: string
+          project_type: string | null
+          contract_value: string | null
+          start_date: string | null
+          estimated_completion: string | null
+          owner: string | null
+          contractor: string | null
+          architect: string | null
+          description: string | null
+          tags: string[] | null
           contract_file_url: string | null
           contract_text: string | null
-          status: 'uploaded' | 'processing' | 'reviewed' | 'complete'
+          status: 'draft' | 'uploaded' | 'processing' | 'reviewed' | 'complete'
           created_at: string
           updated_at: string
         }
@@ -54,9 +63,18 @@ export interface Database {
           id?: string
           user_id: string
           name: string
+          project_type?: string | null
+          contract_value?: string | null
+          start_date?: string | null
+          estimated_completion?: string | null
+          owner?: string | null
+          contractor?: string | null
+          architect?: string | null
+          description?: string | null
+          tags?: string[] | null
           contract_file_url?: string | null
           contract_text?: string | null
-          status?: 'uploaded' | 'processing' | 'reviewed' | 'complete'
+          status?: 'draft' | 'uploaded' | 'processing' | 'reviewed' | 'complete'
           created_at?: string
           updated_at?: string
         }
@@ -64,9 +82,18 @@ export interface Database {
           id?: string
           user_id?: string
           name?: string
+          project_type?: string | null
+          contract_value?: string | null
+          start_date?: string | null
+          estimated_completion?: string | null
+          owner?: string | null
+          contractor?: string | null
+          architect?: string | null
+          description?: string | null
+          tags?: string[] | null
           contract_file_url?: string | null
           contract_text?: string | null
-          status?: 'uploaded' | 'processing' | 'reviewed' | 'complete'
+          status?: 'draft' | 'uploaded' | 'processing' | 'reviewed' | 'complete'
           created_at?: string
           updated_at?: string
         }

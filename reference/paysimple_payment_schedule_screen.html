@@ -1,0 +1,384 @@
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --navy:#1B4F72; --steel:#2E86C1; --slate:#2C3E50; --concrete:#F2F4F5;
+  --warm-white:#FAFBFC; --green:#27AE60; --amber:#F39C12; --red:#E74C3C; --gold:#D4A843;
+}
+
+.app-shell { font-family:'Segoe UI',system-ui,sans-serif; color:var(--slate); display:flex; flex-direction:column; min-height:820px; background:var(--concrete); }
+
+.topbar { display:flex; align-items:center; justify-content:space-between; padding:10px 20px; background:var(--navy); border-bottom:2px solid rgba(46,134,193,0.3); }
+.topbar-logo { font-weight:600; font-size:15px; color:#fff; letter-spacing:-0.3px; }
+.topbar-logo span { color:var(--steel); }
+.topbar-breadcrumb { font-size:12px; color:rgba(255,255,255,0.5); }
+.topbar-breadcrumb b { color:rgba(255,255,255,0.85); font-weight:500; }
+.topbar-actions { display:flex; gap:8px; }
+.topbar-btn { font-size:11px; padding:5px 12px; border-radius:6px; border:1px solid rgba(255,255,255,0.2); background:transparent; color:rgba(255,255,255,0.75); cursor:pointer; font-weight:500; }
+.topbar-btn.primary { background:var(--steel); border-color:var(--steel); color:#fff; }
+
+.step-bar { display:flex; align-items:center; gap:0; padding:0 20px; background:var(--warm-white); border-bottom:0.5px solid #ddd; height:40px; }
+.step { display:flex; align-items:center; gap:6px; padding:0 16px; font-size:11px; font-weight:500; color:#999; }
+.step.done { color:var(--green); }
+.step.active { color:var(--navy); }
+.step-num { width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:600; border:1.5px solid #ccc; color:#999; background:#fff; }
+.step.done .step-num { background:var(--green); border-color:var(--green); color:#fff; }
+.step.active .step-num { background:var(--navy); border-color:var(--navy); color:#fff; }
+.step-line { width:40px; height:1.5px; background:#ddd; }
+.step-line.done { background:var(--green); }
+
+.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+
+.summary-strip { display:flex; gap:10px; padding:14px 20px; background:#fff; border-bottom:0.5px solid #ddd; }
+.stat-card { flex:1; background:var(--concrete); border-radius:8px; padding:10px 14px; }
+.stat-label { font-size:10px; font-weight:600; color:#999; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:2px; }
+.stat-value { font-size:18px; font-weight:700; color:var(--slate); font-family:'SF Mono','Cascadia Code','Consolas',monospace; letter-spacing:-0.5px; }
+.stat-value.green { color:var(--green); }
+.stat-sub { font-size:10px; color:#aaa; margin-top:1px; }
+
+.progress-wrap { padding:10px 20px 6px; background:#fff; }
+.progress-row { display:flex; align-items:center; gap:10px; }
+.progress-label { font-size:10px; font-weight:600; color:#999; text-transform:uppercase; letter-spacing:0.4px; min-width:90px; }
+.progress-track { flex:1; height:8px; background:var(--concrete); border-radius:4px; overflow:hidden; position:relative; }
+.progress-fill { height:100%; border-radius:4px; transition:width 0.6s ease; }
+.progress-fill.blue { background:linear-gradient(90deg,var(--navy),var(--steel)); }
+.progress-fill.green { background:var(--green); }
+.progress-pct { font-size:11px; font-weight:600; color:var(--slate); min-width:36px; text-align:right; }
+
+.toolbar { display:flex; align-items:center; justify-content:space-between; padding:10px 20px; background:#fff; border-bottom:0.5px solid #ddd; }
+.toolbar-left { display:flex; align-items:center; gap:8px; }
+.view-toggle { display:flex; border:1px solid #ddd; border-radius:6px; overflow:hidden; }
+.view-btn { font-size:11px; padding:4px 12px; background:#fff; border:none; cursor:pointer; color:#999; font-weight:500; }
+.view-btn.active { background:var(--navy); color:#fff; }
+.toolbar-right { display:flex; gap:6px; }
+.tb { font-size:11px; padding:5px 12px; border-radius:6px; border:1px solid #ddd; background:#fff; color:var(--slate); cursor:pointer; font-weight:500; }
+.tb:hover { border-color:#bbb; }
+.tb svg { width:12px; height:12px; vertical-align:-1px; margin-right:4px; }
+
+.table-wrap { flex:1; overflow:auto; background:#fff; }
+table { width:100%; border-collapse:collapse; font-size:12px; }
+thead { position:sticky; top:0; z-index:2; }
+th { background:var(--navy); color:#fff; font-weight:600; font-size:10px; text-transform:uppercase; letter-spacing:0.5px; padding:9px 12px; text-align:left; white-space:nowrap; border-right:1px solid rgba(255,255,255,0.1); }
+th:last-child { border-right:none; }
+th.r { text-align:right; }
+td { padding:8px 12px; border-bottom:0.5px solid #eee; white-space:nowrap; vertical-align:middle; }
+td.r { text-align:right; font-family:'SF Mono','Cascadia Code','Consolas',monospace; font-size:11.5px; letter-spacing:-0.3px; }
+tr:hover td { background:rgba(46,134,193,0.03); }
+tr.retainage-change td { background:rgba(39,174,96,0.04); }
+tr.substantial td { background:rgba(212,168,67,0.06); font-weight:600; }
+tr.final td { background:rgba(27,79,114,0.04); font-weight:600; }
+
+.status-chip { font-size:10px; font-weight:600; padding:2px 8px; border-radius:10px; }
+.status-chip.upcoming { background:rgba(46,134,193,0.1); color:var(--steel); }
+.status-chip.action { background:rgba(243,156,18,0.1); color:#b87400; }
+.status-chip.milestone { background:rgba(212,168,67,0.12); color:#8a6b1a; }
+.status-chip.complete { background:rgba(39,174,96,0.1); color:var(--green); }
+
+.lien-col { font-size:10px; color:#888; }
+.lien-col b { color:var(--slate); font-weight:600; }
+
+.note-flag { display:inline-flex; align-items:center; gap:3px; font-size:10px; color:var(--amber); font-weight:600; margin-left:6px; }
+
+tr.totals td { background:var(--concrete); font-weight:700; border-top:2px solid var(--navy); font-size:12px; }
+
+.sidebar-toggle { position:absolute; right:20px; top:50%; transform:translateY(-50%); }
+
+.bottom-bar { display:flex; align-items:center; justify-content:space-between; padding:12px 20px; background:#fff; border-top:0.5px solid #ddd; }
+.bottom-info { font-size:11px; color:#999; }
+.bottom-info b { color:var(--slate); font-weight:600; }
+.bottom-actions { display:flex; gap:8px; }
+.btn { font-size:12px; padding:7px 16px; border-radius:7px; border:1px solid #ddd; background:#fff; color:var(--slate); cursor:pointer; font-weight:500; }
+.btn:hover { border-color:#bbb; }
+.btn.primary { background:var(--navy); border-color:var(--navy); color:#fff; }
+.btn.primary:hover { background:#164060; }
+
+.inline-edit { border:1px solid transparent; padding:1px 4px; border-radius:3px; cursor:text; transition:border-color 0.15s; }
+.inline-edit:hover { border-color:var(--steel); background:rgba(46,134,193,0.04); }
+</style>
+
+<div class="app-shell">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:20px;">
+      <div class="topbar-logo">Pay<span>Simple</span></div>
+      <div class="topbar-breadcrumb">My projects / <b>Riverside Office Complex</b> / Payment schedule</div>
+    </div>
+    <div class="topbar-actions">
+      <button class="topbar-btn">Save draft</button>
+      <button class="topbar-btn primary">Export</button>
+    </div>
+  </div>
+
+  <div class="step-bar">
+    <div class="step done"><div class="step-num">&#10003;</div> Upload</div>
+    <div class="step-line done"></div>
+    <div class="step done"><div class="step-num">&#10003;</div> Review extraction</div>
+    <div class="step-line done"></div>
+    <div class="step active"><div class="step-num">3</div> Payment schedule</div>
+    <div class="step-line"></div>
+    <div class="step"><div class="step-num">4</div> Compliance</div>
+    <div class="step-line"></div>
+    <div class="step"><div class="step-num">5</div> Export</div>
+  </div>
+
+  <div class="main">
+    <div class="summary-strip">
+      <div class="stat-card">
+        <div class="stat-label">Contract sum</div>
+        <div class="stat-value">$4,250,000</div>
+        <div class="stat-sub">AIA A101-2017 &middot; Stipulated sum</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total retainage</div>
+        <div class="stat-value">$318,750</div>
+        <div class="stat-sub">10% &rarr; 5% at 50% complete</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Net payments</div>
+        <div class="stat-value green">$3,931,250</div>
+        <div class="stat-sub">14 scheduled payments</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Schedule duration</div>
+        <div class="stat-value">14 mo</div>
+        <div class="stat-sub">Apr 2026 &ndash; Jun 2027</div>
+      </div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-row" style="margin-bottom:4px;">
+        <div class="progress-label">Scheduled</div>
+        <div class="progress-track"><div class="progress-fill blue" style="width:100%;"></div></div>
+        <div class="progress-pct">100%</div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label">Retainage held</div>
+        <div class="progress-track"><div class="progress-fill green" style="width:7.5%;"></div></div>
+        <div class="progress-pct">7.5%</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <div class="view-toggle">
+          <button class="view-btn active">Table</button>
+          <button class="view-btn">Timeline</button>
+          <button class="view-btn">Calendar</button>
+        </div>
+        <span style="font-size:11px;color:#999;margin-left:8px;">14 payments &middot; Monthly on the 25th</span>
+      </div>
+      <div class="toolbar-right">
+        <button class="tb" onclick="sendPrompt('Add a custom milestone payment to this schedule')"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg>Add row</button>
+        <button class="tb"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 5h10M3 8h10M3 11h7"/></svg>Filters</button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:36px;">#</th>
+            <th style="width:100px;">Due date</th>
+            <th>Description</th>
+            <th class="r" style="width:105px;">Gross amt</th>
+            <th class="r" style="width:60px;">Ret %</th>
+            <th class="r" style="width:95px;">Retainage</th>
+            <th class="r" style="width:105px;">Net payment</th>
+            <th class="r" style="width:115px;">Cumulative</th>
+            <th style="width:155px;">Lien waiver</th>
+            <th style="width:85px;">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color:#999;">1</td>
+            <td><span class="inline-edit">Apr 25, 2026</span></td>
+            <td>Progress payment #1</td>
+            <td class="r">$340,000</td>
+            <td class="r">10%</td>
+            <td class="r" style="color:var(--red);">-$34,000</td>
+            <td class="r" style="font-weight:600;">$306,000</td>
+            <td class="r">$306,000</td>
+            <td><span class="lien-col"><b>Conditional</b> w/ app</span></td>
+            <td><span class="status-chip upcoming">Upcoming</span></td>
+          </tr>
+          <tr>
+            <td style="color:#999;">2</td>
+            <td><span class="inline-edit">May 25, 2026</span></td>
+            <td>Progress payment #2</td>
+            <td class="r">$340,000</td>
+            <td class="r">10%</td>
+            <td class="r" style="color:var(--red);">-$34,000</td>
+            <td class="r" style="font-weight:600;">$306,000</td>
+            <td class="r">$612,000</td>
+            <td><span class="lien-col"><b>Cond.</b> + <b>Uncond.</b> #1</span></td>
+            <td><span class="status-chip upcoming">Upcoming</span></td>
+          </tr>
+          <tr>
+            <td style="color:#999;">3</td>
+            <td><span class="inline-edit">Jun 25, 2026</span></td>
+            <td>Progress payment #3</td>
+            <td class="r">$340,000</td>
+            <td class="r">10%</td>
+            <td class="r" style="color:var(--red);">-$34,000</td>
+            <td class="r" style="font-weight:600;">$306,000</td>
+            <td class="r">$918,000</td>
+            <td><span class="lien-col"><b>Cond.</b> + <b>Uncond.</b> #2</span></td>
+            <td><span class="status-chip upcoming">Upcoming</span></td>
+          </tr>
+          <tr>
+            <td style="color:#999;">4</td>
+            <td><span class="inline-edit">Jul 25, 2026</span></td>
+            <td>Progress payment #4</td>
+            <td class="r">$340,000</td>
+            <td class="r">10%</td>
+            <td class="r" style="color:var(--red);">-$34,000</td>
+            <td class="r" style="font-weight:600;">$306,000</td>
+            <td class="r">$1,224,000</td>
+            <td><span class="lien-col"><b>Cond.</b> + <b>Uncond.</b> #3</span></td>
+            <td><span class="status-chip upcoming">Upcoming</span></td>
+          </tr>
+          <tr>
+            <td style="color:#999;">5</td>
+            <td><span class="inline-edit">Aug 25, 2026</span></td>
+            <td>Progress payment #5</td>
+            <td class="r">$340,000</td>
+            <td class="r">10%</td>
+            <td class="r" style="color:var(--red);">-$34,000</td>
+            <td class="r" style="font-weight:600;">$306,000</td>
+            <td class="r">$1,530,000</td>
+            <td><span class="lien-col"><b>Cond.</b> + <b>Uncond.</b> #4</span></td>
+            <td><span class="status-chip upcoming">Upcoming</span></td>
+          </tr>
+          <tr>
+            <td style="color:#999;">6</td>
+            <td><span class="inline-edit">Sep 25, 2026</span></td>
+            <td>Progress payment #6</td>
+            <td class="r">$340,000</td>
+            <td class="r">10%</td>
+            <td class="r" style="color:var(--red);">-$34,000</td>
+            <td class="r" style="font-weight:600;">$306,000</td>
+            <td class="r">$1,836,000</td>
+            <td><span class="lien-col"><b>Cond.</b> + <b>Uncond.</b> #5</span></td>
+            <td><span class="status-chip action">Action needed</span></td>
+          </tr>
+          <tr class="retainage-change">
+            <td style="color:#999;">7</td>
+            <td><span class="inline-edit">Oct 25, 2026</span></td>
+            <td>Progress payment #7 <span class="note-flag">&#9660; Retainage drops to 5%</span></td>
+            <td class="r">$340,000</td>
+            <td class="r" style="color:var(--green);font-weight:600;">5%</td>
+            <td class="r" style="color:var(--green);">-$17,000</td>
+            <td class="r" style="font-weight:600;">$323,000</td>
+            <td class="r">$2,159,000</td>
+            <td><span class="lien-col"><b>Cond.</b> + <b>Uncond.</b> #6</span></td>
+            <td><span class="status-chip upcoming">Upcoming</span></td>
+          </tr>
+          <tr>
+            <td style="color:#999;">8</td>
+            <td><span class="inline-edit">Nov 25, 2026</span></td>
+            <td>Progress payment #8</td>
+            <td class="r">$340,000</td>
+            <td class="r">5%</td>
+            <td class="r" style="color:var(--green);">-$17,000</td>
+            <td class="r" style="font-weight:600;">$323,000</td>
+            <td class="r">$2,482,000</td>
+            <td><span class="lien-col"><b>Cond.</b> + <b>Uncond.</b> #7</span></td>
+            <td><span class="status-chip upcoming">Upcoming</span></td>
+          </tr>
+          <tr>
+            <td style="color:#999;">9</td>
+            <td><span class="inline-edit">Dec 25, 2026</span></td>
+            <td>Progress payment #9</td>
+            <td class="r">$340,000</td>
+            <td class="r">5%</td>
+            <td class="r" style="color:var(--green);">-$17,000</td>
+            <td class="r" style="font-weight:600;">$323,000</td>
+            <td class="r">$2,805,000</td>
+            <td><span class="lien-col"><b>Cond.</b> + <b>Uncond.</b> #8</span></td>
+            <td><span class="status-chip upcoming">Upcoming</span></td>
+          </tr>
+          <tr>
+            <td style="color:#999;">10</td>
+            <td><span class="inline-edit">Jan 25, 2027</span></td>
+            <td>Progress payment #10</td>
+            <td class="r">$340,000</td>
+            <td class="r">5%</td>
+            <td class="r" style="color:var(--green);">-$17,000</td>
+            <td class="r" style="font-weight:600;">$323,000</td>
+            <td class="r">$3,128,000</td>
+            <td><span class="lien-col"><b>Cond.</b> + <b>Uncond.</b> #9</span></td>
+            <td><span class="status-chip upcoming">Upcoming</span></td>
+          </tr>
+          <tr>
+            <td style="color:#999;">11</td>
+            <td><span class="inline-edit">Feb 25, 2027</span></td>
+            <td>Progress payment #11</td>
+            <td class="r">$270,000</td>
+            <td class="r">5%</td>
+            <td class="r" style="color:var(--green);">-$13,500</td>
+            <td class="r" style="font-weight:600;">$256,500</td>
+            <td class="r">$3,384,500</td>
+            <td><span class="lien-col"><b>Cond.</b> + <b>Uncond.</b> #10</span></td>
+            <td><span class="status-chip upcoming">Upcoming</span></td>
+          </tr>
+          <tr class="substantial">
+            <td style="color:var(--gold);">12</td>
+            <td><span class="inline-edit">Mar 15, 2027</span></td>
+            <td>Substantial completion <span class="note-flag" style="color:var(--gold);">&#9733; Milestone</span></td>
+            <td class="r">$220,000</td>
+            <td class="r">5%</td>
+            <td class="r" style="color:var(--green);">-$11,000</td>
+            <td class="r">$209,000</td>
+            <td class="r">$3,593,500</td>
+            <td><span class="lien-col"><b>Cond.</b> + <b>Uncond.</b> #11</span></td>
+            <td><span class="status-chip milestone">Milestone</span></td>
+          </tr>
+          <tr class="substantial">
+            <td style="color:var(--gold);">13</td>
+            <td><span class="inline-edit">Mar 25, 2027</span></td>
+            <td>Retainage release <span class="note-flag" style="color:var(--green);">&#8593; $281,000 released</span></td>
+            <td class="r">&mdash;</td>
+            <td class="r">&mdash;</td>
+            <td class="r" style="color:var(--green);font-weight:600;">+$281,000</td>
+            <td class="r" style="font-weight:600;">$281,000</td>
+            <td class="r">$3,874,500</td>
+            <td><span class="lien-col"><b>Unconditional</b> all</span></td>
+            <td><span class="status-chip milestone">Milestone</span></td>
+          </tr>
+          <tr class="final">
+            <td style="color:var(--navy);">14</td>
+            <td><span class="inline-edit">Jun 15, 2027</span></td>
+            <td>Final payment + punch list holdback release</td>
+            <td class="r">$340,000</td>
+            <td class="r">&mdash;</td>
+            <td class="r" style="color:var(--green);font-weight:600;">+$35,500</td>
+            <td class="r" style="font-weight:600;">$375,500</td>
+            <td class="r">$4,250,000</td>
+            <td><span class="lien-col"><b>Final uncond.</b> all parties</span></td>
+            <td><span class="status-chip complete">Final</span></td>
+          </tr>
+          <tr class="totals">
+            <td colspan="3" style="text-align:right;padding-right:16px;">Totals</td>
+            <td class="r">$4,250,000</td>
+            <td class="r">&mdash;</td>
+            <td class="r">$0</td>
+            <td class="r" style="color:var(--navy);">$4,250,000</td>
+            <td class="r">$4,250,000</td>
+            <td colspan="2"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <div class="bottom-info">
+      <b>14 payments</b> &middot; Schedule complete &middot; <span style="color:var(--amber);font-weight:600;">2 compliance flags</span> to review
+    </div>
+    <div class="bottom-actions">
+      <button class="btn" onclick="sendPrompt('Go back to the extraction review screen')">&#8592; Back to review</button>
+      <button class="btn" onclick="sendPrompt('Show me the compliance dashboard for this contract')">View compliance flags</button>
+      <button class="btn primary" onclick="sendPrompt('Show me the export options for this payment schedule')">Export schedule &#8594;</button>
+    </div>
+  </div>
+</div>

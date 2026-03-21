@@ -1,0 +1,325 @@
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--navy:#1B4F72;--steel:#2E86C1;--slate:#2C3E50;--concrete:#F2F4F5;--warm-white:#FAFBFC;--green:#27AE60;--amber:#F39C12;--red:#E74C3C;--gold:#D4A843}
+body{font-family:'Segoe UI',system-ui,sans-serif;color:var(--slate)}
+.app{display:flex;flex-direction:column;min-height:860px;background:var(--concrete)}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:var(--navy);border-bottom:2px solid rgba(46,134,193,0.3)}
+.topbar-logo{font-weight:600;font-size:15px;color:#fff;letter-spacing:-0.3px}
+.topbar-logo span{color:var(--steel)}
+.topbar-bc{font-size:12px;color:rgba(255,255,255,0.5)}
+.topbar-bc b{color:rgba(255,255,255,0.85);font-weight:500}
+.topbar-actions{display:flex;gap:8px}
+.topbar-btn{font-size:11px;padding:5px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.2);background:transparent;color:rgba(255,255,255,0.75);cursor:pointer;font-weight:500}
+.topbar-btn.primary{background:var(--steel);border-color:var(--steel);color:#fff}
+.step-bar{display:flex;align-items:center;gap:0;padding:0 20px;background:var(--warm-white);border-bottom:0.5px solid #ddd;height:40px}
+.stp{display:flex;align-items:center;gap:6px;padding:0 16px;font-size:11px;font-weight:500;color:#999}
+.stp.done{color:var(--green)}.stp.active{color:var(--navy)}
+.stp-n{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;border:1.5px solid #ccc;color:#999;background:#fff}
+.stp.done .stp-n{background:var(--green);border-color:var(--green);color:#fff}
+.stp.active .stp-n{background:var(--navy);border-color:var(--navy);color:#fff}
+.stp-l{width:40px;height:1.5px;background:#ddd}.stp-l.done{background:var(--green)}
+
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.score-strip{display:flex;gap:10px;padding:16px 20px;background:#fff;border-bottom:0.5px solid #ddd}
+.score-ring-card{display:flex;align-items:center;gap:16px;flex:0 0 220px;background:var(--concrete);border-radius:10px;padding:16px 18px}
+.ring-wrap{position:relative;width:64px;height:64px;flex-shrink:0}
+.ring-wrap svg{width:64px;height:64px;transform:rotate(-90deg)}
+.ring-wrap circle{fill:none;stroke-width:5;stroke-linecap:round}
+.ring-bg{stroke:#e8e8e8}
+.ring-fill{transition:stroke-dashoffset 0.8s ease}
+.ring-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;letter-spacing:-0.5px}
+.ring-label.green{color:var(--green)}.ring-label.amber{color:var(--amber)}.ring-label.red{color:var(--red)}
+.score-meta .sm-title{font-size:10px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:0.4px}
+.score-meta .sm-val{font-size:14px;font-weight:700;color:var(--slate);margin:2px 0}
+.score-meta .sm-sub{font-size:10px;color:#aaa}
+
+.mini-scores{flex:1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.ms{background:var(--concrete);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;justify-content:space-between}
+.ms-top{display:flex;align-items:center;justify-content:space-between}
+.ms-label{font-size:9px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:0.4px}
+.ms-badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:8px}
+.ms-badge.pass{background:rgba(39,174,96,0.1);color:var(--green)}
+.ms-badge.warn{background:rgba(243,156,18,0.1);color:#b87400}
+.ms-badge.fail{background:rgba(231,76,60,0.1);color:var(--red)}
+.ms-bar{height:4px;border-radius:2px;background:#e8e8e8;margin-top:8px;overflow:hidden}
+.ms-bar-fill{height:100%;border-radius:2px}
+.ms-bar-fill.green{background:var(--green)}.ms-bar-fill.amber{background:var(--amber)}.ms-bar-fill.red{background:var(--red)}
+
+.content{flex:1;display:flex;overflow:hidden}
+.flags-col{flex:1;display:flex;flex-direction:column;overflow:hidden;border-right:0.5px solid #ddd}
+.flags-head{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:#fff;border-bottom:0.5px solid #ddd}
+.flags-title{font-size:12px;font-weight:700;color:var(--slate)}
+.flags-filter{display:flex;gap:4px}
+.ff{font-size:10px;padding:3px 10px;border-radius:6px;border:1px solid #ddd;background:#fff;color:#999;cursor:pointer;font-weight:500}
+.ff.active{background:var(--navy);border-color:var(--navy);color:#fff}
+.flags-list{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:8px}
+
+.flag-card{background:#fff;border-radius:10px;border:0.5px solid #e4e4e4;overflow:hidden;transition:border-color 0.15s}
+.flag-card:hover{border-color:var(--steel)}
+.flag-card.resolved{opacity:0.55}
+.fc-top{display:flex;align-items:flex-start;gap:10px;padding:12px 14px}
+.fc-sev{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.fc-sev.high{background:var(--red)}.fc-sev.medium{background:var(--amber)}.fc-sev.low{background:var(--steel)}
+.fc-body{flex:1}
+.fc-title{font-size:12px;font-weight:700;color:var(--slate);margin-bottom:3px;display:flex;align-items:center;gap:6px}
+.fc-sev-pill{font-size:9px;font-weight:700;padding:1px 6px;border-radius:6px}
+.fc-sev-pill.high{background:rgba(231,76,60,0.1);color:var(--red)}
+.fc-sev-pill.medium{background:rgba(243,156,18,0.1);color:#b87400}
+.fc-sev-pill.low{background:rgba(46,134,193,0.1);color:var(--steel)}
+.fc-desc{font-size:11px;color:#777;line-height:1.55}
+.fc-source{margin-top:6px;font-size:10px;color:#aaa;font-style:italic}
+.fc-actions{display:flex;align-items:center;justify-content:space-between;padding:0 14px 10px;gap:8px}
+.fc-rec{flex:1;font-size:10px;color:var(--steel);font-weight:500;display:flex;align-items:baseline;gap:4px}
+.fc-rec-icon{font-size:12px}
+.fc-btns{display:flex;gap:4px}
+.fc-btn{font-size:10px;padding:4px 10px;border-radius:5px;border:1px solid #ddd;background:#fff;cursor:pointer;font-weight:500;color:#777}
+.fc-btn:hover{border-color:#bbb}
+.fc-btn.resolve{background:var(--green);border-color:var(--green);color:#fff}
+.fc-btn.resolve:hover{background:#1e8c4e}
+.resolved-bar{display:flex;align-items:center;gap:6px;padding:8px 14px;background:rgba(39,174,96,0.05);border-top:0.5px solid rgba(39,174,96,0.1)}
+.resolved-check{width:16px;height:16px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700}
+.resolved-text{font-size:10px;color:var(--green);font-weight:600}
+
+.checklist-col{width:310px;display:flex;flex-direction:column;overflow:hidden;background:#fff}
+.cl-head{padding:10px 16px;border-bottom:0.5px solid #ddd;display:flex;align-items:center;justify-content:space-between}
+.cl-title{font-size:12px;font-weight:700;color:var(--slate)}
+.cl-progress{font-size:10px;color:#999;font-weight:500}
+.cl-body{flex:1;overflow-y:auto;padding:12px 16px}
+.cl-group-title{font-size:9px;font-weight:700;color:#bbb;text-transform:uppercase;letter-spacing:0.8px;margin:12px 0 6px}
+.cl-group-title:first-child{margin-top:0}
+.cl-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:0.5px solid rgba(0,0,0,0.04)}
+.cl-item:last-child{border-bottom:none}
+.cl-check{width:16px;height:16px;border-radius:4px;border:1.5px solid #ccc;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:9px;transition:all 0.15s;margin-top:1px}
+.cl-check.checked{background:var(--green);border-color:var(--green);color:#fff}
+.cl-check:hover{border-color:var(--steel)}
+.cl-text{font-size:11px;color:#666;line-height:1.45}
+.cl-text.done{text-decoration:line-through;color:#bbb}
+
+.bottom-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:#fff;border-top:0.5px solid #ddd}
+.bottom-info{font-size:11px;color:#999}
+.bottom-info b{color:var(--slate);font-weight:600}
+.bottom-info .red{color:var(--red)}.bottom-info .amber{color:var(--amber)}.bottom-info .green{color:var(--green)}
+.bottom-actions{display:flex;gap:8px}
+.btn{font-size:12px;padding:7px 16px;border-radius:7px;border:1px solid #ddd;background:#fff;color:var(--slate);cursor:pointer;font-weight:500}
+.btn:hover{border-color:#bbb}
+.btn.primary{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn.primary:hover{background:#164060}
+</style>
+
+<div class="app">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:20px">
+      <div class="topbar-logo">Pay<span>Simple</span></div>
+      <div class="topbar-bc">My projects / <b>Riverside Office Complex</b> / Compliance</div>
+    </div>
+    <div class="topbar-actions">
+      <button class="topbar-btn">Print report</button>
+      <button class="topbar-btn primary">Export schedule</button>
+    </div>
+  </div>
+
+  <div class="step-bar">
+    <div class="stp done"><div class="stp-n">&#10003;</div> Upload</div><div class="stp-l done"></div>
+    <div class="stp done"><div class="stp-n">&#10003;</div> Review extraction</div><div class="stp-l done"></div>
+    <div class="stp done"><div class="stp-n">&#10003;</div> Payment schedule</div><div class="stp-l done"></div>
+    <div class="stp active"><div class="stp-n">4</div> Compliance</div><div class="stp-l"></div>
+    <div class="stp"><div class="stp-n">5</div> Export</div>
+  </div>
+
+  <div class="main">
+    <div class="score-strip">
+      <div class="score-ring-card">
+        <div class="ring-wrap">
+          <svg viewBox="0 0 64 64">
+            <circle class="ring-bg" cx="32" cy="32" r="28" />
+            <circle class="ring-fill" cx="32" cy="32" r="28" stroke="#F39C12" stroke-dasharray="175.9" stroke-dashoffset="44" />
+          </svg>
+          <div class="ring-label amber">75</div>
+        </div>
+        <div class="score-meta">
+          <div class="sm-title">Compliance score</div>
+          <div class="sm-val">75 / 100</div>
+          <div class="sm-sub">2 high &middot; 2 medium &middot; 1 low</div>
+        </div>
+      </div>
+      <div class="mini-scores">
+        <div class="ms">
+          <div class="ms-top"><div class="ms-label">Payment terms</div><div class="ms-badge warn">1 issue</div></div>
+          <div class="ms-bar"><div class="ms-bar-fill amber" style="width:70%"></div></div>
+        </div>
+        <div class="ms">
+          <div class="ms-top"><div class="ms-label">Retainage</div><div class="ms-badge pass">Pass</div></div>
+          <div class="ms-bar"><div class="ms-bar-fill green" style="width:100%"></div></div>
+        </div>
+        <div class="ms">
+          <div class="ms-top"><div class="ms-label">Lien waivers</div><div class="ms-badge warn">1 issue</div></div>
+          <div class="ms-bar"><div class="ms-bar-fill amber" style="width:65%"></div></div>
+        </div>
+        <div class="ms">
+          <div class="ms-top"><div class="ms-label">Insurance</div><div class="ms-badge fail">2 issues</div></div>
+          <div class="ms-bar"><div class="ms-bar-fill red" style="width:40%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="flags-col">
+        <div class="flags-head">
+          <div class="flags-title">Compliance flags (5)</div>
+          <div class="flags-filter">
+            <div class="ff active">All</div>
+            <div class="ff">High</div>
+            <div class="ff">Medium</div>
+            <div class="ff">Resolved</div>
+          </div>
+        </div>
+        <div class="flags-list">
+
+          <div class="flag-card" id="f1">
+            <div class="fc-top">
+              <div class="fc-sev high"></div>
+              <div class="fc-body">
+                <div class="fc-title">Missing auto liability insurance requirement <span class="fc-sev-pill high">High</span></div>
+                <div class="fc-desc">Contract requires CGL and workers' comp but does not specify automobile liability coverage. Standard AIA A101 Exhibit A typically requires auto liability with a minimum of $1,000,000 combined single limit. Without this, the owner may reject your insurance certificate.</div>
+                <div class="fc-source">Expected in: A101 Exhibit A &mdash; Insurance and Bonds, Section A.2.1</div>
+              </div>
+            </div>
+            <div class="fc-actions">
+              <div class="fc-rec"><span class="fc-rec-icon">&#9432;</span> Add auto liability requirement or confirm with owner that it's intentionally omitted</div>
+              <div class="fc-btns"><button class="fc-btn" onclick="dismiss(this)">Dismiss</button><button class="fc-btn resolve" onclick="resolve(this)">Resolve</button></div>
+            </div>
+          </div>
+
+          <div class="flag-card" id="f2">
+            <div class="fc-top">
+              <div class="fc-sev high"></div>
+              <div class="fc-body">
+                <div class="fc-title">No late payment interest rate specified <span class="fc-sev-pill high">High</span></div>
+                <div class="fc-desc">A201 &sect;9.7 allows the contractor to stop work after 7 days' notice if payment is late, but the contract does not specify an interest rate on overdue payments. Without a stated rate, you may have limited recourse for the time-value cost of delayed payments.</div>
+                <div class="fc-source">Missing from: Article 5 &mdash; Payment, expected per A201 &sect;9.6.1</div>
+              </div>
+            </div>
+            <div class="fc-actions">
+              <div class="fc-rec"><span class="fc-rec-icon">&#9432;</span> Negotiate adding interest rate (typical: prime rate + 2% or 1.5%/month)</div>
+              <div class="fc-btns"><button class="fc-btn" onclick="dismiss(this)">Dismiss</button><button class="fc-btn resolve" onclick="resolve(this)">Resolve</button></div>
+            </div>
+          </div>
+
+          <div class="flag-card" id="f3">
+            <div class="fc-top">
+              <div class="fc-sev medium"></div>
+              <div class="fc-body">
+                <div class="fc-title">Subcontractor lien waiver timing unspecified <span class="fc-sev-pill medium">Medium</span></div>
+                <div class="fc-desc">Contract requires lien waivers from subcontractors for prior period amounts, but does not specify how many days before the payment application these must be collected. This commonly causes payment delays when subs are slow to return waivers.</div>
+                <div class="fc-source">Section 9.3.2 &mdash; Lien waiver requirements</div>
+              </div>
+            </div>
+            <div class="fc-actions">
+              <div class="fc-rec"><span class="fc-rec-icon">&#9432;</span> Establish internal deadline (recommend: 5 business days before application due date)</div>
+              <div class="fc-btns"><button class="fc-btn" onclick="dismiss(this)">Dismiss</button><button class="fc-btn resolve" onclick="resolve(this)">Resolve</button></div>
+            </div>
+          </div>
+
+          <div class="flag-card" id="f4">
+            <div class="fc-top">
+              <div class="fc-sev medium"></div>
+              <div class="fc-body">
+                <div class="fc-title">No stored materials payment provision <span class="fc-sev-pill medium">Medium</span></div>
+                <div class="fc-desc">The contract does not address payment for materials stored off-site. For a $4.25M project, prefabricated components, steel, and specialty equipment often require advance purchase. Without this provision, these costs can't be included in progress payment applications, straining cash flow.</div>
+                <div class="fc-source">Missing from: Article 9 &mdash; expected per A201 &sect;9.3.2</div>
+              </div>
+            </div>
+            <div class="fc-actions">
+              <div class="fc-rec"><span class="fc-rec-icon">&#9432;</span> Request amendment allowing stored materials with proof of insurance and title transfer</div>
+              <div class="fc-btns"><button class="fc-btn" onclick="dismiss(this)">Dismiss</button><button class="fc-btn resolve" onclick="resolve(this)">Resolve</button></div>
+            </div>
+          </div>
+
+          <div class="flag-card resolved" id="f5">
+            <div class="fc-top">
+              <div class="fc-sev low"></div>
+              <div class="fc-body">
+                <div class="fc-title">Owner financing verification not exercised <span class="fc-sev-pill low">Low</span></div>
+                <div class="fc-desc">A201 &sect;2.2 gives the contractor the right to request evidence of the owner's ability to pay. This right exists in the contract but there's no indication it has been exercised. For a $4.25M project, confirming financing is prudent.</div>
+                <div class="fc-source">A201 &sect;2.2 &mdash; Owner's financial capability</div>
+              </div>
+            </div>
+            <div class="resolved-bar">
+              <div class="resolved-check">&#10003;</div>
+              <div class="resolved-text">Resolved &mdash; Owner provided bank letter of credit on Mar 12, 2026</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="checklist-col">
+        <div class="cl-head">
+          <div class="cl-title">Pre-payment checklist</div>
+          <div class="cl-progress">7 / 12 complete</div>
+        </div>
+        <div class="cl-body">
+          <div class="cl-group-title">Before first application</div>
+          <div class="cl-item"><div class="cl-check checked" onclick="toggleCheck(this)">&#10003;</div><div class="cl-text done">Schedule of values submitted and approved by architect</div></div>
+          <div class="cl-item"><div class="cl-check checked" onclick="toggleCheck(this)">&#10003;</div><div class="cl-text done">CGL insurance certificate on file ($2M per occurrence)</div></div>
+          <div class="cl-item"><div class="cl-check checked" onclick="toggleCheck(this)">&#10003;</div><div class="cl-text done">Workers' comp certificate on file (state statutory)</div></div>
+          <div class="cl-item"><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text">Auto liability insurance certificate on file</div></div>
+          <div class="cl-item"><div class="cl-check checked" onclick="toggleCheck(this)">&#10003;</div><div class="cl-text done">Owner added as additional insured</div></div>
+          <div class="cl-item"><div class="cl-check checked" onclick="toggleCheck(this)">&#10003;</div><div class="cl-text done">Owner financing verification received</div></div>
+
+          <div class="cl-group-title">With each payment application</div>
+          <div class="cl-item"><div class="cl-check checked" onclick="toggleCheck(this)">&#10003;</div><div class="cl-text done">Conditional lien waiver for current period</div></div>
+          <div class="cl-item"><div class="cl-check checked" onclick="toggleCheck(this)">&#10003;</div><div class="cl-text done">Unconditional lien waiver for prior period</div></div>
+          <div class="cl-item"><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text">Subcontractor conditional waivers collected</div></div>
+          <div class="cl-item"><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text">Subcontractor unconditional waivers (prior period)</div></div>
+          <div class="cl-item"><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text">Updated project schedule attached</div></div>
+
+          <div class="cl-group-title">At substantial completion</div>
+          <div class="cl-item"><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text">Affidavit of paid debts prepared</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <div class="bottom-info">
+      <b class="red">2 high</b> &middot; <b class="amber">2 medium</b> &middot; <b class="green">1 resolved</b> &middot; Compliance score: <b>75/100</b>
+    </div>
+    <div class="bottom-actions">
+      <button class="btn" onclick="sendPrompt('Go back to the payment schedule screen')">&#8592; Payment schedule</button>
+      <button class="btn" onclick="sendPrompt('Show me the export screen for this project')">Export &amp; share &#8594;</button>
+      <button class="btn primary" onclick="sendPrompt('Generate a printable compliance report PDF for this project')">Print compliance report</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function resolve(btn){
+  const card=btn.closest('.flag-card');
+  card.classList.add('resolved');
+  const actions=card.querySelector('.fc-actions');
+  const bar=document.createElement('div');
+  bar.className='resolved-bar';
+  bar.innerHTML='<div class="resolved-check">&#10003;</div><div class="resolved-text">Resolved just now</div>';
+  actions.replaceWith(bar);
+}
+function dismiss(btn){
+  const card=btn.closest('.flag-card');
+  card.style.opacity='0';
+  card.style.transform='translateX(-20px)';
+  card.style.transition='all 0.3s ease';
+  setTimeout(()=>card.style.display='none',300);
+}
+function toggleCheck(el){
+  if(el.classList.contains('checked')){
+    el.classList.remove('checked');
+    el.innerHTML='';
+    el.nextElementSibling.classList.remove('done');
+  } else {
+    el.classList.add('checked');
+    el.innerHTML='&#10003;';
+    el.nextElementSibling.classList.add('done');
+  }
+}
+</script>

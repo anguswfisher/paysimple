@@ -146,3 +146,14 @@
     @apply font-sans;
   }
 }
+
+/* Background patterns for landing page */
+.bg-grid-white {
+  background-image: 
+    repeating-linear-gradient(0deg, #fff 0px, #fff 1px, transparent 1px, transparent 60px),
+    repeating-linear-gradient(90deg, #fff 0px, #fff 1px, transparent 1px, transparent 60px);
+}
+
+.bg-radial-blue {
+  background: radial-gradient(ellipse, rgba(46, 134, 193, 0.2) 0%, transparent 70%);
+}
