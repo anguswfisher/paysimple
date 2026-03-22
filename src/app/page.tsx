@@ -17,17 +17,14 @@ export default function LandingPage() {
           <a href="#how-it-works" className="text-sm text-neutral-500 font-medium hover:text-slate cursor-pointer transition-colors">
             How It Works
           </a>
-          <a href="#pricing" className="text-sm text-neutral-500 font-medium hover:text-slate cursor-pointer transition-colors">
-            Pricing
-          </a>
-          <Link href="/auth/login">
+                    <Link href="/auth/login">
             <Button variant="ghost" size="sm" className="text-slate hover:bg-slate/10">
               Sign In
             </Button>
           </Link>
           <Link href="/auth/signup">
             <Button size="sm" className="bg-navy hover:bg-navy/90">
-              Start Free Trial
+              Create Account
             </Button>
           </Link>
         </div>
@@ -57,43 +54,21 @@ export default function LandingPage() {
           <div className="flex items-center justify-center gap-3 mb-3">
             <Link href="/auth/signup">
               <Button size="lg" className="bg-white text-navy hover:bg-neutral-100 font-semibold px-7 py-3">
-                Start Free Trial
+                Create Account
               </Button>
             </Link>
             <Button variant="outline" size="lg" className="border-white/25 text-white/80 hover:border-white/50 hover:text-white">
-                Watch Demo
+                View Demo
             </Button>
           </div>
           
           <p className="text-xs text-white/35">
-            No credit card required • 14-day free trial
+            Educational Demo • Portfolio Project
           </p>
         </div>
       </section>
 
-      {/* Social Proof */}
-      <section className="flex items-center justify-center gap-8 py-4.5 bg-white border-b border-neutral-100">
-        <div className="flex items-center gap-1.5 text-xs text-neutral-500 font-medium">
-          <span className="font-bold text-slate text-xs">500+</span>
-          Construction Companies
-        </div>
-        <div className="w-0.5 h-0.5 rounded-full bg-neutral-300"></div>
-        <div className="flex items-center gap-1.5 text-xs text-neutral-500 font-medium">
-          <span className="font-bold text-slate text-xs">$2.4B</span>
-          Contract Value Processed
-        </div>
-        <div className="w-0.5 h-0.5 rounded-full bg-neutral-300"></div>
-        <div className="flex items-center gap-1.5 text-xs text-neutral-500 font-medium">
-          <span className="font-bold text-slate text-xs">50K+</span>
-          Payment Schedules Generated
-        </div>
-        <div className="w-0.5 h-0.5 rounded-full bg-neutral-300"></div>
-        <div className="flex items-center gap-1.5 text-xs text-neutral-500 font-medium">
-          <span className="font-bold text-slate text-xs">99.9%</span>
-          Compliance Accuracy
-        </div>
-      </section>
-
+      
       {/* Steps Section */}
       <section id="how-it-works" className="py-12 bg-warm-white text-center">
         <div className="text-xs font-bold text-steel uppercase tracking-widest mb-2">
@@ -237,15 +212,15 @@ export default function LandingPage() {
             Ready to Simplify Your Payment Schedules?
           </h2>
           <p className="text-base text-white/80 mb-8 max-w-2xl mx-auto">
-            Join hundreds of construction companies using PaySimple to automate their payment workflows.
+            Explore the demo
           </p>
           <Link href="/auth/signup">
             <Button size="lg" className="bg-white text-navy hover:bg-neutral-100 font-semibold px-8 py-3">
-              Start Your Free Trial
+              Create Account
             </Button>
           </Link>
           <p className="text-xs text-white/60 mt-4">
-            No credit card required • 14-day free trial • Cancel anytime
+            Educational Demo • Portfolio Project
           </p>
         </div>
       </section>

@@ -111,7 +111,7 @@ export default function DashboardPage() {
             <div className="text-center py-8">
               <FileText className="h-12 w-12 text-slate/30 mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-slate mb-2">No projects yet</h3>
-              <p className="text-sm text-slate/70 mb-4">Create your first project to get started</p>
+              <p className="text-sm text-slate/70 mb-4">Create your first project</p>
               <Link href="/dashboard/create">
                 <Button className="bg-navy hover:bg-navy/90">
                   <Plus className="mr-2 h-4 w-4" />

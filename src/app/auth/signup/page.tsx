@@ -155,7 +155,7 @@ export default function SignupPage() {
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold text-navy">Create Account</CardTitle>
           <CardDescription>
-            Start your free trial of PaySimple
+            Create your PaySimple account
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
