@@ -7,40 +7,40 @@ import { Edit, Check, AlertCircle } from 'lucide-react'
 
 export default function ReviewPage() {
   return (
-    <div className="flex flex-1 overflow-hidden">
+    <div className="flex flex-1 overflow-hidden h-full">
       {/* Left Column - Contract Viewer */}
-      <div className="flex-1 border-r border-neutral-200 bg-white">
-        <div className="p-4 border-b border-neutral-200">
+      <div className="flex-1 border-r border-neutral-200 bg-white flex flex-col">
+        <div className="p-4 border-b border-neutral-200 flex-shrink-0">
           <h2 className="text-sm font-semibold text-slate">Contract Document</h2>
           <p className="text-xs text-neutral-500">AIA A201-2017 - Office Building Construction</p>
-          </div>
-          <div className="p-4">
-            <div className="bg-neutral-50 rounded-lg p-8 h-96 flex items-center justify-center text-neutral-400">
-              <div className="text-center">
-                <div className="text-4xl mb-2">📄</div>
-                <p className="text-sm">Contract viewer will be displayed here</p>
-                <p className="text-xs mt-1">PDF preview with highlighted extracted terms</p>
-              </div>
+        </div>
+        <div className="flex-1 p-4 overflow-auto">
+          <div className="bg-neutral-50 rounded-lg p-8 h-full flex items-center justify-center text-neutral-400">
+            <div className="text-center">
+              <div className="text-4xl mb-2">📄</div>
+              <p className="text-sm">Contract viewer will be displayed here</p>
+              <p className="text-xs mt-1">PDF preview with highlighted extracted terms</p>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Right Column - Extracted Terms */}
-        <div className="w-96 bg-white">
-          <div className="p-4 border-b border-neutral-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-sm font-semibold text-slate">Extracted Terms</h2>
-                <p className="text-xs text-neutral-500">12 terms identified with 94% confidence</p>
-              </div>
-              <Badge variant="secondary" className="text-xs">
-                <Check className="w-3 h-3 mr-1" />
-                Verified
-              </Badge>
+      {/* Right Column - Extracted Terms */}
+      <div className="w-96 bg-white flex flex-col">
+        <div className="p-4 border-b border-neutral-200 flex-shrink-0">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-sm font-semibold text-slate">Extracted Terms</h2>
+              <p className="text-xs text-neutral-500">12 terms identified with 94% confidence</p>
             </div>
+            <Badge variant="secondary" className="text-xs">
+              <Check className="w-3 h-3 mr-1" />
+              Verified
+            </Badge>
           </div>
-          
-          <div className="p-4 space-y-4 overflow-y-auto max-h-96">
+        </div>
+        
+        <div className="flex-1 p-4 space-y-4 overflow-y-auto">
             {/* Contract Basics */}
             <Card className="border border-neutral-200">
               <CardHeader className="pb-3">
