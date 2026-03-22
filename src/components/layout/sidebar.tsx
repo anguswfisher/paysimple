@@ -108,7 +108,7 @@ export function Sidebar() {
             </div>
             <div className="ml-3">
               <p className="text-sm font-medium text-white">{getUserName(user)}</p>
-              <p className="text-xs text-white/60">Pro Plan</p>
+              <p className="text-xs text-white/60">Educational Demo</p>
             </div>
           </div>
         </div>
