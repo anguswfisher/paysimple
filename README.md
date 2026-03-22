@@ -1,125 +1,239 @@
-# PaySimple - AI-Powered Construction Payment Scheduling
+# PaySimple: AI-Powered AIA Construction Contract Analysis
 
-PaySimple lets construction contractors upload AIA contract documents (PDF/DOCX), uses Claude AI to extract payment terms, auto-generates a payment schedule with retainage calculations, flags compliance risks, and lets users export as PDF/CSV.
+## About This Project
 
-## Tech Stack
+**PaySimple is a portfolio project** that demonstrates AI product development skills combined with deep expertise in construction finance and AIA contracts.
 
-- **Framework**: Next.js 14+ with App Router, TypeScript (strict mode)
-- **Styling**: Tailwind CSS 3.4+ with custom brand colors
-- **Component library**: shadcn/ui (New York style, slate color, CSS variables)
-- **Database & auth**: Supabase (PostgreSQL + Auth + Storage)
-- **AI**: Anthropic Claude API via `@anthropic-ai/sdk` 
-- **PDF parsing**: `pdf-parse` for text extraction from uploaded contracts
-- **PDF generation**: `@react-pdf/renderer` for export
-- **CSV export**: `papaparse` 
-- **State management**: React Server Components + Server Actions
-- **Validation**: `zod` for all schemas
-- **Package manager**: pnpm
+The project tackles a real problem: construction contractors manually extract payment terms from AIA contracts, build payment schedules in spreadsheets, and struggle with compliance risks. PaySimple automates this workflow using Claude AI, combining technical product skills with domain knowledge from 5+ years of hands-on AIA contract experience.
 
-## Getting Started
+---
 
-1. **Install dependencies**:
-```bash
-pnpm install
-```
+## What PaySimple Does
 
-2. **Set up environment variables**:
-```bash
-cp .env.local.example .env.local
-# Fill in your Supabase and Anthropic API keys
-```
+**PaySimple** extracts critical payment terms from AIA construction contracts, auto-generates payment schedules, and flags compliance risks—all powered by Claude AI.
 
-3. **Set up Supabase**:
-- Create a new Supabase project
-- Run the migration file: `supabase/migrations/001_initial_schema.sql`
-- Copy your Supabase URL and keys to `.env.local`
+### Core Features
 
-4. **Run the development server**:
-```bash
-pnpm dev
-```
+- **Contract Upload & Analysis**: Upload AIA construction contracts (docx or PDF). Claude extracts payment terms, key dates, and risk flags in seconds.
+- **Payment Schedule Generation**: Auto-generate schedules based on contract terms (progress draws, retainage, lien waivers, prompt payment rules).
+- **Compliance Risk Detection**: Flag pay-when-paid vs. pay-if-paid clauses, retainage triggers, substantial completion dependencies, and state-specific prompt payment act violations.
+- **Export & Dashboard**: View results in-app, download schedules (Excel/PDF), and manage multiple projects.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Why AIA-Specific?
 
-## Project Structure
+Generic construction payment tools exist. But they don't understand AIA nuances:
+- Retainage release mechanics tied to substantial completion
+- G702/G703 payment application procedures
+- Stored materials vs. incorporated materials distinctions
+- State prompt payment law variations
+- Lien waiver timing and release conditions
+
+PaySimple speaks this language.
+
+---
+
+## Build Plan (8 Weeks, Phased)
+
+This project is built in phases to keep scope manageable, reduce risk, and deliver value incrementally.
+
+### Phase 1: Foundation (Weeks 1–2)
+**Goal**: Core AI extraction pipeline, basic UX, upload-to-results flow.
+
+- [ ] Set up Next.js 14 project with TypeScript, Tailwind, shadcn/ui
+- [ ] Configure Supabase (auth, file storage, database)
+- [ ] Design and build landing page (copy, value prop, upload CTA)
+- [ ] Implement Claude API integration (contract analysis prompts)
+- [ ] Build basic upload modal and file handling
+- [ ] Create extraction preview component (show Claude output)
+- [ ] Implement signup gate (view results only after registration)
+
+**Output**: Users can upload contracts, see extracted terms in real-time, and sign up to unlock full results.
+
+---
+
+### Phase 2: Payment Schedule Engine (Weeks 3–4)
+**Goal**: Auto-generate payment schedules from extracted terms.
+
+- [ ] Build schedule calculation logic (progress draws, retainage, release conditions)
+- [ ] Implement timeline visualization (milestones, draws, retainage release)
+- [ ] Design Schedule of Values editor (edit extracted amounts, sequence)
+- [ ] Export schedules to Excel (using `xlsx` library)
+- [ ] Add PDF export (using `pdf` library with formatting)
+- [ ] Create schedule comparison view (original contract vs. simplified schedule)
+
+**Output**: Users can generate, edit, and export payment schedules. Schedules reflect actual contract terms.
+
+---
+
+### Phase 3: Compliance & Risk Flagging (Weeks 5–6)
+**Goal**: Deep compliance analysis and risk scoring.
+
+- [ ] Build risk detection logic (pay-when-paid, pay-if-paid, retainage triggers)
+- [ ] Implement state-specific prompt payment law checks (50+ states)
+- [ ] Design risk dashboard (high/medium/low severity, mitigation suggestions)
+- [ ] Add lien waiver tracking (release dates, party requirements)
+- [ ] Create compliance export (audit-ready PDF with flagged items)
+- [ ] Build Claude-powered risk explanation (why this flag matters)
+
+**Output**: Users see detailed compliance risks with explanations and mitigation steps.
+
+---
+
+### Phase 4: Dashboard & Multi-Project (Weeks 7–8)
+**Goal**: Full product experience, project management, persistence.
+
+- [ ] Build project dashboard (list, create, delete, archive)
+- [ ] Implement user project history (retrieve past analyses)
+- [ ] Add favorites/tagging (organize contracts by project, client, status)
+- [ ] Design results summary view (one-page overview of key terms + risks)
+- [ ] Add sharing & collaboration scaffolding (future: team features)
+- [ ] Polish UX, test flows end-to-end, performance optimization
+- [ ] Deploy to Vercel, set up monitoring and error tracking
+
+**Output**: Production-ready product. Users manage multiple contracts, see history, export everything.
+
+---
+
+## Technical Stack
+
+| Layer | Choice | Rationale |
+|-------|--------|-----------|
+| **Frontend** | Next.js 14, TypeScript, Tailwind, shadcn/ui | Modern, type-safe, fast builds, accessible components out of the box |
+| **AI Engine** | Claude 3.5 Sonnet via API | Superior reasoning for legal/financial documents, structured extraction, chain-of-thought |
+| **Auth & Backend** | Supabase (PostgreSQL + auth) | Free tier suitable for MVP, built-in RLS, file storage, real-time DB |
+| **Document Export** | `docx` (Word), `xlsx` (Excel), PDF (jsPDF) | Standard formats for contractors; Excel for payment scheduling is critical |
+| **Deployment** | Vercel | Seamless Next.js integration, preview environments, serverless functions |
+
+---
+
+## Why This Project Signals Product Skills
+
+### 1. **Not a Tutorial Clone**
+This isn't a generic chatbot or "AI app template." It solves a specific market problem with domain-informed architecture.
+
+### 2. **Thoughtful UX Decisions**
+- **Upload-first, register-to-view**: Product decision that reduces friction (no signup friction) while capturing users (see value before committing).
+- **AIA-focused feature set**: Not a catch-all; specificity shows product thinking (who is the user? what do they actually need?).
+- **Multi-format export**: Users need Excel for their workflows; we export accordingly.
+
+### 3. **Real API Integration**
+Uses Claude API end-to-end, not just a UI wrapper. Demonstrates understanding of prompt engineering, structured outputs, error handling, and cost optimization.
+
+### 4. **Database & Auth**
+Real auth, user data persistence, and multi-tenancy scaffolding—not localStorage and in-memory state.
+
+### 5. **Domain Expertise**
+5+ years of hands-on AIA contract experience means the feature set, risk flags, and UX are credible. Not generic; genuinely informed by the problem space.
+
+---
+
+
+
+## Repository Structure
 
 ```
 paysimple/
-├── app/
-│   ├── (auth)/                    # Authentication pages
-│   │   ├── login/
-│   │   └── signup/
-│   ├── (dashboard)/              # Protected dashboard routes
-│   │   ├── layout.tsx            # Dashboard shell with sidebar
-│   │   ├── page.tsx              # Project dashboard
-│   │   └── projects/[id]/        # Individual project pages
-│   │       ├── page.tsx          # Project overview
-│   │       ├── review/page.tsx   # AI extraction review
-│   │       ├── schedule/page.tsx # Payment schedule table
-│   │       ├── compliance/page.tsx # Compliance flags
-│   │       └── export/page.tsx   # Export & share
-│   ├── api/                      # API routes
-│   │   └── projects/             # Project CRUD operations
-│   ├── layout.tsx                # Root layout with providers
-│   ├── page.tsx                  # Landing page
-│   └── globals.css               # Tailwind styles
-├── components/
-│   ├── ui/                       # shadcn components
-│   ├── layout/                   # Layout components
-│   └── [feature]/                # Feature-specific components
-├── lib/                          # Utility libraries
-│   ├── supabase/                 # Supabase client setup
-│   ├── ai/                       # Claude AI integration
-│   ├── pdf/                      # PDF processing
-│   ├── schedule/                 # Payment calculations
-│   └── compliance/               # Compliance checking
-├── types/                        # TypeScript definitions
-└── supabase/migrations/          # Database schema
+├── README.md                 # This file
+├── PRODUCT_SPEC.md          # 20+ page spec (market, tech, UX, design)
+├── build-plan.md            # Phased build timeline and milestones
+├── next.config.js           # Next.js configuration
+├── tsconfig.json            # TypeScript config
+├── tailwind.config.ts       # Tailwind setup
+│
+├── src/
+│   ├── app/                 # Next.js app router
+│   │   ├── layout.tsx       # Root layout
+│   │   ├── page.tsx         # Landing page
+│   │   ├── upload/          # Upload flow
+│   │   ├── dashboard/       # User dashboard (protected)
+│   │   ├── api/             # API routes (Claude, exports, etc.)
+│   │   └── auth/            # Supabase auth flows
+│   │
+│   ├── components/          # Reusable React components
+│   │   ├── ui/              # shadcn/ui components
+│   │   ├── UploadBox.tsx    # File upload widget
+│   │   ├── ExtractionPreview.tsx
+│   │   ├── PaymentSchedule.tsx
+│   │   ├── RiskDashboard.tsx
+│   │   └── ...
+│   │
+│   ├── lib/                 # Utilities and helpers
+│   │   ├── claude.ts        # Claude API client
+│   │   ├── supabase.ts      # Supabase client
+│   │   ├── extraction.ts    # Payment term parsing logic
+│   │   ├── schedule.ts      # Schedule calculation logic
+│   │   ├── compliance.ts    # Risk detection logic
+│   │   └── exports.ts       # Excel, PDF, Word export functions
+│   │
+│   ├── types/               # TypeScript interfaces
+│   │   ├── contract.ts      # Contract and extraction types
+│   │   ├── schedule.ts      # Schedule-related types
+│   │   └── risk.ts          # Risk flag types
+│   │
+│   └── styles/              # Global CSS
+│       └── globals.css
+│
+├── public/                  # Static assets (logos, icons, etc.)
+├── supabase/                # Supabase migrations and config
+└── .env.example             # Environment variables template
 ```
 
-## Brand Colors
+---
 
-The app uses a custom color palette:
-- **Navy** (`#1B4F72`): Primary brand, headers, nav, primary buttons
-- **Steel** (`#2E86C1`): Interactive elements, links, hover states
-- **Concrete** (`#F2F4F5`): Page backgrounds
-- **Slate** (`#2C3E50`): Body text
-- **Warm White** (`#FAFBFC`): Card backgrounds
-- **Success** (`#27AE60`): Success states
-- **Warning** (`#F39C12`): Warning states
-- **Danger** (`#E74C3C`): Error states
-- **Gold** (`#D4A843`): Accent color
+## Getting Started (For Reviewers)
 
-## Features
+### Prerequisites
+- Node.js 18+
+- npm or yarn
+- Anthropic API key
+- Supabase project (free tier)
 
-### Current Status: ✅ Scaffold Complete
+### Setup
 
-The project scaffold is complete with:
-- ✅ Full project structure and routing
-- ✅ Tailwind CSS configured with brand colors
-- ✅ shadcn/ui components integrated
-- ✅ Supabase client setup (browser + server + middleware)
-- ✅ Authentication middleware protecting dashboard routes
-- ✅ Landing page with hero section and CTAs
-- ✅ Dashboard layout with sidebar navigation
-- ✅ Step-bar component for project workflow
-- ✅ All project route pages (review, schedule, compliance, export)
-- ✅ Database schema with RLS policies
-- ✅ TypeScript types for all data models
-- ✅ Zero TypeScript compilation errors
+```bash
+# Clone and install
+git clone <repo-url>
+cd paysimple
+npm install
 
-### Next Steps
+# Configure environment
+cp .env.example .env.local
+# Fill in: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_KEY, ANTHROPIC_API_KEY
 
-The scaffold is ready for feature implementation:
-1. **AI Integration**: Set up Claude API for contract analysis
-2. **PDF Processing**: Implement text extraction and generation
-3. **Database Operations**: Connect frontend to Supabase
-4. **Authentication**: Implement login/signup flows
-5. **File Upload**: Handle contract document uploads
-6. **Business Logic**: Payment calculations and compliance checking
+# Run database migrations
+npx supabase migration up
 
-## Deployment
+# Start dev server
+npm run dev
+```
 
-The easiest way to deploy is using the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme).
+Visit `http://localhost:3000` to upload a contract.
 
-Check out the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## Design Philosophy
+
+- **Scope clarity**: 8-week phased build plan with concrete milestones
+- **Technical depth**: Next.js for rapid iteration, Supabase for auth/storage, Claude API for extraction, multi-format exports
+- **Domain expertise**: AIA contract knowledge shapes every feature (retainage, lien waivers, compliance risks, prompt payment laws)
+- **Product thinking**: Deliberate UX decisions (upload-first, AIA-specific feature set, export flexibility)
+- **Full-stack**: Frontend, backend, AI, database, auth, and exports
+
+---
+
+## Future Scope (Post-MVP)
+
+These are intentionally *not* in the 8-week build to keep scope tight:
+
+- Team collaboration (share contracts, assign tasks)
+- Contract comparison (side-by-side term diffing)
+- Template library (pre-built risk checks for common AIA variants)
+- Webhook integration (e.g., notify when retainage release is due)
+- Mobile app (iOS/Android native for field-side access)
+- Integration with accounting software (QuickBooks, Sage, etc.)
+
+---
+
+## License
+
+This project is a portfolio demonstration. Use freely for learning purposes.
