@@ -6,11 +6,11 @@ import { Button } from '@/components/ui/button'
 import { ArrowRight, Upload, FileText } from 'lucide-react'
 
 const steps = [
-  { id: 'upload', name: 'Upload', href: '/projects/123/upload' },
-  { id: 'review', name: 'Review', href: '/projects/123/review' },
-  { id: 'schedule', name: 'Schedule', href: '/projects/123/schedule' },
-  { id: 'compliance', name: 'Compliance', href: '/projects/123/compliance' },
-  { id: 'export', name: 'Export', href: '/projects/123/export' },
+  { id: 'upload', name: 'Upload', href: '/upload' },
+  { id: 'review', name: 'Review', href: '/review' },
+  { id: 'schedule', name: 'Schedule', href: '/schedule' },
+  { id: 'compliance', name: 'Compliance', href: '/compliance' },
+  { id: 'export', name: 'Export', href: '/export' },
 ]
 
 export default function ProjectPage() {

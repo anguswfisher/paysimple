@@ -1,20 +1,10 @@
 'use client'
 
-import { StepBar } from '@/components/layout/step-bar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Download, FileText, Share2, Mail, Link, Check, Calendar, FileSpreadsheet } from 'lucide-react'
 import { useState } from 'react'
-
-const steps = [
-  { id: 'upload', name: 'Upload', href: '/projects/123/upload' },
-  { id: 'extraction', name: 'Extraction', href: '/projects/123/extraction' },
-  { id: 'review', name: 'Review', href: '/projects/123/review' },
-  { id: 'schedule', name: 'Schedule', href: '/projects/123/schedule' },
-  { id: 'compliance', name: 'Compliance', href: '/projects/123/compliance' },
-  { id: 'export', name: 'Export', href: '/projects/123/export' },
-]
 
 export default function ExportPage() {
   const [selectedExports, setSelectedExports] = useState<string[]>(['pdf'])
@@ -70,33 +60,9 @@ export default function ExportPage() {
   }
 
   return (
-    <div className="min-h-screen bg-concrete">
-      {/* Top Bar */}
-      <div className="flex items-center justify-between px-5 py-2.5 bg-navy border-b-2 border-steel/30">
-        <div className="flex items-center gap-4">
-          <div className="font-semibold text-base text-white tracking-tight">
-            Pay<span className="text-steel">Simple</span>
-          </div>
-          <div className="text-xs text-white/50">
-            Projects / <span className="text-white/85 font-medium">Office Building Construction</span>
-          </div>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="ghost" size="sm" className="text-white/75 border-white/20 hover:bg-white/10">
-            <Download className="w-3 h-3 mr-1" />
-            Download All
-          </Button>
-          <Button size="sm" className="bg-steel hover:bg-steel/90">
-            Complete Project
-          </Button>
-        </div>
-      </div>
-
-      {/* Step Bar */}
-      <StepBar steps={steps} currentStep="export" />
-
-      {/* Main Content */}
-      <div className="flex-1 p-6 flex gap-5">
+    <div className="flex-1 bg-concrete p-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex gap-5">
         {/* Left Column */}
         <div className="flex-1 flex flex-col gap-3.5">
           <div>
@@ -262,6 +228,7 @@ export default function ExportPage() {
               </Button>
             </CardContent>
           </Card>
+        </div>
         </div>
       </div>
     </div>

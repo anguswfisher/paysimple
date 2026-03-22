@@ -11,6 +11,7 @@ export interface CreateProjectData {
   name: string
   project_type?: string
   contract_value?: string
+  contract_file_url?: string
   start_date?: string
   estimated_completion?: string
   owner?: string
@@ -61,7 +62,7 @@ export async function createProject(data: CreateProjectData): Promise<Project> {
     throw new Error('Failed to create project')
   }
 
-  return project
+  return project as Project
 }
 
 export async function getUserProjects(): Promise<Project[]> {
@@ -117,20 +118,20 @@ export async function updateProject(projectId: string, data: Partial<CreateProje
   }
 
   // Prepare update data
-  const updateData: any = {
+  const updateData: ProjectUpdate = {
     ...data,
     updated_at: new Date().toISOString()
   }
 
-  // Convert contract_value to number if provided
+  // Keep contract_value aligned with database type (string)
   if (data.contract_value) {
-    (updateData as any).contract_value = parseFloat(data.contract_value.replace(/[^0-9.-]/g, ''))
+    updateData.contract_value = data.contract_value
   }
 
   // Update project
-  const { data: project, error } = await supabase
-    .from('projects')
-    .update(updateData as any)
+  const { data: project, error } = await (supabase
+    .from('projects') as any)
+    .update(updateData)
     .eq('id', projectId)
     .eq('user_id', user.id)
     .select()
@@ -141,7 +142,7 @@ export async function updateProject(projectId: string, data: Partial<CreateProje
     throw new Error('Failed to update project')
   }
 
-  return project
+  return project as Project
 }
 
 export async function updateProjectStatus(projectId: string, status: Project['status']): Promise<Project> {
@@ -151,13 +152,15 @@ export async function updateProjectStatus(projectId: string, status: Project['st
     throw new Error('User not authenticated')
   }
 
+  const statusUpdate: ProjectUpdate = {
+    status,
+    updated_at: new Date().toISOString()
+  }
+
   // Update project status
-  const { data: project, error } = await supabase
-    .from('projects')
-    .update({ 
-      status,
-      updated_at: new Date().toISOString()
-    } as any)
+  const { data: project, error } = await (supabase
+    .from('projects') as any)
+    .update(statusUpdate)
     .eq('id', projectId)
     .eq('user_id', user.id)
     .select()
@@ -168,7 +171,7 @@ export async function updateProjectStatus(projectId: string, status: Project['st
     throw new Error('Failed to update project status')
   }
 
-  return project
+  return project as Project
 }
 
 export async function deleteProject(projectId: string): Promise<void> {

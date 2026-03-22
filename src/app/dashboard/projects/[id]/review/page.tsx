@@ -1,53 +1,18 @@
 'use client'
 
-import { StepBar } from '@/components/layout/step-bar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Edit, Check, AlertCircle } from 'lucide-react'
 
-const steps = [
-  { id: 'upload', name: 'Upload', href: '/projects/123/upload' },
-  { id: 'extraction', name: 'Extraction', href: '/projects/123/extraction' },
-  { id: 'review', name: 'Review', href: '/projects/123/review' },
-  { id: 'schedule', name: 'Schedule', href: '/projects/123/schedule' },
-  { id: 'compliance', name: 'Compliance', href: '/projects/123/compliance' },
-  { id: 'export', name: 'Export', href: '/projects/123/export' },
-]
-
 export default function ReviewPage() {
   return (
-    <div className="min-h-screen bg-concrete">
-      {/* Top Bar */}
-      <div className="flex items-center justify-between px-5 py-2.5 bg-navy border-b-2 border-steel/30">
-        <div className="flex items-center gap-4">
-          <div className="font-semibold text-base text-white tracking-tight">
-            Pay<span className="text-steel">Simple</span>
-          </div>
-          <div className="text-xs text-white/50">
-            Projects / <span className="text-white/85 font-medium">Office Building Construction</span>
-          </div>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="ghost" size="sm" className="text-white/75 border-white/20 hover:bg-white/10">
-            Save Draft
-          </Button>
-          <Button size="sm" className="bg-steel hover:bg-steel/90">
-            Continue to Schedule
-          </Button>
-        </div>
-      </div>
-
-      {/* Step Bar */}
-      <StepBar steps={steps} currentStep="review" />
-
-      {/* Main Content */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Left Column - Contract Viewer */}
-        <div className="flex-1 border-r border-neutral-200 bg-white">
-          <div className="p-4 border-b border-neutral-200">
-            <h2 className="text-sm font-semibold text-slate">Contract Document</h2>
-            <p className="text-xs text-neutral-500">AIA A201-2017 - Office Building Construction</p>
+    <div className="flex flex-1 overflow-hidden">
+      {/* Left Column - Contract Viewer */}
+      <div className="flex-1 border-r border-neutral-200 bg-white">
+        <div className="p-4 border-b border-neutral-200">
+          <h2 className="text-sm font-semibold text-slate">Contract Document</h2>
+          <p className="text-xs text-neutral-500">AIA A201-2017 - Office Building Construction</p>
           </div>
           <div className="p-4">
             <div className="bg-neutral-50 rounded-lg p-8 h-96 flex items-center justify-center text-neutral-400">
@@ -197,6 +162,5 @@ export default function ReviewPage() {
           </div>
         </div>
       </div>
-    </div>
-  )
-}
+    )
+  }

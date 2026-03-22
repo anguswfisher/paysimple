@@ -1,6 +1,5 @@
 'use client'
 
-import { StepBar } from '@/components/layout/step-bar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
@@ -8,47 +7,10 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Eye, Download, Edit, Grid, List } from 'lucide-react'
 
-const steps = [
-  { id: 'upload', name: 'Upload', href: '/projects/123/upload' },
-  { id: 'extraction', name: 'Extraction', href: '/projects/123/extraction' },
-  { id: 'review', name: 'Review', href: '/projects/123/review' },
-  { id: 'schedule', name: 'Schedule', href: '/projects/123/schedule' },
-  { id: 'compliance', name: 'Compliance', href: '/projects/123/compliance' },
-  { id: 'export', name: 'Export', href: '/projects/123/export' },
-]
-
 export default function SchedulePage() {
   return (
-    <div className="min-h-screen bg-concrete">
-      {/* Top Bar */}
-      <div className="flex items-center justify-between px-5 py-2.5 bg-navy border-b-2 border-steel/30">
-        <div className="flex items-center gap-4">
-          <div className="font-semibold text-base text-white tracking-tight">
-            Pay<span className="text-steel">Simple</span>
-          </div>
-          <div className="text-xs text-white/50">
-            Projects / <span className="text-white/85 font-medium">Office Building Construction</span>
-          </div>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="ghost" size="sm" className="text-white/75 border-white/20 hover:bg-white/10">
-            <Eye className="w-3 h-3 mr-1" />
-            Preview
-          </Button>
-          <Button variant="ghost" size="sm" className="text-white/75 border-white/20 hover:bg-white/10">
-            <Download className="w-3 h-3 mr-1" />
-            Export
-          </Button>
-          <Button size="sm" className="bg-steel hover:bg-steel/90">
-            Continue to Compliance
-          </Button>
-        </div>
-      </div>
-
-      {/* Step Bar */}
-      <StepBar steps={steps} currentStep="schedule" />
-
-      {/* Main Content */}
+    <div className="flex-1 bg-concrete p-6">
+      <div className="max-w-7xl mx-auto">
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Summary Strip */}
         <div className="flex gap-2.5 px-5 py-3.5 bg-white border-b border-neutral-200">
@@ -214,6 +176,7 @@ export default function SchedulePage() {
             </TableBody>
           </Table>
         </div>
+      </div>
       </div>
     </div>
   )
