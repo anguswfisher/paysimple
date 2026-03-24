@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PaySimple – Sign In</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --teal-900: #0d2535;
+  --teal-800: #1e3a4f;
+  --teal-700: #2a4f6a;
+  --teal-600: #355f7e;
+  --teal-400: #4a90b8;
+  --blue: #3b82f6;
+  --blue-dark: #1d4ed8;
+  --blue-light: #60a5fa;
+  --white: #ffffff;
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-400: #94a3b8;
+  --gray-500: #64748b;
+  --gray-700: #334155;
+  --gray-900: #0f172a;
+  --green: #10b981;
+  --yellow: #f59e0b;
+  --red: #ef4444;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'DM Sans', sans-serif;
+  background: var(--teal-900);
+  overflow: hidden;
+}
+
+/* ── LAYOUT ─────────────────────────────────── */
+.auth-wrap {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* ── LEFT PANEL ──────────────────────────────── */
+.left-panel {
+  width: 52%;
+  background: var(--teal-800);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 44px 52px;
+  overflow: hidden;
+}
+
+/* Geometric background */
+.left-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 80% 20%, rgba(59,130,246,0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 10% 80%, rgba(59,130,246,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* Subtle dot grid */
+.left-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+}
+
+.left-top { position: relative; z-index: 2; }
+.left-bottom { position: relative; z-index: 2; }
+.left-middle { position: relative; z-index: 2; flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 28px; }
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+.logo-mark {
+  width: 36px; height: 36px;
+  background: var(--blue);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+}
+.logo-text {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px;
+  color: var(--white);
+  letter-spacing: -0.3px;
+}
+.logo-text em { color: var(--blue-light); font-style: normal; }
+
+.left-headline {
+  font-family: 'DM Serif Display', serif;
+  font-size: 38px;
+  line-height: 1.12;
+  color: var(--white);
+  letter-spacing: -0.5px;
+}
+.left-headline em {
+  font-style: italic;
+  color: var(--blue-light);
+}
+.left-sub {
+  font-size: 15px;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.6;
+  max-width: 360px;
+  margin-top: 4px;
+}
+
+/* ── MINI DASHBOARD CARD ─────────────────────── */
+.dashboard-preview {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  padding: 18px 20px;
+  backdrop-filter: blur(10px);
+  animation: floatCard 6s ease-in-out infinite;
+}
+@keyframes floatCard {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+}
+
+.preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.preview-title { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.9); }
+.preview-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+  background: rgba(16,185,129,0.2);
+  color: #34d399;
+  border: 1px solid rgba(16,185,129,0.25);
+}
+.preview-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.preview-stat {
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.preview-stat-label { font-size: 10px; color: rgba(255,255,255,0.4); margin-bottom: 4px; }
+.preview-stat-value { font-size: 16px; font-weight: 700; color: var(--white); }
+.preview-stat-delta { font-size: 10px; color: #34d399; margin-top: 2px; }
+
+/* Mini bar chart */
+.mini-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 36px;
+  margin-bottom: 10px;
+}
+.mini-bar {
+  flex: 1;
+  border-radius: 3px 3px 0 0;
+  background: rgba(59,130,246,0.35);
+  transition: background 0.3s;
+  animation: barGrow 1s ease-out backwards;
+}
+.mini-bar:nth-child(7) { background: rgba(59,130,246,0.85); }
+@keyframes barGrow {
+  from { transform: scaleY(0); transform-origin: bottom; }
+  to { transform: scaleY(1); transform-origin: bottom; }
+}
+.mini-bar:nth-child(1) { animation-delay: 0.1s; }
+.mini-bar:nth-child(2) { animation-delay: 0.15s; }
+.mini-bar:nth-child(3) { animation-delay: 0.2s; }
+.mini-bar:nth-child(4) { animation-delay: 0.25s; }
+.mini-bar:nth-child(5) { animation-delay: 0.3s; }
+.mini-bar:nth-child(6) { animation-delay: 0.35s; }
+.mini-bar:nth-child(7) { animation-delay: 0.4s; }
+
+.preview-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+.preview-footer-label { font-size: 10px; color: rgba(255,255,255,0.4); }
+.compliance-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #34d399;
+}
+.compliance-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 6px #34d399;
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.85); }
+}
+
+/* ── SOCIAL PROOF ────────────────────────────── */
+.social-proof {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.avatars {
+  display: flex;
+}
+.av {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: 2px solid var(--teal-800);
+  margin-left: -8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--white);
+  display: flex; align-items: center; justify-content: center;
+}
+.av:first-child { margin-left: 0; }
+.social-text { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.4; }
+.social-text strong { color: rgba(255,255,255,0.85); font-weight: 600; }
+
+/* ── RIGHT PANEL ─────────────────────────────── */
+.right-panel {
+  width: 48%;
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 56px;
+  position: relative;
+  overflow-y: auto;
+}
+
+.right-panel::before {
+  content: '';
+  position: absolute;
+  top: -100px; right: -100px;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(59,130,246,0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.form-container {
+  width: 100%;
+  max-width: 380px;
+}
+
+/* ── PAGE TOGGLE ANIMATION ───────────────────── */
+.form-container {
+  animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ── FORM HEADINGS ───────────────────────────── */
+.form-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--blue);
+  margin-bottom: 8px;
+}
+.form-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 30px;
+  color: var(--gray-900);
+  line-height: 1.15;
+  letter-spacing: -0.3px;
+  margin-bottom: 6px;
+}
+.form-sub {
+  font-size: 14px;
+  color: var(--gray-500);
+  margin-bottom: 28px;
+  line-height: 1.5;
+}
+
+/* ── FLOATING LABEL INPUTS ───────────────────── */
+.field {
+  position: relative;
+  margin-bottom: 16px;
+}
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.field input {
+  width: 100%;
+  height: 52px;
+  background: var(--gray-50);
+  border: 1.5px solid var(--gray-200);
+  border-radius: 10px;
+  padding: 18px 16px 6px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--gray-900);
+  outline: none;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+.field input:focus {
+  border-color: var(--blue);
+  background: var(--white);
+  box-shadow: 0 0 0 4px rgba(59,130,246,0.08);
+}
+.field input.has-value, .field input:focus {
+  padding-top: 22px;
+  padding-bottom: 4px;
+}
+.field label {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: var(--gray-400);
+  pointer-events: none;
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: left top;
+}
+.field input:focus + label,
+.field input.has-value + label {
+  top: 10px;
+  transform: translateY(0) scale(0.75);
+  color: var(--blue);
+  font-weight: 600;
+}
+.field input.error {
+  border-color: var(--red);
+  box-shadow: 0 0 0 4px rgba(239,68,68,0.08);
+}
+.field input.success {
+  border-color: var(--green);
+}
+
+/* password toggle */
+.field-pwd { position: relative; }
+.pwd-toggle {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--gray-400);
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+}
+.pwd-toggle:hover { color: var(--gray-700); }
+
+/* ── PASSWORD STRENGTH ───────────────────────── */
+.strength-wrap { margin-top: 8px; margin-bottom: 4px; }
+.strength-bars { display: flex; gap: 4px; margin-bottom: 5px; }
+.strength-bar {
+  flex: 1; height: 3px; border-radius: 2px;
+  background: var(--gray-200);
+  transition: background 0.3s ease;
+}
+.strength-bar.weak { background: var(--red); }
+.strength-bar.fair { background: var(--yellow); }
+.strength-bar.good { background: var(--blue); }
+.strength-bar.strong { background: var(--green); }
+.strength-label { font-size: 11px; color: var(--gray-400); }
+.strength-label span { font-weight: 600; }
+.strength-label span.weak { color: var(--red); }
+.strength-label span.fair { color: var(--yellow); }
+.strength-label span.good { color: var(--blue); }
+.strength-label span.strong { color: var(--green); }
+
+/* ── CHECKBOXES ──────────────────────────────── */
+.check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.check-row input[type="checkbox"] {
+  width: 16px; height: 16px;
+  margin-top: 2px;
+  accent-color: var(--blue);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.check-label { font-size: 13px; color: var(--gray-500); line-height: 1.5; }
+.check-label a { color: var(--blue); text-decoration: none; font-weight: 500; }
+.check-label a:hover { text-decoration: underline; }
+
+/* ── CTA BUTTON ──────────────────────────────── */
+.cta-btn {
+  width: 100%;
+  height: 50px;
+  background: var(--blue);
+  color: var(--white);
+  border: none;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  letter-spacing: 0.01em;
+}
+.cta-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.cta-btn:hover {
+  background: var(--blue-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(59,130,246,0.3);
+}
+.cta-btn:hover::after { opacity: 1; }
+.cta-btn:active { transform: translateY(0); box-shadow: none; }
+.cta-btn.loading { pointer-events: none; opacity: 0.8; }
+.cta-btn svg.spinner {
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── DIVIDER ─────────────────────────────────── */
+.or-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  color: var(--gray-400);
+  font-size: 12px;
+  font-weight: 500;
+}
+.or-divider::before, .or-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--gray-200);
+}
+
+/* ── GOOGLE SSO ──────────────────────────────── */
+.sso-btn {
+  width: 100%;
+  height: 46px;
+  background: var(--white);
+  border: 1.5px solid var(--gray-200);
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray-700);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  margin-bottom: 24px;
+}
+.sso-btn:hover {
+  border-color: var(--gray-300);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  background: var(--gray-50);
+}
+
+/* ── SWITCH LINK ─────────────────────────────── */
+.switch-line {
+  text-align: center;
+  font-size: 13px;
+  color: var(--gray-500);
+}
+.switch-line a, .switch-line button {
+  color: var(--blue);
+  font-weight: 600;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0;
+}
+.switch-line a:hover, .switch-line button:hover { text-decoration: underline; }
+
+/* ── FORGOT LINK ─────────────────────────────── */
+.forgot-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -8px;
+  margin-bottom: 16px;
+}
+.forgot-link {
+  font-size: 12px;
+  color: var(--blue);
+  text-decoration: none;
+  font-weight: 500;
+}
+.forgot-link:hover { text-decoration: underline; }
+
+/* ── FEATURE PILLS (signup) ──────────────────── */
+.feature-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 2px;
+}
+.feature-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.7);
+}
+.feature-pill svg { color: var(--blue-light); }
+
+/* ── STAGGERED ENTRY ─────────────────────────── */
+.stagger { animation: staggerIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.s1 { animation-delay: 0.05s; }
+.s2 { animation-delay: 0.10s; }
+.s3 { animation-delay: 0.15s; }
+.s4 { animation-delay: 0.20s; }
+.s5 { animation-delay: 0.25s; }
+.s6 { animation-delay: 0.30s; }
+.s7 { animation-delay: 0.35s; }
+.s8 { animation-delay: 0.40s; }
+@keyframes staggerIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* left panel stagger */
+.lp1 { animation: lpIn 0.6s cubic-bezier(0.16,1,0.3,1) both; animation-delay: 0.1s; }
+.lp2 { animation: lpIn 0.6s cubic-bezier(0.16,1,0.3,1) both; animation-delay: 0.2s; }
+.lp3 { animation: lpIn 0.6s cubic-bezier(0.16,1,0.3,1) both; animation-delay: 0.35s; }
+.lp4 { animation: lpIn 0.6s cubic-bezier(0.16,1,0.3,1) both; animation-delay: 0.5s; }
+@keyframes lpIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── INPUT FIELD SUCCESS CHECK ───────────────── */
+.field-check {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--green);
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+.field-check.show { opacity: 1; }
+
+/* ── STEP INDICATOR (signup) ─────────────────── */
+.step-dots {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.step-dot {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--gray-200);
+  transition: all 0.3s;
+  flex: 1;
+}
+.step-dot.active { background: var(--blue); }
+.step-dot.done { background: var(--green); }
+
+/* ── RESPONSIVE ──────────────────────────────── */
+@media (max-width: 860px) {
+  .left-panel { display: none; }
+  .right-panel { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<div class="auth-wrap" id="auth-wrap">
+
+  <!-- ════════════════ LEFT PANEL ════════════════ -->
+  <div class="left-panel" id="left-panel">
+    <div class="left-top">
+      <a class="logo lp1" href="#">
+        <div class="logo-mark">
+          <svg fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24" width="18" height="18">
+            <line x1="12" y1="1" x2="12" y2="23"/>
+            <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+          </svg>
+        </div>
+        <span class="logo-text"><em>Pay</em>Simple</span>
+      </a>
+    </div>
+
+    <div class="left-middle">
+      <div class="lp2">
+        <div class="left-headline" id="left-headline">
+          AIA contracts,<br><em>finally</em> under<br>control.
+        </div>
+        <p class="left-sub" id="left-sub">
+          Extract payment terms, generate G702/G703 schedules, and catch compliance risks — in seconds, not days.
+        </p>
+      </div>
+
+      <!-- Mini dashboard preview -->
+      <div class="dashboard-preview lp3">
+        <div class="preview-header">
+          <span class="preview-title">Project Dashboard · Live</span>
+          <span class="preview-badge">● Active</span>
+        </div>
+        <div class="preview-stats">
+          <div class="preview-stat">
+            <div class="preview-stat-label">Contract Value</div>
+            <div class="preview-stat-value">$25M</div>
+            <div class="preview-stat-delta">▲ 2 projects</div>
+          </div>
+          <div class="preview-stat">
+            <div class="preview-stat-label">Compliance</div>
+            <div class="preview-stat-value">94%</div>
+            <div class="preview-stat-delta">▲ +2% MoM</div>
+          </div>
+          <div class="preview-stat">
+            <div class="preview-stat-label">Retainage</div>
+            <div class="preview-stat-value">$2.3M</div>
+            <div class="preview-stat-delta" style="color:rgba(255,255,255,0.4);">tracked</div>
+          </div>
+        </div>
+        <div class="mini-chart">
+          <div class="mini-bar" style="height:45%;"></div>
+          <div class="mini-bar" style="height:58%;"></div>
+          <div class="mini-bar" style="height:50%;"></div>
+          <div class="mini-bar" style="height:72%;"></div>
+          <div class="mini-bar" style="height:65%;"></div>
+          <div class="mini-bar" style="height:80%;"></div>
+          <div class="mini-bar" style="height:100%;"></div>
+        </div>
+        <div class="preview-footer">
+          <span class="preview-footer-label">Payment Schedule — App #7 · Due Mar 28</span>
+          <div class="compliance-pill">
+            <div class="compliance-dot"></div>
+            No risk flags
+          </div>
+        </div>
+      </div>
+
+      <!-- Features -->
+      <div class="feature-pills lp3" id="left-features">
+        <div class="feature-pill">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="12" height="12"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
+          AIA A101 / A102 / A103
+        </div>
+        <div class="feature-pill">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="12" height="12"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Compliance flagging
+        </div>
+        <div class="feature-pill">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="12" height="12"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          G702/G703 export
+        </div>
+        <div class="feature-pill">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="12" height="12"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Real-time analytics
+        </div>
+      </div>
+    </div>
+
+    <!-- Social proof -->
+    <div class="social-proof lp4">
+      <div class="avatars">
+        <div class="av" style="background:#1d4ed8;">AF</div>
+        <div class="av" style="background:#059669;">SL</div>
+        <div class="av" style="background:#7c3aed;">MK</div>
+        <div class="av" style="background:#b45309;">JP</div>
+      </div>
+      <div class="social-text">
+        <strong>Trusted by 200+ contractors</strong><br>
+        Saving 6–10 hrs per payment application
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ RIGHT PANEL ════════════════ -->
+  <div class="right-panel">
+
+    <!-- ─── SIGN IN FORM ─── -->
+    <div class="form-container" id="signin-form">
+      <div class="form-eyebrow stagger s1">Welcome back</div>
+      <h1 class="form-title stagger s2">Sign in to<br>PaySimple</h1>
+      <p class="form-sub stagger s3">Your contracts are waiting.</p>
+
+      <!-- Google SSO -->
+      <div class="stagger s3">
+        <button class="sso-btn" type="button">
+          <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          </svg>
+          Continue with Google
+        </button>
+      </div>
+
+      <div class="or-divider stagger s4">or sign in with email</div>
+
+      <!-- Email -->
+      <div class="field stagger s4">
+        <input type="email" id="si-email" autocomplete="email" oninput="handleInput(this)" onfocus="handleInput(this)">
+        <label for="si-email">Email address</label>
+        <span class="field-check" id="si-email-check">
+          <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg>
+        </span>
+      </div>
+
+      <!-- Password -->
+      <div class="field field-pwd stagger s5">
+        <input type="password" id="si-pass" autocomplete="current-password" oninput="handleInput(this)" onfocus="handleInput(this)">
+        <label for="si-pass">Password</label>
+        <button class="pwd-toggle" type="button" onclick="togglePwd('si-pass', this)" tabindex="-1" aria-label="Show password">
+          <svg id="si-eye" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="18" height="18"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+
+      <div class="forgot-row stagger s5">
+        <a href="#" class="forgot-link">Forgot password?</a>
+      </div>
+
+      <button class="cta-btn stagger s6" type="button" onclick="handleSignIn(this)">
+        Sign in
+        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" width="16" height="16"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+
+      <div class="switch-line stagger s7">
+        Don't have an account? <button onclick="switchTo('signup')">Create one free →</button>
+      </div>
+    </div>
+
+    <!-- ─── SIGN UP FORM ─── -->
+    <div class="form-container" id="signup-form" style="display:none;">
+      <div class="step-dots stagger s1">
+        <div class="step-dot active" id="dot-1"></div>
+        <div class="step-dot" id="dot-2"></div>
+        <div class="step-dot" id="dot-3"></div>
+      </div>
+
+      <div class="form-eyebrow stagger s1">Start for free</div>
+      <h1 class="form-title stagger s2">Create your<br>account</h1>
+      <p class="form-sub stagger s3">No credit card required. Cancel anytime.</p>
+
+      <!-- Google SSO -->
+      <div class="stagger s3">
+        <button class="sso-btn" type="button">
+          <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          </svg>
+          Continue with Google
+        </button>
+      </div>
+
+      <div class="or-divider stagger s4">or sign up with email</div>
+
+      <!-- Name row -->
+      <div class="field-row stagger s4">
+        <div class="field">
+          <input type="text" id="su-first" autocomplete="given-name" oninput="handleInput(this)" onfocus="handleInput(this)">
+          <label for="su-first">First name</label>
+          <span class="field-check" id="su-first-check">
+            <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+        </div>
+        <div class="field">
+          <input type="text" id="su-last" autocomplete="family-name" oninput="handleInput(this)" onfocus="handleInput(this)">
+          <label for="su-last">Last name</label>
+          <span class="field-check" id="su-last-check">
+            <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+        </div>
+      </div>
+
+      <!-- Company -->
+      <div class="field stagger s5">
+        <input type="text" id="su-company" autocomplete="organization" oninput="handleInput(this)" onfocus="handleInput(this)">
+        <label for="su-company">Company name</label>
+        <span class="field-check" id="su-company-check">
+          <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg>
+        </span>
+      </div>
+
+      <!-- Email -->
+      <div class="field stagger s5">
+        <input type="email" id="su-email" autocomplete="email" oninput="handleInput(this); validateEmail(this)" onfocus="handleInput(this)">
+        <label for="su-email">Work email</label>
+        <span class="field-check" id="su-email-check">
+          <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg>
+        </span>
+      </div>
+
+      <!-- Password -->
+      <div class="field field-pwd stagger s6">
+        <input type="password" id="su-pass" autocomplete="new-password" oninput="handleInput(this); checkStrength(this)" onfocus="handleInput(this)">
+        <label for="su-pass">Create password</label>
+        <button class="pwd-toggle" type="button" onclick="togglePwd('su-pass', this)" tabindex="-1" aria-label="Show password">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="18" height="18"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+      <div class="strength-wrap stagger s6" id="strength-wrap" style="display:none;">
+        <div class="strength-bars">
+          <div class="strength-bar" id="sb1"></div>
+          <div class="strength-bar" id="sb2"></div>
+          <div class="strength-bar" id="sb3"></div>
+          <div class="strength-bar" id="sb4"></div>
+        </div>
+        <div class="strength-label">Strength: <span id="strength-text">—</span></div>
+      </div>
+
+      <!-- Terms -->
+      <div class="check-row stagger s7">
+        <input type="checkbox" id="su-terms">
+        <label class="check-label" for="su-terms">
+          I agree to PaySimple's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>. No spam, ever.
+        </label>
+      </div>
+
+      <button class="cta-btn stagger s7" type="button" onclick="handleSignUp(this)">
+        Create free account
+        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" width="16" height="16"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+
+      <div class="switch-line stagger s8">
+        Already have an account? <button onclick="switchTo('signin')">Sign in →</button>
+      </div>
+    </div>
+
+  </div><!-- /right-panel -->
+</div><!-- /auth-wrap -->
+
+<script>
+// ── PANEL SWITCH ─────────────────────────────────────────────────
+const signInContent = {
+  headline: 'AIA contracts,<br><em>finally</em> under<br>control.',
+  sub: 'Extract payment terms, generate G702/G703 schedules, and catch compliance risks — in seconds, not days.',
+};
+const signUpContent = {
+  headline: 'Join 200+<br>contractors<br><em>working smarter.</em>',
+  sub: 'Free to start. Analyze your first AIA contract in under 2 minutes.',
+};
+
+function switchTo(page) {
+  const si = document.getElementById('signin-form');
+  const su = document.getElementById('signup-form');
+  const headline = document.getElementById('left-headline');
+  const sub = document.getElementById('left-sub');
+
+  // Fade out current form
+  const current = page === 'signup' ? si : su;
+  const next = page === 'signup' ? su : si;
+
+  current.style.animation = 'none';
+  current.style.opacity = '0';
+  current.style.transform = 'translateX(-20px)';
+  current.style.transition = 'opacity 0.2s, transform 0.2s';
+
+  setTimeout(() => {
+    current.style.display = 'none';
+    current.style.transition = '';
+    next.style.display = 'block';
+    next.style.opacity = '0';
+    next.style.transform = 'translateX(24px)';
+    next.style.transition = 'none';
+    // Force reflow
+    next.offsetHeight;
+    next.style.transition = 'opacity 0.35s cubic-bezier(0.16,1,0.3,1), transform 0.35s cubic-bezier(0.16,1,0.3,1)';
+    next.style.opacity = '1';
+    next.style.transform = 'translateX(0)';
+  }, 200);
+
+  // Update left panel
+  const content = page === 'signup' ? signUpContent : signInContent;
+  headline.style.transition = 'opacity 0.2s';
+  headline.style.opacity = '0';
+  sub.style.transition = 'opacity 0.2s';
+  sub.style.opacity = '0';
+  setTimeout(() => {
+    headline.innerHTML = content.headline;
+    sub.textContent = content.sub;
+    headline.style.opacity = '1';
+    sub.style.opacity = '1';
+  }, 200);
+
+  // Update step dots for signup
+  if (page === 'signup') {
+    setDot(1);
+  }
+}
+
+// ── FLOATING LABELS ──────────────────────────────────────────────
+function handleInput(el) {
+  if (el.value.length > 0) {
+    el.classList.add('has-value');
+  } else {
+    el.classList.remove('has-value');
+  }
+}
+
+// ── FIELD VALIDATION CHECK ───────────────────────────────────────
+function validateEmail(el) {
+  const checkEl = document.getElementById(el.id + '-check');
+  if (!checkEl) return;
+  const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value);
+  if (valid) {
+    el.classList.add('success');
+    el.classList.remove('error');
+    checkEl.classList.add('show');
+  } else {
+    el.classList.remove('success');
+    checkEl.classList.remove('show');
+  }
+}
+
+// Show check on blur for name/company fields
+document.querySelectorAll('#su-first, #su-last, #su-company').forEach(el => {
+  el.addEventListener('blur', () => {
+    const checkEl = document.getElementById(el.id + '-check');
+    if (el.value.trim().length >= 2 && checkEl) {
+      el.classList.add('success');
+      checkEl.classList.add('show');
+    }
+  });
+});
+
+// ── PASSWORD TOGGLE ──────────────────────────────────────────────
+function togglePwd(inputId, btn) {
+  const input = document.getElementById(inputId);
+  const isText = input.type === 'text';
+  input.type = isText ? 'password' : 'text';
+  btn.innerHTML = isText
+    ? `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="18" height="18"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`
+    : `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="18" height="18"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
+}
+
+// ── PASSWORD STRENGTH ────────────────────────────────────────────
+function checkStrength(el) {
+  const val = el.value;
+  const wrap = document.getElementById('strength-wrap');
+  if (!val) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+
+  let score = 0;
+  if (val.length >= 8) score++;
+  if (/[A-Z]/.test(val)) score++;
+  if (/[0-9]/.test(val)) score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+
+  const bars = [document.getElementById('sb1'), document.getElementById('sb2'), document.getElementById('sb3'), document.getElementById('sb4')];
+  const textEl = document.getElementById('strength-text');
+  const levels = ['weak', 'fair', 'good', 'strong'];
+  const labels = ['Weak', 'Fair', 'Good', 'Strong'];
+
+  bars.forEach((b, i) => {
+    b.className = 'strength-bar';
+    if (i < score) b.classList.add(levels[score - 1]);
+  });
+
+  const level = levels[score - 1] || 'weak';
+  textEl.textContent = labels[score - 1] || 'Too short';
+  textEl.className = level;
+}
+
+// ── STEP DOTS ────────────────────────────────────────────────────
+function setDot(n) {
+  for (let i = 1; i <= 3; i++) {
+    const d = document.getElementById('dot-' + i);
+    d.className = 'step-dot';
+    if (i < n) d.classList.add('done');
+    else if (i === n) d.classList.add('active');
+  }
+}
+
+// Animate dots as user fills form
+['su-first', 'su-last', 'su-email', 'su-pass'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input', () => {
+    const f = document.getElementById('su-first').value;
+    const l = document.getElementById('su-last').value;
+    const e = document.getElementById('su-email').value;
+    const p = document.getElementById('su-pass').value;
+    if (f && l && e && p) setDot(3);
+    else if ((f && l) || e) setDot(2);
+    else setDot(1);
+  });
+});
+
+// ── SIGN IN SUBMIT ───────────────────────────────────────────────
+function handleSignIn(btn) {
+  const email = document.getElementById('si-email').value;
+  const pass = document.getElementById('si-pass').value;
+
+  if (!email || !pass) {
+    if (!email) { document.getElementById('si-email').classList.add('error'); shake('si-email'); }
+    if (!pass)  { document.getElementById('si-pass').classList.add('error');  shake('si-pass'); }
+    return;
+  }
+
+  btn.classList.add('loading');
+  btn.innerHTML = `<svg class="spinner" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" width="18" height="18"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" opacity=".25"/><path d="M21 12a9 9 0 00-9-9" stroke-linecap="round"/></svg> Signing in…`;
+
+  setTimeout(() => {
+    btn.innerHTML = `<svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg> Welcome back!`;
+    btn.style.background = 'var(--green)';
+  }, 1800);
+}
+
+// ── SIGN UP SUBMIT ───────────────────────────────────────────────
+function handleSignUp(btn) {
+  const first = document.getElementById('su-first').value;
+  const email = document.getElementById('su-email').value;
+  const pass  = document.getElementById('su-pass').value;
+  const terms = document.getElementById('su-terms').checked;
+
+  let ok = true;
+  if (!first) { document.getElementById('su-first').classList.add('error'); shake('su-first'); ok = false; }
+  if (!email) { document.getElementById('su-email').classList.add('error'); shake('su-email'); ok = false; }
+  if (!pass)  { document.getElementById('su-pass').classList.add('error');  shake('su-pass');  ok = false; }
+  if (!terms) { ok = false; document.getElementById('su-terms').style.outline = '2px solid var(--red)'; }
+  if (!ok) return;
+
+  btn.classList.add('loading');
+  btn.innerHTML = `<svg class="spinner" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" width="18" height="18"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" opacity=".25"/><path d="M21 12a9 9 0 00-9-9" stroke-linecap="round"/></svg> Creating account…`;
+
+  setDot(3);
+  setTimeout(() => {
+    btn.innerHTML = `<svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg> Account created!`;
+    btn.style.background = 'var(--green)';
+  }, 2000);
+}
+
+// ── SHAKE ANIMATION ──────────────────────────────────────────────
+function shake(id) {
+  const el = document.getElementById(id);
+  el.style.animation = 'none';
+  el.offsetHeight;
+  el.style.animation = 'shake 0.4s ease';
+  el.addEventListener('animationend', () => { el.style.animation = ''; }, { once: true });
+  el.addEventListener('input', () => { el.classList.remove('error'); }, { once: true });
+}
+
+// Shake keyframes injected via JS
+const style = document.createElement('style');
+style.textContent = `@keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }`;
+document.head.appendChild(style);
+</script>
+</body>
+</html>

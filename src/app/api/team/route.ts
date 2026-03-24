@@ -1,16 +1,97 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { TeamService } from '@/lib/services/team'
+import { createClient } from '@supabase/supabase-js'
+import { Database } from '@/types/database'
 
-const teamService = new TeamService()
+// Create server-side Supabase client
+const supabase = createClient<Database>(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
 
 export async function GET(request: NextRequest) {
   try {
-    const members = await teamService.getTeamMembers()
-    const invitations = await teamService.getPendingInvitations()
+    // Get authenticated user
+    const authHeader = request.headers.get('authorization')
+    if (!authHeader?.startsWith('Bearer ')) {
+      return NextResponse.json(
+        { error: 'Missing or invalid authorization header' },
+        { status: 401 }
+      )
+    }
+
+    const token = authHeader.split(' ')[1]
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token)
+
+    if (authError || !user) {
+      return NextResponse.json(
+        { error: 'User not authenticated' },
+        { status: 401 }
+      )
+    }
+
+    // Get team members with user profile data
+    const { data: members, error: membersError } = await (supabase
+      .from('team_members') as any)
+      .select('*')
+      .order('joined_at', { ascending: false })
+
+    if (membersError) {
+      console.error('Error fetching team members:', membersError)
+      throw new Error('Failed to fetch team members')
+    }
+
+    console.log('Team members fetched:', members)
+
+    // Get profile data separately
+    const userIds = (members || []).map((m: any) => m.user_id)
+    const { data: profiles, error: profilesError } = userIds.length > 0 
+      ? await (supabase
+          .from('profiles') as any)
+          .select('id, name, company_name, created_at')
+          .in('id', userIds)
+      : { data: [], error: null }
+
+    if (profilesError) {
+      console.error('Error fetching profiles:', profilesError)
+      // Continue with empty profiles
+    }
+
+    // Combine member and profile data
+    const membersWithProfiles = (members || []).map((member: any) => {
+      const profile = (profiles || []).find((p: any) => p.id === member.user_id)
+      return {
+        ...member,
+        user: profile ? {
+          id: profile.id,
+          name: profile.name || `User ${member.user_id.slice(0, 8)}`,
+          company_name: profile.company_name || 'No company set',
+          created_at: profile.created_at
+        } : {
+          id: member.user_id,
+          name: `User ${member.user_id.slice(0, 8)}`,
+          company_name: 'No company set',
+          created_at: member.joined_at
+        }
+      }
+    })
+
+    // Get pending invitations
+    const { data: invitations, error: invitationsError } = await (supabase
+      .from('team_invitations') as any)
+      .select('*')
+      .eq('inviter_id', user.id)
+      .is('accepted_at', null)
+      .gt('expires_at', new Date().toISOString())
+      .order('created_at', { ascending: false })
+
+    if (invitationsError) {
+      console.error('Error fetching invitations:', invitationsError)
+      throw new Error('Failed to fetch invitations')
+    }
 
     return NextResponse.json({
-      members,
-      invitations
+      members: membersWithProfiles,
+      invitations: invitations || []
     })
   } catch (error) {
     console.error('Error fetching team data:', error)
@@ -41,7 +122,49 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const invitation = await teamService.inviteMember(email, role)
+    // Get authenticated user
+    const authHeader = request.headers.get('authorization')
+    if (!authHeader?.startsWith('Bearer ')) {
+      return NextResponse.json(
+        { error: 'Missing or invalid authorization header' },
+        { status: 401 }
+      )
+    }
+
+    const token = authHeader.split(' ')[1]
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token)
+
+    if (authError || !user) {
+      return NextResponse.json(
+        { error: 'User not authenticated' },
+        { status: 401 }
+      )
+    }
+
+    // Create invitation
+    const invitationToken = crypto.randomUUID()
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+
+    const { data: invitation, error: inviteError } = await (supabase
+      .from('team_invitations') as any)
+      .insert({
+        inviter_id: user.id,
+        email,
+        role,
+        token: invitationToken,
+        expires_at: expiresAt
+      })
+      .select()
+      .single()
+
+    if (inviteError) {
+      console.error('Error creating invitation:', inviteError)
+      throw new Error('Failed to create invitation')
+    }
+
+    // TODO: Send invitation email
+    console.log('Sending invitation email to:', email, 'with token:', invitationToken)
+
     return NextResponse.json(invitation)
   } catch (error) {
     console.error('Error creating invitation:', error)

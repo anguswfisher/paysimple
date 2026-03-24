@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { TeamMember, TeamInvitation, TeamRole } from '@/types/team'
+import { supabase } from '@/lib/supabase/client'
 
 export function useTeam() {
   const [members, setMembers] = useState<TeamMember[]>([])
@@ -9,13 +10,29 @@ export function useTeam() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const getAuthHeaders = async () => {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.access_token) {
+      throw new Error('No authentication token available')
+    }
+    return {
+      'Authorization': `Bearer ${session.access_token}`,
+      'Content-Type': 'application/json'
+    }
+  }
+
   const fetchTeamData = async () => {
     setLoading(true)
     setError(null)
 
     try {
-      const response = await fetch('/api/team')
+      const headers = await getAuthHeaders()
+      const response = await fetch('/api/team', { headers })
+      
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Please sign in to access team data')
+        }
         throw new Error('Failed to fetch team data')
       }
 
@@ -34,15 +51,17 @@ export function useTeam() {
     setError(null)
 
     try {
+      const headers = await getAuthHeaders()
       const response = await fetch('/api/team', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
         body: JSON.stringify({ email, role }),
       })
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Please sign in to invite team members')
+        }
         const errorData = await response.json()
         throw new Error(errorData.error || 'Failed to send invitation')
       }
@@ -63,15 +82,17 @@ export function useTeam() {
     setError(null)
 
     try {
+      const headers = await getAuthHeaders()
       const response = await fetch(`/api/team/${userId}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
         body: JSON.stringify({ role }),
       })
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Please sign in to manage team members')
+        }
         const errorData = await response.json()
         throw new Error(errorData.error || 'Failed to update role')
       }
@@ -96,11 +117,16 @@ export function useTeam() {
     setError(null)
 
     try {
+      const headers = await getAuthHeaders()
       const response = await fetch(`/api/team/${userId}`, {
         method: 'DELETE',
+        headers,
       })
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Please sign in to manage team members')
+        }
         const errorData = await response.json()
         throw new Error(errorData.error || 'Failed to remove member')
       }
@@ -119,15 +145,17 @@ export function useTeam() {
     setError(null)
 
     try {
+      const headers = await getAuthHeaders()
       const response = await fetch(`/api/team/invite/${token}`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
         body: JSON.stringify({ action: 'resend' }),
       })
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Please sign in to manage invitations')
+        }
         const errorData = await response.json()
         throw new Error(errorData.error || 'Failed to resend invitation')
       }
@@ -153,11 +181,16 @@ export function useTeam() {
     setError(null)
 
     try {
+      const headers = await getAuthHeaders()
       const response = await fetch(`/api/team/invite/${token}`, {
         method: 'DELETE',
+        headers,
       })
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Please sign in to manage invitations')
+        }
         const errorData = await response.json()
         throw new Error(errorData.error || 'Failed to revoke invitation')
       }

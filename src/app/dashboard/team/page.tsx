@@ -14,8 +14,10 @@ export default function TeamPage() {
   const [showInviteModal, setShowInviteModal] = useState(false)
   const [inviteEmail, setInviteEmail] = useState('')
   const [inviteRole, setInviteRole] = useState('member')
+  const [inviteError, setInviteError] = useState('')
 
   const handleInvite = async () => {
+    setInviteError('')
     try {
       await inviteMember(inviteEmail, inviteRole as any)
       setShowInviteModal(false)
@@ -23,6 +25,7 @@ export default function TeamPage() {
       setInviteRole('member')
     } catch (error) {
       console.error('Failed to invite member:', error)
+      setInviteError(error instanceof Error ? error.message : 'Failed to send invitation')
     }
   }
 
@@ -31,6 +34,7 @@ export default function TeamPage() {
       await updateRole(userId, newRole as any)
     } catch (error) {
       console.error('Failed to update role:', error)
+      // You could add a toast notification here
     }
   }
 
@@ -40,6 +44,7 @@ export default function TeamPage() {
         await removeMember(userId)
       } catch (error) {
         console.error('Failed to remove member:', error)
+        // You could add a toast notification here
       }
     }
   }
@@ -142,106 +147,130 @@ export default function TeamPage() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="space-y-1">
-            {/* Admin */}
-            <div className="flex items-center gap-4 p-4 rounded-lg hover:bg-slate/5 transition-colors">
-              <div className="w-10 h-10 rounded-full bg-navy text-white font-semibold flex items-center justify-center">
-                AF
-              </div>
-              <div className="flex-1">
-                <div className="font-medium text-slate">Angus Fisher</div>
-                <div className="text-sm text-slate/70">angus@paysimple.io</div>
-              </div>
-              <div className="flex items-center gap-3">
-                <Badge variant="secondary" className="bg-navy/10 text-navy border-navy/20">
-                  <Crown className="w-3 h-3 mr-1" />
-                  Admin
-                </Badge>
-                <span className="text-sm text-slate/50">Joined Jan 2026</span>
-                <Button variant="outline" size="sm">Edit</Button>
-              </div>
+          {/* Loading State */}
+          {loading && (
+            <div className="flex items-center justify-center py-8">
+              <RefreshCw className="w-6 h-6 animate-spin text-slate/40" />
+              <span className="ml-2 text-slate/60">Loading team data...</span>
             </div>
+          )}
 
-            {/* Member 1 */}
-            <div className="flex items-center gap-4 p-4 rounded-lg hover:bg-slate/5 transition-colors">
-              <div className="w-10 h-10 rounded-full bg-success text-white font-semibold flex items-center justify-center">
-                SL
-              </div>
-              <div className="flex-1">
-                <div className="font-medium text-slate">Sarah Liu</div>
-                <div className="text-sm text-slate/70">sarah@constructco.com</div>
-              </div>
-              <div className="flex items-center gap-3">
-                <Badge variant="secondary" className="bg-success/10 text-success border-success/20">
-                  <Shield className="w-3 h-3 mr-1" />
-                  Member
-                </Badge>
-                <span className="text-sm text-slate/50">Joined Feb 2026</span>
-                <Button variant="outline" size="sm">Edit</Button>
-                <Button variant="outline" size="sm" className="text-danger hover:text-danger">Remove</Button>
-              </div>
+          {/* Error State */}
+          {error && (
+            <div className="p-4 bg-danger/10 border border-danger/20 rounded-lg mb-4">
+              <p className="text-sm text-danger">{error}</p>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="mt-2"
+                onClick={() => window.location.reload()}
+              >
+                Retry
+              </Button>
             </div>
+          )}
 
-            {/* Member 2 */}
-            <div className="flex items-center gap-4 p-4 rounded-lg hover:bg-slate/5 transition-colors">
-              <div className="w-10 h-10 rounded-full bg-purple-600 text-white font-semibold flex items-center justify-center">
-                MK
-              </div>
-              <div className="flex-1">
-                <div className="font-medium text-slate">Marcus Kim</div>
-                <div className="text-sm text-slate/70">marcus@constructco.com</div>
-              </div>
-              <div className="flex items-center gap-3">
-                <Badge variant="secondary" className="bg-success/10 text-success border-success/20">
-                  <Shield className="w-3 h-3 mr-1" />
-                  Member
-                </Badge>
-                <span className="text-sm text-slate/50">Joined Feb 2026</span>
-                <Button variant="outline" size="sm">Edit</Button>
-                <Button variant="outline" size="sm" className="text-danger hover:text-danger">Remove</Button>
-              </div>
-            </div>
+          {/* Team Members List */}
+          {!loading && !error && (
+            <div className="space-y-1">
+              {/* Real Team Members */}
+              {members.map((member) => (
+                <div key={member.id} className="flex items-center gap-4 p-4 rounded-lg hover:bg-slate/5 transition-colors">
+                  <div className="w-10 h-10 rounded-full bg-navy text-white font-semibold flex items-center justify-center">
+                    {member.user?.name ? member.user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : '??'}
+                  </div>
+                  <div className="flex-1">
+                    <div className="font-medium text-slate">
+                      {member.user?.name || `User ${member.user_id.slice(0, 8)}`}
+                    </div>
+                    <div className="text-sm text-slate/70">
+                      {member.user?.company_name || 'No company set'}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Badge variant="secondary" className={getRoleColor(member.role)}>
+                      {getRoleIcon(member.role)}
+                      {member.role.charAt(0).toUpperCase() + member.role.slice(1)}
+                    </Badge>
+                    <span className="text-sm text-slate/50">
+                      Joined {new Date(member.joined_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                    </span>
+                    <Select 
+                      value={member.role} 
+                      onValueChange={(value) => handleRoleChange(member.user_id, value)}
+                    >
+                      <SelectTrigger className="w-24 h-8">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="admin">Admin</SelectItem>
+                        <SelectItem value="member">Member</SelectItem>
+                        <SelectItem value="viewer">Viewer</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="text-danger hover:text-danger"
+                      onClick={() => handleRemoveMember(member.user_id)}
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                </div>
+              ))}
 
-            {/* Viewer */}
-            <div className="flex items-center gap-4 p-4 rounded-lg hover:bg-slate/5 transition-colors">
-              <div className="w-10 h-10 rounded-full bg-warning text-white font-semibold flex items-center justify-center">
-                JP
-              </div>
-              <div className="flex-1">
-                <div className="font-medium text-slate">Jessica Park</div>
-                <div className="text-sm text-slate/70">j.park@constructco.com</div>
-              </div>
-              <div className="flex items-center gap-3">
-                <Badge variant="outline" className="bg-slate/10 text-slate/70 border-slate/20">
-                  <Eye className="w-3 h-3 mr-1" />
-                  Viewer
-                </Badge>
-                <span className="text-sm text-slate/50">Joined Mar 2026</span>
-                <Button variant="outline" size="sm">Edit</Button>
-                <Button variant="outline" size="sm" className="text-danger hover:text-danger">Remove</Button>
-              </div>
-            </div>
+              {/* Pending Invitations */}
+              {invitations.map((invitation) => (
+                <div key={invitation.id} className="flex items-center gap-4 p-4 rounded-lg hover:bg-slate/5 transition-colors opacity-75">
+                  <div className="w-10 h-10 rounded-full bg-slate text-white font-semibold flex items-center justify-center">
+                    {invitation.email.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
+                  </div>
+                  <div className="flex-1">
+                    <div className="font-medium text-slate">{invitation.email}</div>
+                    <div className="text-sm text-slate/70">Invitation pending</div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Badge variant="outline" className="bg-warning/10 text-warning border-warning/20">
+                      <Mail className="w-3 h-3 mr-1" />
+                      Pending
+                    </Badge>
+                    <span className="text-sm text-slate/50">
+                      Expires {new Date(invitation.expires_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                    </span>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => resendInvitation(invitation.token)}
+                    >
+                      Resend
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="text-danger hover:text-danger"
+                      onClick={() => revokeInvitation(invitation.token)}
+                    >
+                      Revoke
+                    </Button>
+                  </div>
+                </div>
+              ))}
 
-            {/* Pending Invite */}
-            <div className="flex items-center gap-4 p-4 rounded-lg hover:bg-slate/5 transition-colors opacity-75">
-              <div className="w-10 h-10 rounded-full bg-slate text-white font-semibold flex items-center justify-center">
-                TW
-              </div>
-              <div className="flex-1">
-                <div className="font-medium text-slate">Tom Weston</div>
-                <div className="text-sm text-slate/70">t.weston@gmail.com</div>
-              </div>
-              <div className="flex items-center gap-3">
-                <Badge variant="outline" className="bg-warning/10 text-warning border-warning/20">
-                  <Mail className="w-3 h-3 mr-1" />
-                  Pending
-                </Badge>
-                <span className="text-sm text-slate/50">Invited 3/20/26</span>
-                <Button variant="outline" size="sm">Resend</Button>
-                <Button variant="outline" size="sm" className="text-danger hover:text-danger">Revoke</Button>
-              </div>
+              {/* Empty State */}
+              {members.length === 0 && invitations.length === 0 && (
+                <div className="text-center py-8">
+                  <Users className="w-12 h-12 text-slate/30 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-slate mb-2">No team members yet</h3>
+                  <p className="text-sm text-slate/70 mb-4">Invite team members to start collaborating on projects</p>
+                  <Button onClick={() => setShowInviteModal(true)}>
+                    <UserPlus className="w-4 h-4 mr-2" />
+                    Invite First Member
+                  </Button>
+                </div>
+              )}
             </div>
-          </div>
+          )}
         </CardContent>
       </Card>
 
@@ -327,6 +356,69 @@ export default function TeamPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Invite Modal */}
+      {showInviteModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+            <h2 className="text-xl font-semibold mb-4">Invite Team Member</h2>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate mb-2">Email Address</label>
+                <Input
+                  type="email"
+                  placeholder="Enter email address"
+                  value={inviteEmail}
+                  onChange={(e) => setInviteEmail(e.target.value)}
+                  className="w-full"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-slate mb-2">Role</label>
+                <Select value={inviteRole} onValueChange={setInviteRole}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="admin">Admin - Full access</SelectItem>
+                    <SelectItem value="member">Member - Can manage projects</SelectItem>
+                    <SelectItem value="viewer">Viewer - Read-only access</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Error Display */}
+              {inviteError && (
+                <div className="p-3 bg-danger/10 border border-danger/20 rounded-lg">
+                  <p className="text-sm text-danger">{inviteError}</p>
+                </div>
+              )}
+            </div>
+
+            <div className="flex gap-3 mt-6">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowInviteModal(false)
+                  setInviteError('')
+                }}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleInvite}
+                disabled={!inviteEmail || loading}
+                className="flex-1 bg-navy hover:bg-navy/90"
+              >
+                {loading ? 'Sending...' : 'Send Invitation'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
