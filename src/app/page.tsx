@@ -208,6 +208,15 @@ export default function LandingPage() {
       {/* CTA Section */}
       <section className="py-16 bg-navy text-center">
         <div className="max-w-3xl mx-auto px-8">
+          <div className="mb-8 p-4 bg-white/10 border border-white/20 rounded-lg">
+            <p className="text-sm text-white font-semibold mb-2">⚠️ Educational Project Disclaimer</p>
+            <p className="text-xs text-white/80">
+              PaySimple is an educational portfolio project created for demonstration and learning purposes only. 
+              This is not a commercial product. There is no intent to distribute, sell, or deploy this application for real-world use. 
+              All features are illustrative and not intended for production use with actual construction contracts or payment data.
+            </p>
+          </div>
+          
           <h2 className="text-3xl font-bold text-white mb-4">
             Ready to Simplify Your Payment Schedules?
           </h2>
