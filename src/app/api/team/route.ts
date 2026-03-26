@@ -162,8 +162,32 @@ export async function POST(request: NextRequest) {
       throw new Error('Failed to create invitation')
     }
 
-    // TODO: Send invitation email
-    console.log('Sending invitation email to:', email, 'with token:', invitationToken)
+    // TODO: Send invitation email with actual link
+    const invitationLink = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/invite/${invitationToken}`
+    console.log('Sending invitation email to:', email, 'with link:', invitationLink)
+    
+    // Here you would integrate with your email service (Resend, SendGrid, etc.)
+    // For now, we'll just log it - in production, implement actual email sending
+    /*
+    import { Resend } from 'resend'
+    const resend = new Resend(process.env.RESEND_API_KEY)
+    
+    await resend.emails.send({
+      from: 'noreply@paysimple.io',
+      to: email,
+      subject: `You're invited to join PaySimple`,
+      html: `
+        <h2>You're invited to join PaySimple!</h2>
+        <p>You've been invited to join PaySimple as a ${role}.</p>
+        <p>Click the link below to accept your invitation:</p>
+        <a href="${invitationLink}" style="background-color: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
+          Accept Invitation
+        </a>
+        <p>This invitation expires on ${new Date(expiresAt).toLocaleDateString()}.</p>
+        <p>If you don't have an account yet, you'll be able to create one when you click the link.</p>
+      `
+    })
+    */
 
     return NextResponse.json(invitation)
   } catch (error) {

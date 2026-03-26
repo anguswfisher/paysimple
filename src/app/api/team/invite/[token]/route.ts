@@ -29,7 +29,7 @@ export async function GET(
   { params }: { params: { token: string } }
 ) {
   try {
-    // This endpoint is for accepting invitations (no auth required)
+    // First, validate the invitation exists and is valid
     const { data: invitation, error: inviteError } = await (supabase
       .from('team_invitations') as any)
       .select('*')
@@ -50,25 +50,34 @@ export async function GET(
       )
     }
 
-    // Get current user from session (not from token)
+    // Check if user is authenticated
     const authHeader = request.headers.get('authorization')
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Authentication required to accept invitation' },
-        { status: 401 }
-      )
+    let user = null
+    
+    if (authHeader?.startsWith('Bearer ')) {
+      const authToken = authHeader.split(' ')[1]
+      const { data: { user: authUser }, error: userError } = await supabase.auth.getUser(authToken)
+      
+      if (!userError && authUser) {
+        user = authUser
+      }
     }
 
-    const authToken = authHeader.split(' ')[1]
-    const { data: { user }, error: userError } = await supabase.auth.getUser(authToken)
-
-    if (userError || !user) {
-      return NextResponse.json(
-        { error: 'User not authenticated' },
-        { status: 401 }
-      )
+    // If not authenticated, return invitation details for the landing page
+    if (!user) {
+      return NextResponse.json({
+        invitation: {
+          id: invitation.id,
+          email: invitation.email,
+          role: invitation.role,
+          expires_at: invitation.expires_at,
+          created_at: invitation.created_at
+        },
+        requiresAuth: true
+      })
     }
 
+    // User is authenticated - proceed with accepting the invitation
     // Check if user already has a profile
     const { data: profile } = await supabase
       .from('profiles')
@@ -106,7 +115,10 @@ export async function GET(
       .update({ accepted_at: new Date().toISOString() })
       .eq('token', params.token)
 
-    return NextResponse.json(member)
+    return NextResponse.json({
+      success: true,
+      member
+    })
   } catch (error) {
     console.error('Error accepting invitation:', error)
     return NextResponse.json(
@@ -150,7 +162,8 @@ export async function POST(
         .eq('token', params.token)
 
       // TODO: Send email
-      console.log('Resending invitation email to:', invitation.email, 'with token:', params.token)
+      const invitationLink = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/invite/${params.token}`
+      console.log('Resending invitation email to:', invitation.email, 'with link:', invitationLink)
 
       return NextResponse.json({ success: true })
     }

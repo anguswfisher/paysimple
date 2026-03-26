@@ -19,7 +19,12 @@ export default function TeamPage() {
   const handleInvite = async () => {
     setInviteError('')
     try {
-      await inviteMember(inviteEmail, inviteRole as any)
+      const invitation = await inviteMember(inviteEmail, inviteRole as any)
+      
+      // Show the invitation link to the user
+      const invitationLink = `${window.location.origin}/invite/${invitation.token}`
+      alert(`Invitation sent! Share this link with ${inviteEmail}:\n\n${invitationLink}\n\n(For testing: ${invitationLink})`)
+      
       setShowInviteModal(false)
       setInviteEmail('')
       setInviteRole('member')
@@ -228,7 +233,19 @@ export default function TeamPage() {
                   </div>
                   <div className="flex-1">
                     <div className="font-medium text-slate">{invitation.email}</div>
-                    <div className="text-sm text-slate/70">Invitation pending</div>
+                    <div className="text-sm text-slate/70">
+                      Invitation link: 
+                      <button 
+                        onClick={() => {
+                          const link = `${window.location.origin}/invite/${invitation.token}`
+                          navigator.clipboard.writeText(link)
+                          alert('Invitation link copied to clipboard!')
+                        }}
+                        className="text-blue-600 hover:underline ml-1"
+                      >
+                        Copy Link
+                      </button>
+                    </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <Badge variant="outline" className="bg-warning/10 text-warning border-warning/20">

@@ -20,7 +20,7 @@ import { supabase } from '@/lib/supabase/client'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: Home, section: 'main' },
-  { name: 'Projects', href: '/dashboard', icon: FileText, section: 'main' },
+  { name: 'Projects', href: '/dashboard/projects', icon: FileText, section: 'main' },
   { name: 'Compliance', href: '/dashboard/compliance', icon: Shield, section: 'main' },
   { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3, section: 'analytics' },
   { name: 'Reports', href: '/dashboard/reports', icon: TrendingUp, section: 'analytics' },

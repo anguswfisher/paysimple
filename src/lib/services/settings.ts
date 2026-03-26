@@ -1,5 +1,12 @@
-import { supabase } from '@/lib/supabase/client'
+import { createClient } from '@supabase/supabase-js'
+import { Database } from '@/types/database'
 import { UserSettings, NotificationPreferences, AIPreferences, UIPreferences, ProfileUpdate, UserProfile } from '@/types/settings'
+
+// Create server-side Supabase client
+const supabase = createClient<Database>(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
 
 export class SettingsService {
   async updateProfile(data: ProfileUpdate): Promise<UserProfile> {
