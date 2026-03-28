@@ -98,7 +98,7 @@ const handleToggle = async (key: keyof AIPreferences) => {
 
     setMessage({ type: 'success', text: 'Saved' })
     setTimeout(() => setMessage(null), 2000)
-    // onUpdate?.() // Commented out to preserve individual preference states
+    // onUpdate?.() // Commented out to preserve individual preference states - detail
   } catch (error) {
     // Revert only this specific key
     setPreferences(prev => ({ ...prev, [key]: currentValue }))
