@@ -167,18 +167,12 @@ export interface PayAppStep {
 }
 
 export const PAY_APP_STEPS: PayAppStep[] = [
-  { step: 1,  label: 'Basics',              route: 'basics' },
-  { step: 2,  label: 'Billing Format',      route: 'billing-format' },
-  { step: 3,  label: 'Retainage',           route: 'retainage' },
-  { step: 4,  label: 'Change Orders',       route: 'change-orders' },
-  { step: 5,  label: 'Materials',           route: 'materials-stored' },
-  { step: 6,  label: 'Setup Review',        route: 'setup-review' },
-  { step: 7,  label: 'Schedule of Values',  route: 'sov-method' },
-  { step: 8,  label: 'Workspace',           route: 'workspace' },
-  { step: 9,  label: 'Summary',             route: 'summary' },
-  { step: 10, label: 'Checks',              route: 'checks' },
-  { step: 11, label: 'Review',              route: 'review-checklist' },
-  { step: 12, label: 'Finalize',            route: 'finalize-confirm' },
+  { step: 1, label: 'Setup',     route: 'setup' },
+  { step: 2, label: 'Billing',   route: 'billing-settings' },
+  { step: 3, label: 'SOV',       route: 'sov' },
+  { step: 4, label: 'Workspace', route: 'workspace' },
+  { step: 5, label: 'Review',    route: 'review' },
+  { step: 6, label: 'Sign',      route: 'sign' },
 ]
 
 // ── Supabase row shape (snake_case from DB) ───────────────────

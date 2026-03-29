@@ -1,10 +1,10 @@
-# PaySimple: AI-Powered AIA Construction Contract Analysis
+# PaySimple: AI-Powered AIA Construction Contract Analysis & Pay Applications
 
 ## About This Project
 
 **PaySimple is a portfolio project** that demonstrates AI product development skills combined with deep expertise in construction finance and AIA contracts.
 
-The project tackles a real problem: construction contractors manually extract payment terms from AIA contracts, build payment schedules in spreadsheets, and struggle with compliance risks. PaySimple automates this workflow using Claude AI, combining technical product skills with domain knowledge from 5+ years of hands-on AIA contract experience.
+The project tackles real problems: construction contractors manually extract payment terms from AIA contracts, build payment schedules in spreadsheets, struggle with compliance risks, and manage complex pay application workflows. PaySimple automates these workflows using Claude AI, combining technical product skills with domain knowledge from 5+ years of hands-on AIA contract experience.
 
 ---
 
@@ -17,7 +17,10 @@ The project tackles a real problem: construction contractors manually extract pa
 - **Contract Upload & Analysis**: Upload AIA construction contracts (docx or PDF). Claude extracts payment terms, key dates, and risk flags in seconds.
 - **Payment Schedule Generation**: Auto-generate schedules based on contract terms (progress draws, retainage, lien waivers, prompt payment rules).
 - **Compliance Risk Detection**: Flag pay-when-paid vs. pay-if-paid clauses, retainage triggers, substantial completion dependencies, and state-specific prompt payment act violations.
-- **Export & Dashboard**: View results in-app, download schedules (Excel/PDF), and manage multiple projects.
+- **Pay Application Management**: Complete AIA G702/G703 pay application workflow with 6-step wizard, line item management, and automated calculations.
+- **Database Integration**: Full PostgreSQL integration with Supabase for persistent storage, user management, and data security.
+- **History & Corrections**: Complete audit trail with history views, corrected draft creation, and finalization workflows.
+- **Export & Dashboard**: View results in-app, download schedules (Excel/PDF), manage multiple projects, and track payment application status.
 
 ### Why AIA-Specific?
 
@@ -32,65 +35,48 @@ PaySimple speaks this language.
 
 ---
 
-## Build Plan (8 Weeks, Phased)
+## Build Status
 
-This project is built in phases to keep scope manageable, reduce risk, and deliver value incrementally.
+### ✅ **Completed Features**
 
-### Phase 1: Foundation (Weeks 1–2)
-**Goal**: Core AI extraction pipeline, basic UX, upload-to-results flow.
+#### **Pay Applications System (Production Ready)**
+- **6-Step Wizard**: Consolidated from 12 steps for better UX
+  - Step 1: Application Setup (merged Basics + Billing Format)
+  - Step 2: Billing Settings (merged Retainage + Change Orders + Materials)
+  - Step 3: Schedule of Values (merged SOV Method + Import + Manual)
+  - Step 4: Workspace (full-screen line item management)
+  - Step 5: Review & Submit (merged Summary + Checks + Checklist)
+  - Step 6: Sign & Finalize (with certification and snapshot)
+- **Database Integration**: Full PostgreSQL with Supabase
+  - Server actions for CRUD operations
+  - Row Level Security (RLS) policies
+  - Optimistic updates with error handling
+  - Type-safe data mapping
+- **History Management**: Complete audit trail
+  - History list with search and filtering
+  - Detailed history views with G702 calculations
+  - Corrected draft creation from finalized apps
+  - Finalization workflows with immutable snapshots
+- **State Management**: Zustand store with TypeScript
+  - Optimistic updates and rollback
+  - Server action integration
+  - Type safety throughout
+  - Performance optimizations
 
-- [ ] Set up Next.js 14 project with TypeScript, Tailwind, shadcn/ui
-- [ ] Configure Supabase (auth, file storage, database)
-- [ ] Design and build landing page (copy, value prop, upload CTA)
-- [ ] Implement Claude API integration (contract analysis prompts)
-- [ ] Build basic upload modal and file handling
-- [ ] Create extraction preview component (show Claude output)
-- [ ] Implement signup gate (view results only after registration)
+#### **Core Infrastructure**
+- **Next.js 14** with App Router and TypeScript
+- **Supabase** for auth, database, and file storage
+- **Tailwind CSS** with shadcn/ui components
+- **Zustand** for state management
+- **Responsive Design** with mobile support
 
-**Output**: Users can upload contracts, see extracted terms in real-time, and sign up to unlock full results.
+### 🚧 **In Progress**
 
----
-
-### Phase 2: Payment Schedule Engine (Weeks 3–4)
-**Goal**: Auto-generate payment schedules from extracted terms.
-
-- [ ] Build schedule calculation logic (progress draws, retainage, release conditions)
-- [ ] Implement timeline visualization (milestones, draws, retainage release)
-- [ ] Design Schedule of Values editor (edit extracted amounts, sequence)
-- [ ] Export schedules to Excel (using `xlsx` library)
-- [ ] Add PDF export (using `pdf` library with formatting)
-- [ ] Create schedule comparison view (original contract vs. simplified schedule)
-
-**Output**: Users can generate, edit, and export payment schedules. Schedules reflect actual contract terms.
-
----
-
-### Phase 3: Compliance & Risk Flagging (Weeks 5–6)
-**Goal**: Deep compliance analysis and risk scoring.
-
-- [ ] Build risk detection logic (pay-when-paid, pay-if-paid, retainage triggers)
-- [ ] Implement state-specific prompt payment law checks (50+ states)
-- [ ] Design risk dashboard (high/medium/low severity, mitigation suggestions)
-- [ ] Add lien waiver tracking (release dates, party requirements)
-- [ ] Create compliance export (audit-ready PDF with flagged items)
-- [ ] Build Claude-powered risk explanation (why this flag matters)
-
-**Output**: Users see detailed compliance risks with explanations and mitigation steps.
-
----
-
-### Phase 4: Dashboard & Multi-Project (Weeks 7–8)
-**Goal**: Full product experience, project management, persistence.
-
-- [ ] Build project dashboard (list, create, delete, archive)
-- [ ] Implement user project history (retrieve past analyses)
-- [ ] Add favorites/tagging (organize contracts by project, client, status)
-- [ ] Design results summary view (one-page overview of key terms + risks)
-- [ ] Add sharing & collaboration scaffolding (future: team features)
-- [ ] Polish UX, test flows end-to-end, performance optimization
-- [ ] Deploy to Vercel, set up monitoring and error tracking
-
-**Output**: Production-ready product. Users manage multiple contracts, see history, export everything.
+#### **Contract Analysis System**
+- **Phase 1**: Foundation setup completed
+- **Phase 2**: Payment schedule engine (in development)
+- **Phase 3**: Compliance & risk flagging (planned)
+- **Phase 4**: Dashboard & multi-project (planned)
 
 ---
 
@@ -101,6 +87,7 @@ This project is built in phases to keep scope manageable, reduce risk, and deliv
 | **Frontend** | Next.js 14, TypeScript, Tailwind, shadcn/ui | Modern, type-safe, fast builds, accessible components out of the box |
 | **AI Engine** | Claude 3.5 Sonnet via API | Superior reasoning for legal/financial documents, structured extraction, chain-of-thought |
 | **Auth & Backend** | Supabase (PostgreSQL + auth) | Free tier suitable for MVP, built-in RLS, file storage, real-time DB |
+| **State Management** | Zustand with TypeScript | Optimistic updates, server action integration, type safety |
 | **Document Export** | `docx` (Word), `xlsx` (Excel), PDF (jsPDF) | Standard formats for contractors; Excel for payment scheduling is critical |
 | **Deployment** | Vercel | Seamless Next.js integration, preview environments, serverless functions |
 
@@ -120,10 +107,13 @@ This isn't a generic chatbot or "AI app template." It solves a specific market p
 Uses Claude API end-to-end, not just a UI wrapper. Demonstrates understanding of prompt engineering, structured outputs, error handling, and cost optimization.
 
 ### 4. **Database & Auth**
-Real auth, user data persistence, and multi-tenancy scaffolding—not localStorage and in-memory state.
+Real auth, user data persistence, and multi-tenancy with PostgreSQL and Supabase—not localStorage and in-memory state.
 
 ### 5. **Domain Expertise**
-5+ years of hands-on AIA contract experience means the feature set, risk flags, and UX are credible. Not generic; genuinely informed by the problem space.
+5+ years of hands-on AIA contract experience means the feature set, risk flags, UX, and pay application workflows are credible. Not generic; genuinely informed by the problem space.
+
+### 6. **Full-Stack Implementation**
+Complete pay application system with database integration, state management, and production-ready architecture—not just UI mockups.
 
 ---
 
@@ -146,11 +136,32 @@ paysimple/
 │   │   ├── page.tsx         # Landing page
 │   │   ├── upload/          # Upload flow
 │   │   ├── dashboard/       # User dashboard (protected)
+│   │   ├── pay-applications/ # Pay application system
+│   │   │   ├── page.tsx     # Pay apps landing
+│   │   │   ├── new/         # Entry choice
+│   │   │   ├── history/     # History list/detail
+│   │   │   ├── [id]/        # Dynamic pay app routes
+│   │   │   │   ├── setup/   # Step 1: Application Setup
+│   │   │   │   ├── billing-settings/ # Step 2: Billing Settings
+│   │   │   │   ├── sov/     # Step 3: Schedule of Values
+│   │   │   │   ├── workspace/ # Step 4: Line item management
+│   │   │   │   ├── review/  # Step 5: Review & Submit
+│   │   │   │   ├── sign/    # Step 6: Sign & Finalize
+│   │   │   │   ├── complete/ # Success screen
+│   │   │   │   └── corrected-draft/ # Correction workflow
+│   │   │   ├── actions.ts   # Server actions
+│   │   │   ├── store.ts     # Zustand store
+│   │   │   ├── types.ts     # TypeScript types
+│   │   │   └── calculations.ts # Pay app calculations
 │   │   ├── api/             # API routes (Claude, exports, etc.)
 │   │   └── auth/            # Supabase auth flows
 │   │
 │   ├── components/          # Reusable React components
 │   │   ├── ui/              # shadcn/ui components
+│   │   ├── pay-applications/ # Pay app specific components
+│   │   │   ├── PayAppStepper.tsx
+│   │   │   ├── WizardActionBar.tsx
+│   │   │   └── ...
 │   │   ├── UploadBox.tsx    # File upload widget
 │   │   ├── ExtractionPreview.tsx
 │   │   ├── PaymentSchedule.tsx
@@ -163,12 +174,14 @@ paysimple/
 │   │   ├── extraction.ts    # Payment term parsing logic
 │   │   ├── schedule.ts      # Schedule calculation logic
 │   │   ├── compliance.ts    # Risk detection logic
-│   │   └── exports.ts       # Excel, PDF, Word export functions
+│   │   ├── exports.ts       # Excel, PDF, Word export functions
+│   │   └── pdf/             # PDF processing utilities
 │   │
 │   ├── types/               # TypeScript interfaces
 │   │   ├── contract.ts      # Contract and extraction types
 │   │   ├── schedule.ts      # Schedule-related types
-│   │   └── risk.ts          # Risk flag types
+│   │   ├── risk.ts          # Risk flag types
+│   │   └── pay-applications/ # Pay app types
 │   │
 │   └── styles/              # Global CSS
 │       └── globals.css
@@ -207,30 +220,62 @@ npx supabase migration up
 npm run dev
 ```
 
-Visit `http://localhost:3000` to upload a contract.
+Visit `http://localhost:3000` to:
+- Upload contracts for analysis
+- Create and manage pay applications
+- View history and corrected drafts
+
+### Key Features to Explore
+
+1. **Pay Applications**: Navigate to `/pay-applications` to see the complete system
+2. **6-Step Wizard**: Create a new pay app to experience the consolidated workflow
+3. **History Management**: View past applications and create corrected drafts
+4. **Database Integration**: All data persists in PostgreSQL with real-time updates
 
 ---
 
 ## Design Philosophy
 
-- **Scope clarity**: 8-week phased build plan with concrete milestones
-- **Technical depth**: Next.js for rapid iteration, Supabase for auth/storage, Claude API for extraction, multi-format exports
-- **Domain expertise**: AIA contract knowledge shapes every feature (retainage, lien waivers, compliance risks, prompt payment laws)
-- **Product thinking**: Deliberate UX decisions (upload-first, AIA-specific feature set, export flexibility)
-- **Full-stack**: Frontend, backend, AI, database, auth, and exports
+- **Scope clarity**: Phased build with completed pay application system
+- **Technical depth**: Next.js, Supabase, Zustand, TypeScript, full-stack architecture
+- **Domain expertise**: AIA contract knowledge shapes every feature (retainage, G702/G703, compliance)
+- **Product thinking**: Deliberate UX decisions (6-step consolidation, specific feature set, export flexibility)
+- **Production-ready**: Complete implementation with database integration, not just mockups
 
 ---
 
 ## Future Scope (Post-MVP)
 
-These are intentionally *not* in the 8-week build to keep scope tight:
+These are intentionally *not* in the current scope to keep focus tight:
 
+### Contract Analysis Enhancements
 - Team collaboration (share contracts, assign tasks)
 - Contract comparison (side-by-side term diffing)
 - Template library (pre-built risk checks for common AIA variants)
 - Webhook integration (e.g., notify when retainage release is due)
-- Mobile app (iOS/Android native for field-side access)
+
+### Pay Application Extensions
 - Integration with accounting software (QuickBooks, Sage, etc.)
+- Mobile app (iOS/Android native for field-side access)
+- Advanced reporting and analytics
+- Multi-company support with role-based access
+
+### AI & Automation
+- Automated compliance checking across state lines
+- AI-powered payment recommendations
+- Predictive cash flow forecasting
+- Smart document generation
+
+---
+
+## Current Status
+
+**PaySimple is actively developed** with a production-ready Pay Applications system and ongoing contract analysis features. The project demonstrates:
+
+- ✅ **Full-stack development** with database integration
+- ✅ **Domain expertise** in AIA contracts and construction finance
+- ✅ **Product thinking** with user-centered design
+- ✅ **Technical excellence** with TypeScript, modern React patterns, and scalable architecture
 
 ---
 
