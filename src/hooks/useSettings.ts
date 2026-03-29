@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { UserSettings, ProfileUpdate, NotificationPreferences, AIPreferences, UIPreferences } from '@/types/settings'
+import { UserSettings, ProfileData, NotificationSettings, AIPreferences } from '@/types/settings'
 
 export function useSettings() {
   const [settings, setSettings] = useState<UserSettings | null>(null)
@@ -27,7 +27,7 @@ export function useSettings() {
     }
   }
 
-  const updateProfile = async (data: ProfileUpdate) => {
+  const updateProfile = async (data: ProfileData) => {
     setLoading(true)
     setError(null)
 
@@ -55,7 +55,7 @@ export function useSettings() {
     }
   }
 
-  const updateNotificationPreferences = async (preferences: Partial<NotificationPreferences>) => {
+  const updateNotificationPreferences = async (preferences: Partial<NotificationSettings>) => {
     setLoading(true)
     setError(null)
 
@@ -115,7 +115,7 @@ export function useSettings() {
     }
   }
 
-  const updateUIPreferences = async (preferences: Partial<UIPreferences>) => {
+  const updateUIPreferences = async (preferences: Partial<AIPreferences>) => {
     setLoading(true)
     setError(null)
 
@@ -146,9 +146,9 @@ export function useSettings() {
   }
 
   const updatePreferences = async (updates: {
-    notification_preferences?: Partial<NotificationPreferences>
+    notification_preferences?: Partial<NotificationSettings>
     ai_preferences?: Partial<AIPreferences>
-    ui_preferences?: Partial<UIPreferences>
+    ui_preferences?: Partial<AIPreferences>
   }) => {
     setLoading(true)
     setError(null)

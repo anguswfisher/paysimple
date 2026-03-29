@@ -1,0 +1,168 @@
+'use client'
+
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { WizardActionBar } from '@/components/pay-applications/WizardActionBar'
+import { usePayAppStore } from '@/app/pay-applications/store'
+import { ArrowRight, Check } from 'lucide-react'
+import type { EntryMode } from '@/app/pay-applications/types'
+
+const ENTRY_MODES: {
+  mode: EntryMode
+  title: string
+  description: string
+  recommended?: boolean
+}[] = [
+  {
+    mode: 'guided',
+    title: 'Guided Setup',
+    description: "We'll walk you through each step",
+    recommended: true,
+  },
+  {
+    mode: 'from-previous',
+    title: 'Use Previous Pay App',
+    description: 'Your schedule of values and settings will be carried forward',
+  },
+  {
+    mode: 'blank',
+    title: 'Start Blank',
+    description: 'Jump straight to the workspace with default settings',
+  },
+]
+
+export default function NewPayApplicationPage() {
+  const router = useRouter()
+  const { createPayApp } = usePayAppStore()
+  const [selectedMode, setSelectedMode] = useState<EntryMode | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleContinue = async () => {
+    if (!selectedMode) return
+
+    setIsLoading(true)
+    try {
+      // Get current user ID - for now we'll use a placeholder
+      // In a real app, this would come from auth context
+      const userId = 'current-user-id' // TODO: Get from auth
+      
+      const newPayApp = await createPayApp(selectedMode, userId)
+      
+      // Navigate to the basics step of the new pay app
+      router.push(`/pay-applications/${newPayApp.id}/basics`)
+    } catch (error) {
+      console.error('Failed to create pay application:', error)
+      // TODO: Show error message to user
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleSaveAndExit = () => {
+    router.push('/pay-applications')
+  }
+
+  const handleBack = () => {
+    router.push('/pay-applications')
+  }
+
+  const handleClassicEditor = () => {
+    alert('Classic editor coming soon')
+  }
+
+  return (
+    <div className="flex-1 flex flex-col">
+      {/* Page Header */}
+      <div className="p-6 border-b border-slate/10">
+        <h1 className="text-2xl font-bold text-slate-900">New Pay Application</h1>
+        <p className="text-slate/70 mt-1">How would you like to get started?</p>
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 p-6">
+        <div className="max-w-2xl mx-auto space-y-4">
+          {/* Entry Mode Cards */}
+          {ENTRY_MODES.map((entry) => (
+            <Card
+              key={entry.mode}
+              className={`
+                cursor-pointer transition-all duration-200
+                ${selectedMode === entry.mode
+                  ? 'border-teal-600 bg-teal-50/30'
+                  : 'border-slate/20 hover:border-slate/40'
+                }
+              `}
+              onClick={() => setSelectedMode(entry.mode)}
+            >
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <h3 className="text-lg font-semibold text-slate-900">
+                        {entry.title}
+                      </h3>
+                      {entry.recommended && (
+                        <Badge className="bg-teal-100 text-teal-800 border-teal-200 text-xs">
+                          Recommended
+                        </Badge>
+                      )}
+                    </div>
+                    <p className="text-slate/70">
+                      {entry.description}
+                    </p>
+                  </div>
+                  
+                  {selectedMode === entry.mode && (
+                    <div className="w-6 h-6 bg-teal-600 rounded-full flex items-center justify-center">
+                      <Check className="w-4 h-4 text-white" />
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+
+          {/* Divider */}
+          <div className="flex items-center gap-4 py-4">
+            <div className="flex-1 h-px bg-slate/20" />
+            <span className="text-sm text-slate/50 font-medium">or</span>
+            <div className="flex-1 h-px bg-slate/20" />
+          </div>
+
+          {/* Classic Editor Card */}
+          <Card 
+            className="border-slate/20 hover:border-slate/40 cursor-pointer transition-all duration-200"
+            onClick={handleClassicEditor}
+          >
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                    Classic Editor
+                  </h3>
+                  <p className="text-slate/70">
+                    Traditional form-based interface for experienced users
+                  </p>
+                </div>
+                <ArrowRight className="w-5 h-5 text-slate/40" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* Action Bar */}
+      <WizardActionBar
+        onSaveAndExit={handleSaveAndExit}
+        onBack={handleBack}
+        onContinue={handleContinue}
+        continueLabel="Continue"
+        continueDisabled={!selectedMode || isLoading}
+        isLoading={isLoading}
+      />
+    </div>
+  )
+}
