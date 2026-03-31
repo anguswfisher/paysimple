@@ -2,102 +2,124 @@
 
 import { PAY_APP_STEPS, PayAppStep } from '@/app/pay-applications/types'
 import { usePayAppStore } from '@/app/pay-applications/store'
+import { Check } from 'lucide-react'
 
 export function PayAppStepper() {
   const { currentPayApp } = usePayAppStore()
 
   if (!currentPayApp) {
-    return <div className="h-16 animate-pulse bg-slate/10 rounded-lg" />
+    return (
+      <div className="w-52 shrink-0 bg-[#F2F4F5] border-r border-slate/10 p-5 space-y-2">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="h-10 rounded-lg bg-slate/10 animate-pulse" />
+        ))}
+      </div>
+    )
   }
 
   const currentStep = currentPayApp.currentStep
   const completedSteps = currentPayApp.completedSteps
 
   const getStepState = (step: PayAppStep) => {
-    const isCompleted = completedSteps.includes(step.step)
-    const isCurrent = step.step === currentStep
-
-    if (isCompleted) return 'completed'
-    if (isCurrent) return 'current'
+    if (completedSteps.includes(step.step)) return 'completed'
+    if (step.step === currentStep) return 'current'
     return 'upcoming'
   }
 
+  const completedCount = completedSteps.length
+
   return (
-    <div className="py-6">
-      <div className="flex items-center justify-between max-w-4xl mx-auto">
+    <div className="w-52 shrink-0 bg-[#F2F4F5] border-r border-slate/10 flex flex-col">
+      {/* Sidebar header */}
+      <div className="px-5 pt-7 pb-4 border-b border-slate/10">
+        <p className="text-[10px] font-semibold tracking-widest text-slate/40 uppercase mb-0.5">
+          Pay Application
+        </p>
+        <p className="text-xs text-slate/50">
+          {completedCount} of {PAY_APP_STEPS.length} steps complete
+        </p>
+        {/* Progress bar */}
+        <div className="mt-2.5 h-1 bg-slate/15 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-teal-500 rounded-full transition-all duration-500"
+            style={{ width: `${(completedCount / PAY_APP_STEPS.length) * 100}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Steps */}
+      <nav className="flex-1 px-3 py-4 space-y-0.5">
         {PAY_APP_STEPS.map((step, index) => {
           const state = getStepState(step)
           const isLast = index === PAY_APP_STEPS.length - 1
 
           return (
-            <div key={step.step} className="flex items-center">
-              {/* Step Node */}
-              <div className="flex flex-col items-center">
-                {/* Step Circle/Icon */}
+            <div key={step.step}>
+              {/* Step row */}
+              <div
+                className={`
+                  flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200
+                  ${state === 'current'
+                    ? 'bg-white shadow-sm border border-slate/10'
+                    : state === 'completed'
+                    ? 'hover:bg-slate/5'
+                    : ''
+                  }
+                `}
+              >
+                {/* Circle */}
                 <div
                   className={`
-                    w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium
+                    w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-xs font-semibold
                     transition-all duration-200
-                    ${
-                      state === 'completed'
-                        ? 'bg-teal-600 text-white'
-                        : state === 'current'
-                        ? 'bg-white border-2 border-teal-600 text-teal-600'
-                        : 'bg-slate/30 text-slate/60 border-2 border-transparent'
+                    ${state === 'completed'
+                      ? 'bg-teal-600 text-white'
+                      : state === 'current'
+                      ? 'bg-teal-600 text-white ring-4 ring-teal-100'
+                      : 'bg-white border-2 border-slate/20 text-slate/35'
                     }
                   `}
                 >
-                  {state === 'completed' ? (
-                    <svg
-                      className="w-4 h-4"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  ) : (
-                    <span className="tabular-nums">{step.step}</span>
-                  )}
+                  {state === 'completed'
+                    ? <Check className="w-3 h-3 stroke-[3]" />
+                    : <span>{step.step}</span>
+                  }
                 </div>
 
-                {/* Step Label */}
-                <div
+                {/* Label */}
+                <span
                   className={`
-                    mt-2 text-xs font-medium transition-all duration-200
-                    ${
-                      state === 'completed' || state === 'current'
-                        ? 'text-slate-900'
-                        : 'text-slate/60'
+                    text-sm transition-all duration-200
+                    ${state === 'current'
+                      ? 'font-semibold text-slate-800'
+                      : state === 'completed'
+                      ? 'font-medium text-slate-500'
+                      : 'font-medium text-slate/35'
                     }
-                    ${state === 'upcoming' ? 'hidden sm:block' : ''}
                   `}
                   style={{ fontVariant: 'small-caps' }}
                 >
                   {step.label}
-                </div>
+                </span>
+
+                {/* Current indicator dot */}
+                {state === 'current' && (
+                  <div className="ml-auto w-1.5 h-1.5 rounded-full bg-teal-500" />
+                )}
               </div>
 
-              {/* Connecting Line */}
+              {/* Connector line */}
               {!isLast && (
-                <div
-                  className={`
-                    w-12 h-0.5 mx-2 transition-all duration-200
-                    ${
-                      index < PAY_APP_STEPS.findIndex(s => s.step === currentStep)
-                        ? 'bg-teal-600'
-                        : 'bg-slate/30'
-                    }
-                  `}
-                />
+                <div className="ml-[1.4rem] flex justify-center w-6 py-0.5">
+                  <div className={`w-px h-3 transition-colors duration-300 ${
+                    state === 'completed' ? 'bg-teal-300' : 'bg-slate/15'
+                  }`} />
+                </div>
               )}
             </div>
           )
         })}
-      </div>
+      </nav>
     </div>
   )
 }

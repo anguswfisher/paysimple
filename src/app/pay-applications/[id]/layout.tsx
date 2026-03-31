@@ -47,14 +47,16 @@ export default function WizardLayout({
 
   if (isLoading) {
     return (
-      <div className="flex-1 p-6">
+      <div className="flex-1 flex flex-row">
         {/* Loading skeleton for stepper */}
-        <div className="mb-8">
-          <Skeleton className="h-16 w-full max-w-4xl mx-auto rounded-lg" />
+        <div className="w-56 shrink-0 border-r border-slate/10 p-4 space-y-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-8 w-full rounded-md" />
+          ))}
         </div>
-        
+
         {/* Loading skeleton for content */}
-        <div className="max-w-4xl mx-auto space-y-4">
+        <div className="flex-1 p-6 space-y-4">
           <Skeleton className="h-8 w-64" />
           <Skeleton className="h-32 w-full" />
           <Skeleton className="h-32 w-full" />
@@ -87,12 +89,12 @@ export default function WizardLayout({
   }
 
   return (
-    <div className="flex-1 flex flex-col">
-      {/* Stepper */}
+    <div className="h-screen overflow-hidden flex flex-row">
+      {/* Left-side stepper */}
       <PayAppStepper />
-      
-      {/* Content */}
-      <div className="flex-1 p-6">
+
+      {/* Content — flex-1 so it fills remaining width; min-h-0 allows children to shrink */}
+      <div className="flex-1 flex flex-col min-h-0">
         {children}
       </div>
     </div>

@@ -4,269 +4,254 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { WizardActionBar } from '@/components/pay-applications/WizardActionBar'
+import { WizardSplitPane } from '@/components/pay-applications/WizardSplitPane'
+import { StepGuide } from '@/components/pay-applications/StepGuide'
 import { usePayAppStore } from '@/app/pay-applications/store'
-import { ChevronDown, ChevronUp, HelpCircle } from 'lucide-react'
+import { PiggyBank, Percent, Layers } from 'lucide-react'
 import type { RetainageSettings, RetainageAppliesTo } from '@/app/pay-applications/types'
 
 export default function RetainagePage() {
   const router = useRouter()
   const { currentPayApp, updateRetainageSettings, markStepCompleted } = usePayAppStore()
-  const [showHelp, setShowHelp] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-
-  // Form state
   const [retainagePercent, setRetainagePercent] = useState(10)
   const [appliesTo, setAppliesTo] = useState<RetainageAppliesTo>('both')
   const [canChangeOverTime, setCanChangeOverTime] = useState(false)
   const [effectiveDate, setEffectiveDate] = useState('')
   const [newRetainagePercent, setNewRetainagePercent] = useState(10)
 
-  // Initialize from current pay app
   useEffect(() => {
     if (currentPayApp?.retainageSettings) {
-      const settings = currentPayApp.retainageSettings
-      setRetainagePercent(settings.retainagePercent)
-      setAppliesTo(settings.appliesTo)
-      setCanChangeOverTime(settings.canChangeOverTime)
-      setEffectiveDate(settings.effectiveDate || '')
-      setNewRetainagePercent(settings.newRetainagePercent || settings.retainagePercent)
+      const s = currentPayApp.retainageSettings
+      setRetainagePercent(s.retainagePercent)
+      setAppliesTo(s.appliesTo)
+      setCanChangeOverTime(s.canChangeOverTime)
+      setEffectiveDate(s.effectiveDate || '')
+      setNewRetainagePercent(s.newRetainagePercent || s.retainagePercent)
     }
   }, [currentPayApp])
 
   const handleContinue = async () => {
     setIsLoading(true)
     try {
-      const retainageSettings: RetainageSettings = {
+      const settings: RetainageSettings = {
         retainagePercent,
         appliesTo,
         canChangeOverTime,
         ...(canChangeOverTime && {
           effectiveDate: effectiveDate || undefined,
-          newRetainagePercent: newRetainagePercent,
+          newRetainagePercent,
         }),
       }
-
-      await updateRetainageSettings(retainageSettings)
+      await updateRetainageSettings(settings)
       await markStepCompleted(3)
       router.push(`/pay-applications/${currentPayApp?.id}/change-orders`)
     } catch (error) {
       console.error('Failed to save retainage settings:', error)
-      // TODO: Show error message to user
     } finally {
       setIsLoading(false)
     }
   }
 
-  const handleSaveAndExit = () => {
-    router.push('/pay-applications')
-  }
+  const inputClass = 'px-3 py-2.5 bg-white border border-slate/20 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-colors hover:border-slate/35'
 
-  const handleBack = () => {
-    router.push(`/pay-applications/${currentPayApp?.id}/billing-format`)
-  }
-
-  const handleRetainagePercentChange = (value: string) => {
-    const num = parseInt(value) || 0
-    const clampedValue = Math.min(100, Math.max(0, num))
-    setRetainagePercent(clampedValue)
-  }
-
-  const handleNewRetainagePercentChange = (value: string) => {
-    const num = parseInt(value) || 0
-    const clampedValue = Math.min(100, Math.max(0, num))
-    setNewRetainagePercent(clampedValue)
-  }
+  const guide = (
+    <StepGuide
+      title="Retainage Settings"
+      subtitle="Retainage is one of the most impactful clauses in a construction contract."
+      blocks={[
+        {
+          type: 'intro',
+          text: 'Retainage (also called retention) is a percentage of each progress payment that the owner withholds until the project is substantially complete. It protects the owner against incomplete or defective work.',
+        },
+        { type: 'divider' },
+        {
+          type: 'section',
+          icon: <Percent className="w-3.5 h-3.5" />,
+          heading: 'Standard Rates',
+          body: [
+            '10% is the most common rate on private commercial projects in the US.',
+            '5% is typical on larger projects or once work reaches 50% completion.',
+            'Public projects may be governed by statute — some states cap retainage at 5%.',
+          ],
+        },
+        {
+          type: 'tip',
+          text: 'Your retainage rate must match the contract. Using the wrong rate is one of the most common pay application errors and will cause the architect to reject certification.',
+        },
+        { type: 'divider' },
+        {
+          type: 'section',
+          icon: <Layers className="w-3.5 h-3.5" />,
+          heading: 'Applies To',
+          body: [
+            'Work Only — retainage deducted from completed work amounts but not from materials stored.',
+            'Materials Only — rare, typically only seen in specialized fabrication contracts.',
+            'Both — the most common setting; retainage applies to the full earned amount.',
+          ],
+        },
+        { type: 'divider' },
+        {
+          type: 'section',
+          icon: <PiggyBank className="w-3.5 h-3.5" />,
+          heading: 'Tiered Retainage',
+          body: 'Many AIA contracts reduce retainage once the project reaches 50% completion. Enable "Changes Over Time" to model this — set the effective date and the reduced rate that takes effect.',
+        },
+        {
+          type: 'warning',
+          text: 'Tiered retainage only applies to future applications. Past applications already submitted at the higher rate are not retroactively adjusted.',
+        },
+        {
+          type: 'glossary',
+          terms: [
+            {
+              term: 'Substantial Completion',
+              definition: 'The stage when work is sufficiently complete for the owner to use it for its intended purpose. Typically triggers release of most or all retainage.',
+            },
+            {
+              term: 'Retainage Release',
+              definition: 'The payment of withheld funds to the contractor. Often split: half at substantial completion, half at final completion with punch list cleared.',
+            },
+          ],
+        },
+      ]}
+    />
+  )
 
   return (
-    <div className="flex-1 flex flex-col">
-      {/* Page Header */}
-      <div className="p-6 border-b border-slate/10">
-        <h1 className="text-2xl font-bold text-slate-900">Retainage Settings</h1>
-        <p className="text-slate/70 mt-1">
-          Configure retainage percentage and application rules
-        </p>
+    <div className="flex-1 flex flex-col min-h-0">
+      <div className="px-8 pt-7 pb-5 border-b border-slate/10">
+        <div className="flex items-center gap-2 text-xs font-medium text-slate/40 uppercase tracking-widest mb-2">
+          <span>Step 2</span>
+          <span className="text-slate/20">·</span>
+          <span>Billing</span>
+        </div>
+        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Retainage Settings</h1>
+        <p className="text-sm text-slate/55 mt-1">Configure retainage percentage and application rules.</p>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 p-6">
-        <div className="max-w-2xl mx-auto space-y-6">
+      <WizardSplitPane guide={guide}>
+        <div className="flex-1 overflow-y-auto px-8 py-7 space-y-6">
+
           {/* Retainage Percentage */}
-          <Card>
-            <CardHeader>
-              <CardTitle style={{ fontVariant: 'small-caps' }}>
+          <section>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-7 h-7 rounded-md bg-teal-50 flex items-center justify-center">
+                <Percent className="w-3.5 h-3.5 text-teal-600" />
+              </div>
+              <h2 className="text-sm font-semibold text-slate-700" style={{ fontVariant: 'small-caps', letterSpacing: '0.04em' }}>
                 Retainage Percentage
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-2">
+              </h2>
+            </div>
+            <div className="bg-white border border-slate/15 rounded-xl p-5 shadow-sm">
+              <div className="flex items-center gap-3">
                 <input
                   type="number"
                   min="0"
                   max="100"
                   value={retainagePercent}
-                  onChange={(e) => handleRetainagePercentChange(e.target.value)}
-                  className="w-20 px-3 py-2 border border-slate/30 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                  onChange={e => setRetainagePercent(Math.min(100, Math.max(0, parseInt(e.target.value) || 0)))}
+                  className={`w-24 text-right tabular-nums ${inputClass}`}
                 />
-                <span className="text-slate-700">%</span>
+                <span className="text-slate-600 font-medium">%</span>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </section>
 
-          {/* Retainage Applies To */}
-          <Card>
-            <CardHeader>
-              <CardTitle style={{ fontVariant: 'small-caps' }}>
+          {/* Applies To */}
+          <section>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-7 h-7 rounded-md bg-teal-50 flex items-center justify-center">
+                <Layers className="w-3.5 h-3.5 text-teal-600" />
+              </div>
+              <h2 className="text-sm font-semibold text-slate-700" style={{ fontVariant: 'small-caps', letterSpacing: '0.04em' }}>
                 Retainage Applies To
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {[
-                  { value: 'work' as const, label: 'Work Only' },
-                  { value: 'materials' as const, label: 'Materials Only' },
-                  { value: 'both' as const, label: 'Both Work and Materials' },
-                ].map((option) => (
-                  <label key={option.value} className="flex items-center gap-3 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="appliesTo"
-                      value={option.value}
-                      checked={appliesTo === option.value}
-                      onChange={(e) => setAppliesTo(e.target.value as RetainageAppliesTo)}
-                      className="w-4 h-4 text-teal-600 focus:ring-teal-500 border-slate/30"
-                    />
-                    <span className="text-slate-700">{option.label}</span>
-                  </label>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+              </h2>
+            </div>
+            <div className="bg-white border border-slate/15 rounded-xl p-5 shadow-sm space-y-3">
+              {([
+                { value: 'work' as const,      label: 'Work Only' },
+                { value: 'materials' as const, label: 'Materials Only' },
+                { value: 'both' as const,      label: 'Both Work and Materials' },
+              ] as const).map(opt => (
+                <label key={opt.value} className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="appliesTo"
+                    value={opt.value}
+                    checked={appliesTo === opt.value}
+                    onChange={() => setAppliesTo(opt.value)}
+                    className="w-4 h-4 text-teal-600 focus:ring-teal-500 border-slate/30"
+                  />
+                  <span className="text-sm text-slate-700">{opt.label}</span>
+                </label>
+              ))}
+            </div>
+          </section>
 
-          {/* Retainage Changes Over Time */}
-          <Card>
-            <CardHeader>
-              <CardTitle style={{ fontVariant: 'small-caps' }}>
-                Retainage Changes Over Time
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <label className="flex items-center gap-3 cursor-pointer">
+          {/* Changes Over Time */}
+          <section>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-7 h-7 rounded-md bg-teal-50 flex items-center justify-center">
+                <PiggyBank className="w-3.5 h-3.5 text-teal-600" />
+              </div>
+              <h2 className="text-sm font-semibold text-slate-700" style={{ fontVariant: 'small-caps', letterSpacing: '0.04em' }}>
+                Tiered Retainage
+              </h2>
+            </div>
+            <div className="bg-white border border-slate/15 rounded-xl p-5 shadow-sm">
+              <label className="flex items-start gap-3 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={canChangeOverTime}
-                  onChange={(e) => setCanChangeOverTime(e.target.checked)}
-                  className="w-4 h-4 text-teal-600 focus:ring-teal-500 border-slate/30 rounded"
+                  onChange={e => setCanChangeOverTime(e.target.checked)}
+                  className="w-4 h-4 text-teal-600 focus:ring-teal-500 border-slate/30 rounded mt-0.5"
                 />
                 <div>
-                  <div className="text-slate-700">Enable if retainage percentage will decrease at a certain point</div>
-                  <div className="text-sm text-slate/60">Useful for projects with tiered retainage schedules</div>
+                  <div className="text-sm font-medium text-slate-700">Retainage reduces at a certain point</div>
+                  <div className="text-xs text-slate/50 mt-0.5">Useful for projects with tiered retainage schedules</div>
                 </div>
               </label>
 
-              {/* Additional fields when enabled */}
               {canChangeOverTime && (
-                <div className="mt-4 grid grid-cols-2 gap-4 pt-4 border-t border-slate/10">
+                <div className="mt-4 pt-4 border-t border-slate/10 grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-900 mb-2">
-                      Effective Date
-                    </label>
+                    <label className="block text-xs font-semibold tracking-wide text-slate/60 uppercase mb-1.5">Effective Date</label>
                     <input
                       type="date"
                       value={effectiveDate}
-                      onChange={(e) => setEffectiveDate(e.target.value)}
-                      className="w-full px-3 py-2 border border-slate/30 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                      onChange={e => setEffectiveDate(e.target.value)}
+                      className={`w-full ${inputClass}`}
                     />
                   </div>
-
                   <div>
-                    <label className="block text-sm font-medium text-slate-900 mb-2">
-                      New Retainage %
-                    </label>
+                    <label className="block text-xs font-semibold tracking-wide text-slate/60 uppercase mb-1.5">New Rate</label>
                     <div className="flex items-center gap-2">
                       <input
                         type="number"
                         min="0"
                         max="100"
                         value={newRetainagePercent}
-                        onChange={(e) => handleNewRetainagePercentChange(e.target.value)}
-                        className="w-20 px-3 py-2 border border-slate/30 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                        onChange={e => setNewRetainagePercent(Math.min(100, Math.max(0, parseInt(e.target.value) || 0)))}
+                        className={`w-24 text-right tabular-nums ${inputClass}`}
                       />
-                      <span className="text-slate-700">%</span>
+                      <span className="text-slate-600 font-medium">%</span>
                     </div>
                   </div>
                 </div>
               )}
-            </CardContent>
-          </Card>
-
-          {/* Help Section */}
-          <Card className="border-slate/10">
-            <CardContent className="p-0">
-              <button
-                onClick={() => setShowHelp(!showHelp)}
-                className="w-full flex items-center justify-between p-4 text-left hover:bg-slate/5 transition-colors"
-              >
-                <div className="flex items-center gap-2">
-                  <HelpCircle className="w-4 h-4 text-slate/60" />
-                  <span className="text-sm font-medium text-slate-700">
-                    Explain retainage
-                  </span>
-                </div>
-                {showHelp ? (
-                  <ChevronUp className="w-4 h-4 text-slate/60" />
-                ) : (
-                  <ChevronDown className="w-4 h-4 text-slate/60" />
-                )}
-              </button>
-              
-              {showHelp && (
-                <div className="px-4 pb-4 border-t border-slate/10">
-                  <div className="pt-4 text-sm">
-                    <div className="space-y-3">
-                      <div>
-                        <h4 className="font-semibold text-slate-900 mb-2">What is Retainage?</h4>
-                        <p className="text-slate/70">
-                          Retainage is a portion of the contract amount that the owner withholds as security 
-                          until the project is substantially complete. This protects the owner against 
-                          incomplete work or defects and ensures the contractor finishes the project.
-                        </p>
-                      </div>
-                      
-                      <div>
-                        <h4 className="font-semibold text-slate-900 mb-2">Common Retainage Amounts</h4>
-                        <p className="text-slate/70">
-                          Most construction contracts specify retainage between 5% and 10%. 
-                          10% is most common for private projects, while public projects may have lower rates 
-                          or specific requirements based on local laws.
-                        </p>
-                      </div>
-
-                      <div>
-                        <h4 className="font-semibold text-slate-900 mb-2">How It Works</h4>
-                        <p className="text-slate/70">
-                          The retainage amount is calculated on each progress payment and accumulated 
-                          until the project reaches completion. Once substantially complete, the retainage 
-                          is typically released in phases (half at substantial completion, final half at final completion).
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+            </div>
+          </section>
         </div>
-      </div>
 
-      {/* Action Bar */}
-      <WizardActionBar
-        onSaveAndExit={handleSaveAndExit}
-        onBack={handleBack}
-        onContinue={handleContinue}
-        continueLabel="Continue"
-        continueDisabled={isLoading}
-        isLoading={isLoading}
-      />
+        <WizardActionBar
+          onSaveAndExit={() => router.push('/pay-applications')}
+          onBack={() => router.push(`/pay-applications/${currentPayApp?.id}/billing-format`)}
+          onContinue={handleContinue}
+          continueDisabled={isLoading}
+          isLoading={isLoading}
+        />
+      </WizardSplitPane>
     </div>
   )
 }

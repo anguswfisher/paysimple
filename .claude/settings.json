@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Read(//c/src/paySimple/src/app/pay-applications/[id]/$dir/**)"
+      "Read(//c/src/paySimple/src/app/pay-applications/[id]/$dir/**)",
+      "Bash(grep -v \"^d.*\\\\.$\")",
+      "Bash(xargs grep:*)"
     ]
   }
 }

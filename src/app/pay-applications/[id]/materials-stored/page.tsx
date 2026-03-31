@@ -2,21 +2,18 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { WizardActionBar } from '@/components/pay-applications/WizardActionBar'
+import { WizardSplitPane } from '@/components/pay-applications/WizardSplitPane'
+import { StepGuide } from '@/components/pay-applications/StepGuide'
 import { usePayAppStore } from '@/app/pay-applications/store'
-import { ChevronDown, ChevronUp, HelpCircle, Warehouse } from 'lucide-react'
+import { Warehouse, Package, ShieldCheck } from 'lucide-react'
 
 export default function MaterialsStoredPage() {
   const router = useRouter()
   const { currentPayApp, updateMaterialsStoredEnabled, markStepCompleted } = usePayAppStore()
-  const [showHelp, setShowHelp] = useState(false)
+  const [materialsStoredEnabled, setMaterialsStoredEnabled] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  // Form state
-  const [materialsStoredEnabled, setMaterialsStoredEnabled] = useState(false)
-
-  // Initialize from current pay app
   useEffect(() => {
     if (currentPayApp?.materialsStoredEnabled !== undefined) {
       setMaterialsStoredEnabled(currentPayApp.materialsStoredEnabled)
@@ -31,169 +28,136 @@ export default function MaterialsStoredPage() {
       router.push(`/pay-applications/${currentPayApp?.id}/setup-review`)
     } catch (error) {
       console.error('Failed to save materials stored setting:', error)
-      // TODO: Show error message to user
     } finally {
       setIsLoading(false)
     }
   }
 
-  const handleSaveAndExit = () => {
-    router.push('/pay-applications')
-  }
-
-  const handleBack = () => {
-    router.push(`/pay-applications/${currentPayApp?.id}/change-orders`)
-  }
+  const guide = (
+    <StepGuide
+      title="Materials Stored"
+      subtitle="Understanding when and how to bill for materials on-site but not yet installed."
+      blocks={[
+        {
+          type: 'intro',
+          text: 'Stored materials are items that have been purchased and delivered to the job site but have not yet been incorporated into the permanent work. Many contracts allow billing for these materials as they represent a real cost to the contractor.',
+        },
+        { type: 'divider' },
+        {
+          type: 'section',
+          icon: <Package className="w-3.5 h-3.5" />,
+          heading: 'When to Enable',
+          body: [
+            'You have materials purchased and physically on-site (or in approved off-site storage).',
+            'Your contract expressly permits billing for stored materials.',
+            'The materials are suitably stored and protected from weather, theft, and damage.',
+          ],
+        },
+        {
+          type: 'tip',
+          text: 'Check your contract\'s General Conditions. AIA A201 §9.3.2 covers the requirements for including stored materials in a pay application.',
+        },
+        { type: 'divider' },
+        {
+          type: 'section',
+          icon: <ShieldCheck className="w-3.5 h-3.5" />,
+          heading: 'Documentation Required',
+          body: [
+            'Invoices or receipts showing the cost of materials purchased.',
+            'Proof of delivery to the job site (delivery tickets, photos).',
+            'Insurance certificate covering the materials in storage if stored off-site.',
+            'Bill of sale or conditional transfer documents for off-site storage.',
+          ],
+        },
+        {
+          type: 'warning',
+          text: 'Do not bill for materials that haven\'t arrived on-site yet or that are still at the supplier\'s warehouse without an approved off-site storage agreement.',
+        },
+        { type: 'divider' },
+        {
+          type: 'section',
+          icon: <Warehouse className="w-3.5 h-3.5" />,
+          heading: 'How It Appears in the Workspace',
+          body: 'When enabled, the G703 workspace adds a "Materials Stored" column (Column E in AIA format). You\'ll enter the value of newly stored materials each period. The system tracks this separately from work completed.',
+        },
+        {
+          type: 'glossary',
+          terms: [
+            {
+              term: 'Materials Stored to Date',
+              definition: 'Cumulative value of materials on-site not yet installed. Decreases as materials get incorporated into the work.',
+            },
+            {
+              term: 'Total Completed & Stored',
+              definition: 'Work completed to date plus materials stored to date. This is column F (or G703 column D+E+F) — the basis for calculating payment due.',
+            },
+          ],
+        },
+      ]}
+    />
+  )
 
   return (
-    <div className="flex-1 flex flex-col">
-      {/* Page Header */}
-      <div className="p-6 border-b border-slate/10">
-        <h1 className="text-2xl font-bold text-slate-900">Materials Stored</h1>
-        <p className="text-slate/70 mt-1">
-          Configure billing for materials purchased but not yet installed
-        </p>
+    <div className="flex-1 flex flex-col min-h-0">
+      <div className="px-8 pt-7 pb-5 border-b border-slate/10">
+        <div className="flex items-center gap-2 text-xs font-medium text-slate/40 uppercase tracking-widest mb-2">
+          <span>Step 2</span>
+          <span className="text-slate/20">·</span>
+          <span>Billing</span>
+        </div>
+        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Materials Stored</h1>
+        <p className="text-sm text-slate/55 mt-1">Configure billing for materials purchased but not yet installed.</p>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 p-6">
-        <div className="max-w-2xl mx-auto space-y-6">
-          {/* Main Toggle Card */}
-          <Card
-            className={`
-              cursor-pointer transition-all duration-200
-              ${materialsStoredEnabled
-                ? 'border-teal-600 bg-teal-50/30'
-                : 'border-slate/20 hover:border-slate/40'
-              }
-            `}
+      <WizardSplitPane guide={guide}>
+        <div className="flex-1 overflow-y-auto px-8 py-7 space-y-5">
+
+          {/* Toggle card */}
+          <div
             onClick={() => setMaterialsStoredEnabled(!materialsStoredEnabled)}
+            className={`cursor-pointer rounded-xl border p-6 bg-white shadow-sm transition-all duration-200 ${
+              materialsStoredEnabled ? 'border-teal-500 ring-2 ring-teal-500/20' : 'border-slate/15 hover:border-slate/30'
+            }`}
           >
-            <CardContent className="p-6">
-              <div className="flex items-start gap-4">
-                <div className={`
-                  w-12 h-12 rounded-full flex items-center justify-center
-                  ${materialsStoredEnabled ? 'bg-teal-600' : 'bg-slate/30'}
-                `}>
-                  <Warehouse className={`w-6 h-6 ${materialsStoredEnabled ? 'text-white' : 'text-slate/60'}`} />
-                </div>
-                
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-slate-900 mb-2">
-                    Bill for materials stored
-                  </h3>
-                  <p className="text-slate/70">
-                    Enable this if you have materials purchased but not yet installed that should be included in billing.
-                  </p>
-                  
-                  {/* Toggle Indicator */}
-                  <div className="mt-4 flex items-center gap-2">
-                    <div className={`
-                      w-12 h-6 rounded-full transition-colors duration-200
-                      ${materialsStoredEnabled ? 'bg-teal-600' : 'bg-slate/30'}
-                    `}>
-                      <div className={`
-                        w-5 h-5 bg-white rounded-full transition-transform duration-200
-                        ${materialsStoredEnabled ? 'translate-x-6' : 'translate-x-0.5'}
-                      `} />
-                    </div>
-                    <span className="text-sm font-medium text-slate-700">
-                      {materialsStoredEnabled ? 'Enabled' : 'Disabled'}
-                    </span>
+            <div className="flex items-start gap-4">
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${
+                materialsStoredEnabled ? 'bg-teal-600' : 'bg-slate/10'
+              }`}>
+                <Warehouse className={`w-5 h-5 ${materialsStoredEnabled ? 'text-white' : 'text-slate/50'}`} />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-base font-semibold text-slate-900 mb-1">Bill for materials stored on-site</h3>
+                <p className="text-sm text-slate/55">Enable if you have materials purchased but not yet installed.</p>
+                <div className="mt-3 flex items-center gap-2">
+                  <div className={`w-10 h-5 rounded-full transition-colors duration-200 ${materialsStoredEnabled ? 'bg-teal-600' : 'bg-slate/20'}`}>
+                    <div className={`w-4 h-4 bg-white rounded-full shadow-sm mt-0.5 transition-transform duration-200 ${materialsStoredEnabled ? 'translate-x-5' : 'translate-x-0.5'}`} />
                   </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Info Box */}
-          <Card className={materialsStoredEnabled ? 'border-teal-200 bg-teal-50/20' : 'border-slate/10 bg-slate/5'}>
-            <CardContent className="p-4">
-              <div className="flex items-start gap-3">
-                <div className={`
-                  w-2 h-2 rounded-full mt-2
-                  ${materialsStoredEnabled ? 'bg-teal-600' : 'bg-slate/40'}
-                `} />
-                <p className={`text-sm ${materialsStoredEnabled ? 'text-teal-800' : 'text-slate/60'}`}>
-                  {materialsStoredEnabled
-                    ? 'Materials stored columns will appear in the workspace, allowing you to track and bill for materials purchased but not yet installed.'
-                    : 'Materials stored columns will be hidden from the workspace. You can enable this later if needed.'
-                  }
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Help Section */}
-          <Card className="border-slate/10">
-            <CardContent className="p-0">
-              <button
-                onClick={() => setShowHelp(!showHelp)}
-                className="w-full flex items-center justify-between p-4 text-left hover:bg-slate/5 transition-colors"
-              >
-                <div className="flex items-center gap-2">
-                  <HelpCircle className="w-4 h-4 text-slate/60" />
-                  <span className="text-sm font-medium text-slate-700">
-                    Explain materials stored
+                  <span className={`text-xs font-semibold ${materialsStoredEnabled ? 'text-teal-600' : 'text-slate/40'}`}>
+                    {materialsStoredEnabled ? 'Enabled' : 'Disabled'}
                   </span>
                 </div>
-                {showHelp ? (
-                  <ChevronUp className="w-4 h-4 text-slate/60" />
-                ) : (
-                  <ChevronDown className="w-4 h-4 text-slate/60" />
-                )}
-              </button>
-              
-              {showHelp && (
-                <div className="px-4 pb-4 border-t border-slate/10">
-                  <div className="pt-4 text-sm space-y-4">
-                    <div>
-                      <h4 className="font-semibold text-slate-900 mb-2">What are Stored Materials?</h4>
-                      <p className="text-slate/70">
-                        Stored materials are construction materials that have been purchased and delivered to the job site 
-                        but have not yet been incorporated into the work. These materials represent a cost to the contractor 
-                        and can be billed for under most construction contracts.
-                      </p>
-                    </div>
-                    
-                    <div>
-                      <h4 className="font-semibold text-slate-900 mb-2">When to Bill for Stored Materials</h4>
-                      <p className="text-slate/70">
-                        You should bill for stored materials when:
-                      </p>
-                      <ul className="mt-2 ml-4 list-disc space-y-1 text-slate/70">
-                        <li>Materials have been purchased and are on-site</li>
-                        <li>Materials are properly stored and protected from damage</li>
-                        <li>The contract allows for billing of stored materials</li>
-                        <li>Materials will be installed in a future billing period</li>
-                      </ul>
-                    </div>
+              </div>
+            </div>
+          </div>
 
-                    <div>
-                      <h4 className="font-semibold text-slate-900 mb-2">How It Works in Pay Applications</h4>
-                      <p className="text-slate/70">
-                        When enabled, the workspace will include additional columns for tracking materials stored to date, 
-                        materials stored this period, and the value of stored materials. These amounts are typically excluded 
-                        from retainage calculations since the work isn't yet complete.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+          {/* Status info */}
+          <div className={`rounded-xl border p-4 text-sm transition-all ${
+            materialsStoredEnabled ? 'bg-teal-50 border-teal-100 text-teal-800' : 'bg-slate/5 border-slate/10 text-slate/50'
+          }`}>
+            {materialsStoredEnabled
+              ? 'A Materials Stored column will appear in the workspace (G703 Column E). You\'ll track and bill for materials each period.'
+              : 'Materials stored columns will be hidden from the workspace. You can change this setting later if needed.'}
+          </div>
         </div>
-      </div>
 
-      {/* Action Bar */}
-      <WizardActionBar
-        onSaveAndExit={handleSaveAndExit}
-        onBack={handleBack}
-        onContinue={handleContinue}
-        continueLabel="Continue"
-        continueDisabled={isLoading}
-        isLoading={isLoading}
-      />
+        <WizardActionBar
+          onSaveAndExit={() => router.push('/pay-applications')}
+          onBack={() => router.push(`/pay-applications/${currentPayApp?.id}/change-orders`)}
+          onContinue={handleContinue}
+          continueDisabled={isLoading}
+          isLoading={isLoading}
+        />
+      </WizardSplitPane>
     </div>
   )
 }
