@@ -17,12 +17,13 @@ import type { PayApp, PayAppRow, LineItemRow, ChangeOrderRow } from './types'
 
 // ── Load ──────────────────────────────────────────────────────
 
-export async function loadPayApplications(): Promise<PayApp[]> {
+export async function loadPayApplications(userId: string): Promise<PayApp[]> {
   const supabase = await createClient()
 
   const { data: rows, error } = await supabase
     .from('pay_applications')
     .select('*')
+    .eq('user_id', userId)
     .order('created_at', { ascending: false })
 
   if (error) throw new Error(`loadPayApplications: ${error.message}`)
@@ -53,12 +54,17 @@ export async function loadPayApplications(): Promise<PayApp[]> {
   )
 }
 
-export async function loadPayApplicationById(id: string): Promise<PayApp | null> {
+export async function loadPayApplicationById(id: string, userId: string): Promise<PayApp | null> {
   const supabase = await createClient()
 
   const [{ data: row, error }, { data: lineItemRows }, { data: changeOrderRows }] =
     await Promise.all([
-      supabase.from('pay_applications').select('*').eq('id', id).single(),
+      supabase
+        .from('pay_applications')
+        .select('*')
+        .eq('id', id)
+        .eq('user_id', userId)
+        .single(),
       supabase
         .from('pay_application_line_items')
         .select('*')
@@ -81,7 +87,9 @@ export async function loadPayApplicationById(id: string): Promise<PayApp | null>
 export async function createPayApplication(payApp: PayApp, userId: string): Promise<PayApp> {
   const supabase = await createClient()
 
-  const row = toSupabaseRow(payApp, userId)
+  const row = toSupabaseRow(payApp, userId) as any
+  delete row.id
+
   const { data: insertedRow, error } = await (supabase
     .from('pay_applications') as any)
     .insert(row)
@@ -125,11 +133,11 @@ export async function createPayApplication(payApp: PayApp, userId: string): Prom
 export async function updatePayApplication(payApp: PayApp): Promise<void> {
   const supabase = await createClient()
 
-  // Get the current user_id (RLS requires it in the row)
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('updatePayApplication: not authenticated')
+  if (!payApp.userId) {
+    throw new Error('updatePayApplication: missing user ID')
+  }
 
-  const row = toSupabaseRow(payApp, user.id)
+  const row = toSupabaseRow(payApp, payApp.userId)
 
   const { error } = await (supabase
     .from('pay_applications') as any)
@@ -202,6 +210,7 @@ export async function createCorrectedDraft(
     .from('pay_applications')
     .select('*')
     .eq('id', originalId)
+    .eq('user_id', userId)
     .single()
 
   if (loadError || !original) {
@@ -260,16 +269,20 @@ export async function createCorrectedDraft(
   }
 
   // Load the complete corrected draft with line items
-  return loadPayApplicationById((insertedRow as any).id) as Promise<PayApp>
+  return loadPayApplicationById((insertedRow as any).id, userId) as Promise<PayApp>
 }
 
 // ── Finalize ───────────────────────────────────────────────────────
 
-export async function finalizePayApplication(id: string): Promise<PayApp> {
+export async function finalizePayApplication(id: string, userId: string): Promise<PayApp> {
+  if (!userId) {
+    throw new Error('finalizePayApplication: missing user ID')
+  }
+
   const supabase = await createClient()
 
   // Load the current pay application with line items
-  const current = await loadPayApplicationById(id)
+  const current = await loadPayApplicationById(id, userId)
   if (!current) {
     throw new Error('finalizePayApplication: Pay application not found')
   }
@@ -305,5 +318,5 @@ export async function finalizePayApplication(id: string): Promise<PayApp> {
   if (error) throw new Error(`finalizePayApplication: ${error.message}`)
 
   // Load and return the finalized pay application
-  return loadPayApplicationById(id) as Promise<PayApp>
+  return loadPayApplicationById(id, userId) as Promise<PayApp>
 }

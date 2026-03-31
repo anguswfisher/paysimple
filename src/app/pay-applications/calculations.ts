@@ -215,6 +215,7 @@ export function fromSupabaseRow(
     createdAt: row.created_at,
     updatedAt: row.updated_at,
     finalizedAt: row.finalized_at ?? undefined,
+    userId: row.user_id,
 
     basics: {
       projectName: row.project_name,
@@ -273,7 +274,7 @@ export function toSupabaseRow(
 ): Omit<PayAppRow, 'created_at' | 'updated_at'> {
   return {
     id: payApp.id,
-    user_id: userId,
+    user_id: payApp.userId ?? userId,
     status: payApp.status,
     entry_mode: payApp.entryMode,
 
@@ -319,9 +320,8 @@ export function lineItemToSupabaseRow(
   item: LineItem,
   payApplicationId: string,
   sortOrder: number,
-): Omit<LineItemRow, 'work_to_date' | 'materials_to_date' | 'earned_to_date' | 'balance_to_finish' | 'created_at' | 'updated_at'> {
+): Omit<LineItemRow, 'id' | 'work_to_date' | 'materials_to_date' | 'earned_to_date' | 'balance_to_finish' | 'created_at' | 'updated_at'> {
   return {
-    id: item.id,
     pay_application_id: payApplicationId,
     sort_order: sortOrder,
     line_number: item.lineNumber,
@@ -339,9 +339,8 @@ export function changeOrderToSupabaseRow(
   co: ChangeOrder,
   payApplicationId: string,
   sortOrder: number,
-): Omit<ChangeOrderRow, 'created_at' | 'updated_at'> {
+): Omit<ChangeOrderRow, 'id' | 'created_at' | 'updated_at'> {
   return {
-    id: co.id,
     pay_application_id: payApplicationId,
     co_number: co.number,
     description: co.description,

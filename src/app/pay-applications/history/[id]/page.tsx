@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { useSupabase } from '@/components/providers/supabase-provider'
 import { usePayAppStore } from '@/app/pay-applications/store'
 import { calculateG702Totals } from '@/app/pay-applications/calculations'
 import { ArrowLeft, Download, FilePlus, User, Calendar, Building } from 'lucide-react'
@@ -10,15 +11,16 @@ import type { G702Totals } from '@/app/pay-applications/types'
 
 export default function HistoryDetailPage({ params }: { params: { id: string } }) {
   const router = useRouter()
+  const { user, loading: authLoading } = useSupabase()
   const { currentPayApp, loadPayAppById } = usePayAppStore()
   const [isLoading, setIsLoading] = useState(false)
   const [totals, setTotals] = useState<G702Totals | null>(null)
 
   useEffect(() => {
-    const loadPayApp = async () => {
+    const loadPayApp = async (userId: string) => {
       setIsLoading(true)
       try {
-        await loadPayAppById(params.id)
+        await loadPayAppById(params.id, userId)
       } catch (error) {
         console.error('Failed to load pay application:', error)
       } finally {
@@ -26,8 +28,10 @@ export default function HistoryDetailPage({ params }: { params: { id: string } }
       }
     }
 
-    loadPayApp()
-  }, [params.id, loadPayAppById])
+    if (!authLoading && user) {
+      loadPayApp(user.id)
+    }
+  }, [params.id, loadPayAppById, authLoading, user])
 
   useEffect(() => {
     if (currentPayApp) {

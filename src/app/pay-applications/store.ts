@@ -68,10 +68,10 @@ interface PayAppState {
   // ── Lifecycle ──────────────────────────────────────────────
 
   /** Load all pay apps for the current user from Supabase. Call on mount. */
-  loadPayApps: () => Promise<void>
+  loadPayApps: (userId: string) => Promise<void>
 
   /** Load a single pay app by ID (e.g. when navigating to /pay-applications/[id]/basics) */
-  loadPayAppById: (id: string) => Promise<void>
+  loadPayAppById: (id: string, userId: string) => Promise<void>
 
   /** Set the active pay app by ID (from already-loaded list). */
   setCurrentPayApp: (id: string) => void
@@ -150,20 +150,20 @@ export const usePayAppStore = create<PayAppState>()(
 
       // ── Lifecycle ────────────────────────────────────────────
 
-      loadPayApps: async () => {
+      loadPayApps: async (userId: string) => {
         try {
           const { loadPayApplications } = await import('@/app/pay-applications/actions')
-          const payApps = await loadPayApplications()
+          const payApps = await loadPayApplications(userId)
           set({ payApps })
         } catch (err) {
           console.error('[PayAppStore] loadPayApps failed:', err)
         }
       },
 
-      loadPayAppById: async (id: string) => {
+      loadPayAppById: async (id: string, userId: string) => {
         try {
           const { loadPayApplicationById } = await import('@/app/pay-applications/actions')
-          const payApp = await loadPayApplicationById(id)
+          const payApp = await loadPayApplicationById(id, userId)
           if (payApp) {
             set({ currentPayApp: payApp })
           }
@@ -203,7 +203,8 @@ export const usePayAppStore = create<PayAppState>()(
           return saved
         } catch (err) {
           console.error('[PayAppStore] createPayApp failed:', err)
-          return payApp
+          set({ saveStatus: 'unsaved' })
+          throw err
         }
       },
 
@@ -379,11 +380,11 @@ export const usePayAppStore = create<PayAppState>()(
 
       finalizePayApp: async () => {
         const current = get().currentPayApp
-        if (!current) return
+        if (!current || !current.userId) return
 
         try {
           const { finalizePayApplication } = await import('@/app/pay-applications/actions')
-          const finalized = await finalizePayApplication(current.id)
+          const finalized = await finalizePayApplication(current.id, current.userId)
           
           set((state) => ({
             payApps: state.payApps.map((p) => (p.id === current.id ? finalized : p)),

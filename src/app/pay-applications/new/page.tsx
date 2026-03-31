@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { WizardActionBar } from '@/components/pay-applications/WizardActionBar'
 import { usePayAppStore } from '@/app/pay-applications/store'
+import { useSupabase } from '@/components/providers/supabase-provider'
 import { ArrowRight, Check } from 'lucide-react'
 import type { EntryMode } from '@/app/pay-applications/types'
 
@@ -37,25 +38,26 @@ const ENTRY_MODES: {
 export default function NewPayApplicationPage() {
   const router = useRouter()
   const { createPayApp } = usePayAppStore()
+  const { user, loading: authLoading } = useSupabase()
   const [selectedMode, setSelectedMode] = useState<EntryMode | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleContinue = async () => {
     if (!selectedMode) return
+    if (!user) {
+      setError('Please sign in before creating a pay application.')
+      return
+    }
 
+    setError(null)
     setIsLoading(true)
     try {
-      // Get current user ID - for now we'll use a placeholder
-      // In a real app, this would come from auth context
-      const userId = 'current-user-id' // TODO: Get from auth
-      
-      const newPayApp = await createPayApp(selectedMode, userId)
-      
-      // Navigate to the basics step of the new pay app
+      const newPayApp = await createPayApp(selectedMode, user.id)
       router.push(`/pay-applications/${newPayApp.id}/basics`)
     } catch (error) {
       console.error('Failed to create pay application:', error)
-      // TODO: Show error message to user
+      setError('Unable to create pay application. Please try again.')
     } finally {
       setIsLoading(false)
     }
@@ -160,9 +162,14 @@ export default function NewPayApplicationPage() {
         onBack={handleBack}
         onContinue={handleContinue}
         continueLabel="Continue"
-        continueDisabled={!selectedMode || isLoading}
+        continueDisabled={!selectedMode || isLoading || authLoading || !user}
         isLoading={isLoading}
       />
+      {error && (
+        <div className="mt-4 text-sm text-red-600 text-center">
+          {error}
+        </div>
+      )}
     </div>
   )
 }

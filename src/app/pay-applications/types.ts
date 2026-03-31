@@ -115,6 +115,7 @@ export interface PayApp {
   createdAt: string
   updatedAt: string
   finalizedAt?: string
+  userId?: string
 
   basics: PayAppBasics
   billingFormat: BillingFormat

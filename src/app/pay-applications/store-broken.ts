@@ -126,20 +126,20 @@ export const usePayAppStore = create<PayAppState>()(
 
       // ── Lifecycle ────────────────────────────────────────────
 
-      loadPayApps: async () => {
+      loadPayApps: async (userId: string) => {
         try {
           const { loadPayApplications } = await import('@/app/pay-applications/actions')
-          const payApps = await loadPayApplications()
+          const payApps = await loadPayApplications(userId)
           set({ payApps })
         } catch (err) {
           console.error('[PayAppStore] loadPayApps failed:', err)
         }
       },
 
-      loadPayAppById: async (id: string) => {
+      loadPayAppById: async (id: string, userId: string) => {
         try {
           const { loadPayApplicationById } = await import('@/app/pay-applications/actions')
-          const payApp = await loadPayApplicationById(id)
+          const payApp = await loadPayApplicationById(id, userId)
           if (payApp) {
             set({ currentPayApp: payApp })
           }
@@ -364,11 +364,11 @@ export const usePayAppStore = create<PayAppState>()(
 
       finalizePayApp: async () => {
         const current = get().currentPayApp
-        if (!current) return
+        if (!current || !current.userId) return
 
         try {
           const { finalizePayApplication } = await import('@/app/pay-applications/actions')
-          const finalized = await finalizePayApplication(current.id)
+          const finalized = await finalizePayApplication(current.id, current.userId)
           
           set(
             (state) => ({

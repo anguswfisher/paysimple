@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(for dir:*)",
+      "Bash(do)",
+      "Bash(echo \"=== $dir ===\")",
+      "Read(//c/src/paySimple/src/app/pay-applications/[id]$dir/**)",
+      "Bash(done)"
+    ]
+  }
+}

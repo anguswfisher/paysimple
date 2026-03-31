@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { PayAppStepper } from '@/components/pay-applications/PayAppStepper'
 import { usePayAppStore } from '@/app/pay-applications/store'
+import { useSupabase } from '@/components/providers/supabase-provider'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export default function WizardLayout({
@@ -14,17 +15,18 @@ export default function WizardLayout({
   params: { id: string }
 }) {
   const router = useRouter()
+  const { user, loading: authLoading } = useSupabase()
   const { loadPayAppById, currentPayApp } = usePayAppStore()
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const loadPayApp = async () => {
+    const loadPayApp = async (userId: string) => {
       try {
         setIsLoading(true)
         setError(null)
         
-        await loadPayAppById(params.id)
+        await loadPayAppById(params.id, userId)
       } catch (err) {
         console.error('Failed to load pay application:', err)
         setError('Failed to load pay application')
@@ -38,10 +40,10 @@ export default function WizardLayout({
       }
     }
 
-    if (params.id) {
-      loadPayApp()
+    if (params.id && !authLoading && user) {
+      loadPayApp(user.id)
     }
-  }, [params.id, loadPayAppById, router])
+  }, [params.id, loadPayAppById, router, authLoading, user])
 
   if (isLoading) {
     return (

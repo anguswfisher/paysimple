@@ -6,17 +6,21 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { useSupabase } from '@/components/providers/supabase-provider'
 import { usePayAppStore } from '@/app/pay-applications/store'
 import { calculateG702Totals } from '@/app/pay-applications/calculations'
 import { FileText, Plus, Download, Eye, Edit } from 'lucide-react'
 
 export default function PayApplicationsPage() {
   const router = useRouter()
+  const { user, loading: authLoading } = useSupabase()
   const { payApps, loadPayApps } = usePayAppStore()
 
   useEffect(() => {
-    loadPayApps()
-  }, [loadPayApps])
+    if (!authLoading && user) {
+      loadPayApps(user.id)
+    }
+  }, [authLoading, user, loadPayApps])
 
   const getStatusBadge = (status: string) => {
     switch (status) {

@@ -3,11 +3,13 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { useSupabase } from '@/components/providers/supabase-provider'
 import { usePayAppStore } from '@/app/pay-applications/store'
 import { ArrowLeft, AlertTriangle, Info } from 'lucide-react'
 
 export default function CorrectedDraftPage({ params }: { params: { id: string } }) {
   const router = useRouter()
+  const { user, loading: authLoading } = useSupabase()
   const { currentPayApp, loadPayAppById, createCorrectedDraft } = usePayAppStore()
   const [isLoading, setIsLoading] = useState(false)
   const [reason, setReason] = useState('')
@@ -23,10 +25,10 @@ export default function CorrectedDraftPage({ params }: { params: { id: string } 
   ]
 
   useEffect(() => {
-    const loadPayApp = async () => {
+    const loadPayApp = async (userId: string) => {
       setIsLoading(true)
       try {
-        await loadPayAppById(params.id)
+        await loadPayAppById(params.id, userId)
       } catch (error) {
         console.error('Failed to load pay application:', error)
       } finally {
@@ -34,8 +36,10 @@ export default function CorrectedDraftPage({ params }: { params: { id: string } 
       }
     }
 
-    loadPayApp()
-  }, [params.id, loadPayAppById])
+    if (!authLoading && user) {
+      loadPayApp(user.id)
+    }
+  }, [params.id, loadPayAppById, authLoading, user])
 
   const handleBack = () => {
     router.push('/pay-applications/history')
@@ -43,13 +47,14 @@ export default function CorrectedDraftPage({ params }: { params: { id: string } 
 
   const handleSubmit = async () => {
     if (!reason.trim()) return
+    if (!user) {
+      console.error('Failed to create corrected draft: user not authenticated')
+      return
+    }
 
     setIsLoading(true)
     try {
-      // TODO: Get userId from auth context
-      const userId = 'current-user' // Placeholder
-      
-      const newPayApp = await createCorrectedDraft(params.id, userId, reason, notes)
+      const newPayApp = await createCorrectedDraft(params.id, user.id, reason, notes)
       
       if (!newPayApp) {
         throw new Error('Failed to create corrected draft')

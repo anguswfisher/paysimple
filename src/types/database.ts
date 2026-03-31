@@ -98,6 +98,203 @@ export interface Database {
           updated_at?: string
         }
       }
+      pay_applications: {
+        Row: {
+          id: string
+          user_id: string
+          status: 'draft' | 'finalized' | 'corrected-draft'
+          entry_mode: 'guided' | 'from-previous' | 'blank'
+          project_name: string
+          owner_name: string
+          contractor_name: string
+          application_number: string
+          period_start_date: string | null
+          period_end_date: string | null
+          payment_due_date: string | null
+          billing_format: 'schedule-of-values' | 'total-only'
+          materials_stored_enabled: boolean
+          retainage_percent: string
+          retainage_applies_to: 'work' | 'materials' | 'both'
+          retainage_can_change: boolean
+          retainage_effective_date: string | null
+          retainage_new_percent: string | null
+          change_orders_enabled: boolean
+          change_order_mode: 'none' | 'totals-only' | 'individual'
+          change_order_total_amount: string | null
+          current_step: number
+          completed_steps: number[]
+          signer_name: string | null
+          signer_title: string | null
+          signature_date: string | null
+          signature_notes: string | null
+          corrected_from_id: string | null
+          correction_reason: string | null
+          correction_notes: string | null
+          finalized_snapshot: Json | null
+          finalized_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          status?: 'draft' | 'finalized' | 'corrected-draft'
+          entry_mode: 'guided' | 'from-previous' | 'blank'
+          project_name: string
+          owner_name: string
+          contractor_name: string
+          application_number: string
+          period_start_date?: string | null
+          period_end_date?: string | null
+          payment_due_date?: string | null
+          billing_format: 'schedule-of-values' | 'total-only'
+          materials_stored_enabled?: boolean
+          retainage_percent?: string
+          retainage_applies_to?: 'work' | 'materials' | 'both'
+          retainage_can_change?: boolean
+          retainage_effective_date?: string | null
+          retainage_new_percent?: string | null
+          change_orders_enabled?: boolean
+          change_order_mode?: 'none' | 'totals-only' | 'individual'
+          change_order_total_amount?: string | null
+          current_step?: number
+          completed_steps?: number[]
+          signer_name?: string | null
+          signer_title?: string | null
+          signature_date?: string | null
+          signature_notes?: string | null
+          corrected_from_id?: string | null
+          correction_reason?: string | null
+          correction_notes?: string | null
+          finalized_snapshot?: Json | null
+          finalized_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          status?: 'draft' | 'finalized' | 'corrected-draft'
+          entry_mode?: 'guided' | 'from-previous' | 'blank'
+          project_name?: string
+          owner_name?: string
+          contractor_name?: string
+          application_number?: string
+          period_start_date?: string | null
+          period_end_date?: string | null
+          payment_due_date?: string | null
+          billing_format?: 'schedule-of-values' | 'total-only'
+          materials_stored_enabled?: boolean
+          retainage_percent?: string
+          retainage_applies_to?: 'work' | 'materials' | 'both'
+          retainage_can_change?: boolean
+          retainage_effective_date?: string | null
+          retainage_new_percent?: string | null
+          change_orders_enabled?: boolean
+          change_order_mode?: 'none' | 'totals-only' | 'individual'
+          change_order_total_amount?: string | null
+          current_step?: number
+          completed_steps?: number[]
+          signer_name?: string | null
+          signer_title?: string | null
+          signature_date?: string | null
+          signature_notes?: string | null
+          corrected_from_id?: string | null
+          correction_reason?: string | null
+          correction_notes?: string | null
+          finalized_snapshot?: Json | null
+          finalized_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      pay_application_line_items: {
+        Row: {
+          id: string
+          pay_application_id: string
+          sort_order: number
+          line_number: string
+          description: string
+          scheduled_value: string
+          previous_work: string
+          this_period_work: string
+          previous_materials_stored: string
+          this_period_materials_stored: string
+          work_to_date: string
+          materials_to_date: string
+          earned_to_date: string
+          balance_to_finish: string
+          is_change_order_related: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          pay_application_id: string
+          sort_order?: number
+          line_number: string
+          description: string
+          scheduled_value?: string
+          previous_work?: string
+          this_period_work?: string
+          previous_materials_stored?: string
+          this_period_materials_stored?: string
+          is_change_order_related?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          pay_application_id?: string
+          sort_order?: number
+          line_number?: string
+          description?: string
+          scheduled_value?: string
+          previous_work?: string
+          this_period_work?: string
+          previous_materials_stored?: string
+          this_period_materials_stored?: string
+          work_to_date?: string
+          materials_to_date?: string
+          earned_to_date?: string
+          balance_to_finish?: string
+          is_change_order_related?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      pay_application_change_orders: {
+        Row: {
+          id: string
+          pay_application_id: string
+          co_number: string
+          description: string
+          amount: string
+          sort_order: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          pay_application_id: string
+          co_number: string
+          description: string
+          amount?: string
+          sort_order?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          pay_application_id?: string
+          co_number?: string
+          description?: string
+          amount?: string
+          sort_order?: number
+          created_at?: string
+          updated_at?: string
+        }
+      }
       extracted_terms: {
         Row: {
           id: string
