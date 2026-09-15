@@ -16,7 +16,7 @@ export default function SovPage() {
   const guide = (
     <StepGuide
       title="Schedule of Values"
-      subtitle="The G703 is the line-by-line record of your contract's work divisions."
+      subtitle="The schedule of values is the line-by-line record of your contract's work divisions."
       blocks={[
         {
           type: 'intro',

@@ -147,8 +147,8 @@ export function StepGuide({ title, subtitle, blocks }: StepGuideProps) {
       {/* Footer note */}
       <div className="pt-3 border-t border-slate/10">
         <p className="text-xs text-slate/35 leading-relaxed">
-          PaySimple follows the <span className="font-medium">AIA G702/G703</span> standard for
-          construction payment applications, widely required by owners, lenders, and architects.
+          PaySimple follows the <span className="font-medium">standard schedule of values</span> format used
+          for construction payment applications, widely required by owners, lenders, and architects.
         </p>
       </div>
     </div>

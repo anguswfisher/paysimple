@@ -20,7 +20,7 @@ export default function ExportsPage() {
       icon: FileText,
       color: 'bg-blue-100 text-blue-600',
       title: 'Payment Schedule PDF',
-      description: 'Full G702/G703-style schedule with retainage',
+      description: 'Full pay application schedule with retainage',
       format: 'PDF',
       type: 'payment_schedule_pdf'
     },

@@ -29,7 +29,7 @@ const kpiData = [
     icon: DollarSign,
     accent: '#3b82f6',
     accentBg: 'rgba(59,130,246,0.08)',
-    tooltip: 'Sum of all G702 applications submitted across active projects this period.',
+    tooltip: 'Sum of all pay applications submitted across active projects this period.',
   },
   {
     label: 'Payments Received',
@@ -89,9 +89,9 @@ const billingDataPrior = [
 ]
 
 const contractTypes = [
-  { name: 'AIA A101', value: 13000000, percentage: 52, color: '#3b82f6' },
-  { name: 'AIA A102', value: 7750000, percentage: 31, color: '#10b981' },
-  { name: 'AIA A103', value: 4250000, percentage: 17, color: '#f59e0b' },
+  { name: 'Stipulated Sum', value: 13000000, percentage: 52, color: '#3b82f6' },
+  { name: 'Cost Plus GMP', value: 7750000, percentage: 31, color: '#10b981' },
+  { name: 'Cost Plus', value: 4250000, percentage: 17, color: '#f59e0b' },
 ]
 
 const complianceTrend = [
@@ -123,7 +123,7 @@ const riskFlags = [
 const projectPerformance = [
   {
     name: 'Test Project 11',
-    contract: 'A101',
+    contract: 'Stipulated Sum',
     contractValue: 25000002,
     billedToDate: 9200000,
     received: 8100000,
@@ -141,7 +141,7 @@ const projectPerformance = [
   },
   {
     name: 'Westfield Office Build',
-    contract: 'A102',
+    contract: 'Cost Plus GMP',
     contractValue: 12400000,
     billedToDate: 5800000,
     received: 5200000,
@@ -163,7 +163,7 @@ const projectPerformance = [
   },
   {
     name: 'Harbor View Residential',
-    contract: 'A101',
+    contract: 'Stipulated Sum',
     contractValue: 8750000,
     billedToDate: 2100000,
     received: 1900000,
@@ -184,7 +184,7 @@ const projectPerformance = [
   },
   {
     name: 'Northampton Civic Center',
-    contract: 'A103',
+    contract: 'Cost Plus',
     contractValue: 4250000,
     billedToDate: 1300000,
     received: 1200000,
@@ -199,7 +199,7 @@ const projectPerformance = [
       { month: 'Feb', billed: 340000, received: 320000 },
     ],
     complianceIssues: [
-      { label: 'Minor G703 formatting', impact: '-2pts', severity: 'low' },
+      { label: 'Minor schedule of values formatting', impact: '-2pts', severity: 'low' },
     ],
   },
 ]
@@ -230,9 +230,9 @@ const getDeltaColor = (type: string) => {
 
 const getContractBadgeColor = (type: string) => {
   switch (type) {
-    case 'A101': return 'bg-blue-50 text-blue-700 border border-blue-100'
-    case 'A102': return 'bg-emerald-50 text-emerald-700 border border-emerald-100'
-    case 'A103': return 'bg-amber-50 text-amber-700 border border-amber-100'
+    case 'Stipulated Sum': return 'bg-blue-50 text-blue-700 border border-blue-100'
+    case 'Cost Plus GMP': return 'bg-emerald-50 text-emerald-700 border border-emerald-100'
+    case 'Cost Plus': return 'bg-amber-50 text-amber-700 border border-amber-100'
     default: return 'bg-gray-50 text-gray-600 border border-gray-100'
   }
 }
@@ -502,7 +502,7 @@ function EmptyState() {
       </div>
       <h3 className="text-sm font-semibold text-gray-900 mb-1">No data yet</h3>
       <p className="text-xs text-gray-400 max-w-[220px] mb-5 leading-relaxed">
-        Upload your first AIA contract to start tracking payments and compliance.
+        Upload your first construction contract to start tracking payments and compliance.
       </p>
       <button className="text-xs font-semibold text-white bg-blue-500 hover:bg-blue-600 transition-colors px-4 py-2 rounded-lg">
         Upload a contract →

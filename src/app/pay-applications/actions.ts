@@ -292,11 +292,11 @@ export async function finalizePayApplication(id: string, userId: string): Promis
   }
 
   // Create finalized snapshot
-  const { calculateG702Totals } = await import('./calculations')
-  const g702Totals = calculateG702Totals(current)
+  const { calculatePayAppTotals } = await import('./calculations')
+  const payAppTotals = calculatePayAppTotals(current)
 
   const finalizedSnapshot = {
-    g702Totals,
+    payAppTotals,
     lineItems: current.lineItems,
     signatureInfo: current.signatureInfo,
     finalizedAt: new Date().toISOString(),

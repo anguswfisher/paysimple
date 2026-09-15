@@ -8,7 +8,7 @@ import { usePayAppStore } from '@/app/pay-applications/store'
 
 export default function SummaryPage() {
   const router = useRouter()
-  const { currentPayApp, getG702Totals } = usePayAppStore()
+  const { currentPayApp, getPayAppTotals } = usePayAppStore()
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export default function SummaryPage() {
     })
   }
 
-  const totals = getG702Totals()
+  const totals = getPayAppTotals()
 
   if (!currentPayApp || !totals) {
     return (
@@ -75,7 +75,7 @@ export default function SummaryPage() {
       <div className="p-6 border-b border-slate/10">
         <h1 className="text-2xl font-bold text-slate-900">Application Summary</h1>
         <p className="text-slate/70 mt-1">
-          Review your G702 payment application details
+          Review your pay application details
         </p>
       </div>
 
@@ -129,9 +129,9 @@ export default function SummaryPage() {
                 </div>
               </div>
 
-              {/* G702 Line Table */}
+              {/* Payment Summary Line Table */}
               <div className="space-y-2">
-                <h3 className="text-lg font-semibold text-slate-900">G702 Schedule of Values</h3>
+                <h3 className="text-lg font-semibold text-slate-900">Schedule of Values</h3>
                 <div className="border border-slate/20 rounded-lg overflow-hidden">
                   <table className="w-full">
                     <tbody>

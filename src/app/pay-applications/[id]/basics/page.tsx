@@ -114,7 +114,7 @@ export default function BasicsPage() {
       blocks={[
         {
           type: 'intro',
-          text: 'A pay application (AIA G702) is the formal document a contractor submits to request payment for work completed during a billing period. Every field here appears on the final form submitted to the owner or architect.',
+          text: 'A pay application is the formal document a contractor submits to request payment for work completed during a billing period. Every field here appears on the final form submitted to the owner or architect.',
         },
         { type: 'divider' },
         {
@@ -163,7 +163,7 @@ export default function BasicsPage() {
             },
             {
               term: 'Payment Due Date',
-              definition: 'The contractual deadline by which the owner must certify and issue payment. Typically 7–30 days after submission per AIA contract terms.',
+              definition: 'The contractual deadline by which the owner must certify and issue payment. Typically 7–30 days after submission per construction contract terms.',
             },
           ],
         },

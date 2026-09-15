@@ -206,7 +206,7 @@ export default function CompliancePage() {
                 <FileText className="w-4 h-4 text-slate" />
                 <div className="flex-1">
                   <p className="text-xs font-medium text-slate">Contract Documentation</p>
-                  <p className="text-xs text-neutral-500">AIA forms referenced</p>
+                  <p className="text-xs text-neutral-500">Contract forms referenced</p>
                 </div>
                 <CheckCircle className="w-4 h-4 text-success" />
               </div>

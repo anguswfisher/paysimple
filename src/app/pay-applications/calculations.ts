@@ -9,7 +9,7 @@ import type {
   LineItem,
   LineItemRow,
   ChangeOrderRow,
-  G702Totals,
+  PayAppTotals,
   EntryMode,
   PayAppRow,
   ChangeOrder,
@@ -109,10 +109,10 @@ export function calculateAllLineItems(
   return lineItems.map((item) => calculateLineItem(item, retainagePercent))
 }
 
-// ── G702 Totals ───────────────────────────────────────────────
-// Mirrors calculateG702Totals() from Angular service.
+// ── Payment Totals ───────────────────────────────────────────────
+// Mirrors calculatePayAppTotals() from Angular service.
 
-export function calculateG702Totals(payApp: PayApp): G702Totals {
+export function calculatePayAppTotals(payApp: PayApp): PayAppTotals {
   const { lineItems, retainageSettings, changeOrderSettings } = payApp
   const retainagePercent = retainageSettings.retainagePercent / 100
 

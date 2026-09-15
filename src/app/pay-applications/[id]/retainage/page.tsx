@@ -95,7 +95,7 @@ export default function RetainagePage() {
           type: 'section',
           icon: <PiggyBank className="w-3.5 h-3.5" />,
           heading: 'Tiered Retainage',
-          body: 'Many AIA contracts reduce retainage once the project reaches 50% completion. Enable "Changes Over Time" to model this — set the effective date and the reduced rate that takes effect.',
+          body: 'Many construction contracts reduce retainage once the project reaches 50% completion. Enable "Changes Over Time" to model this — set the effective date and the reduced rate that takes effect.',
         },
         {
           type: 'warning',

@@ -179,7 +179,7 @@ export class SettingsService {
         weekly_summary: true
       },
       ai_preferences: {
-        default_contract_type: 'a101',
+        default_contract_type: 'Stipulated Sum',
         flag_pay_when_paid: true,
         auto_generate_schedule: true,
         retainage_threshold: 10
@@ -232,9 +232,9 @@ export class SettingsService {
     const validated: Partial<AIPreferences> = {}
 
     if (prefs.default_contract_type !== undefined) {
-      const validTypes = ['a101', 'a102', 'a103']
+      const validTypes = ['Stipulated Sum', 'Cost Plus with GMP', 'Cost Plus']
       if (validTypes.includes(prefs.default_contract_type)) {
-        validated.default_contract_type = prefs.default_contract_type as 'a101' | 'a102' | 'a103'
+        validated.default_contract_type = prefs.default_contract_type as 'Stipulated Sum' | 'Cost Plus with GMP' | 'Cost Plus'
       }
     }
 

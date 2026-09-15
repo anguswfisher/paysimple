@@ -8,7 +8,7 @@ import { CheckCircle2, Home, Plus, History } from 'lucide-react'
 
 export default function FinalizeSuccessPage() {
   const router = useRouter()
-  const { currentPayApp, getG702Totals } = usePayAppStore()
+  const { currentPayApp, getPayAppTotals } = usePayAppStore()
 
   useEffect(() => {
     // This page reads from currentPayApp, no additional loading needed
@@ -33,7 +33,7 @@ export default function FinalizeSuccessPage() {
     })
   }
 
-  const totals = getG702Totals()
+  const totals = getPayAppTotals()
 
   if (!currentPayApp || !totals) {
     return (

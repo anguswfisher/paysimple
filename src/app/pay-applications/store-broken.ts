@@ -27,7 +27,7 @@ import {
   createEmptyPayApp,
   calculateLineItem,
   calculateAllLineItems,
-  calculateG702Totals,
+  calculatePayAppTotals,
   incrementApplicationNumber,
   generateLineItemId,
   generatePayAppId,
@@ -112,7 +112,7 @@ interface PayAppState {
   // ── Computed Helpers ───────────────────────────────────────
 
   getPayAppsByStatus: (status: PayAppStatus) => PayApp[]
-  getG702Totals: () => ReturnType<typeof calculateG702Totals> | null
+  getPayAppTotals: () => ReturnType<typeof calculatePayAppTotals> | null
 }
 
 // ── Store Implementation ──────────────────────────────────────
@@ -403,10 +403,10 @@ export const usePayAppStore = create<PayAppState>()(
         return get().payApps.filter((p) => p.status === status)
       },
 
-      getG702Totals: () => {
+      getPayAppTotals: () => {
         const current = get().currentPayApp
         if (!current) return null
-        return calculateG702Totals(current)
+        return calculatePayAppTotals(current)
       },
     }),
     { name: 'PayAppStore' },

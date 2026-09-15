@@ -140,9 +140,9 @@ const handleToggle = async (key: keyof AIPreferences) => {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="AIA A101">AIA A101</SelectItem>
-              <SelectItem value="AIA A102">AIA A102</SelectItem>
-              <SelectItem value="AIA A103">AIA A103</SelectItem>
+              <SelectItem value="Stipulated Sum">Stipulated Sum</SelectItem>
+              <SelectItem value="Cost Plus with GMP">Cost Plus with GMP</SelectItem>
+              <SelectItem value="Cost Plus">Cost Plus</SelectItem>
             </SelectContent>
           </Select>
         </div>

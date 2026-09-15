@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useSupabase } from '@/components/providers/supabase-provider'
 import { usePayAppStore } from '@/app/pay-applications/store'
-import { calculateG702Totals } from '@/app/pay-applications/calculations'
+import { calculatePayAppTotals } from '@/app/pay-applications/calculations'
 import { FileText, Plus, Download, Eye, Edit } from 'lucide-react'
 
 export default function PayApplicationsPage() {
@@ -60,7 +60,7 @@ export default function PayApplicationsPage() {
           <div>
             <h1 className="text-2xl font-bold text-slate-900">Pay Applications</h1>
             <p className="text-slate/70 mt-1">
-              Create, manage, and track your AIA G702/G703 pay applications
+              Create, manage, and track your construction pay applications
             </p>
           </div>
           <Button 
@@ -104,7 +104,7 @@ export default function PayApplicationsPage() {
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Pay Applications</h1>
           <p className="text-slate/70 mt-1">
-            Create, manage, and track your AIA G702/G703 pay applications
+            Create, manage, and track your construction pay applications
           </p>
         </div>
         <Button 
@@ -153,7 +153,7 @@ export default function PayApplicationsPage() {
               </thead>
               <tbody>
                 {payApps.map((payApp) => {
-                  const totals = calculateG702Totals(payApp)
+                  const totals = calculatePayAppTotals(payApp)
                   return (
                     <tr key={payApp.id} className="border-b border-slate/5 hover:bg-slate/5">
                       <td className="py-3 px-4 text-sm font-medium tabular-nums">

@@ -22,7 +22,7 @@ const savedReports = [
   {
     id: 1,
     name: 'Monthly Payment Summary',
-    description: 'G702 billing vs. received — all projects',
+    description: 'Pay application billing vs. received — all projects',
     type: 'Scheduled',
     formats: ['PDF', 'CSV'],
     icon: BarChart3,
@@ -54,7 +54,7 @@ const savedReports = [
   },
   {
     id: 4,
-    name: 'Schedule of Values (G703)',
+    name: 'Schedule of Values',
     description: 'Full line-item breakdown with completion %',
     type: 'Scheduled',
     formats: ['XLSX'],

@@ -5,16 +5,16 @@ import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useSupabase } from '@/components/providers/supabase-provider'
 import { usePayAppStore } from '@/app/pay-applications/store'
-import { calculateG702Totals } from '@/app/pay-applications/calculations'
+import { calculatePayAppTotals } from '@/app/pay-applications/calculations'
 import { ArrowLeft, Download, FilePlus, User, Calendar, Building } from 'lucide-react'
-import type { G702Totals } from '@/app/pay-applications/types'
+import type { PayAppTotals } from '@/app/pay-applications/types'
 
 export default function HistoryDetailPage({ params }: { params: { id: string } }) {
   const router = useRouter()
   const { user, loading: authLoading } = useSupabase()
   const { currentPayApp, loadPayAppById } = usePayAppStore()
   const [isLoading, setIsLoading] = useState(false)
-  const [totals, setTotals] = useState<G702Totals | null>(null)
+  const [totals, setTotals] = useState<PayAppTotals | null>(null)
 
   useEffect(() => {
     const loadPayApp = async (userId: string) => {
@@ -35,7 +35,7 @@ export default function HistoryDetailPage({ params }: { params: { id: string } }
 
   useEffect(() => {
     if (currentPayApp) {
-      const calculatedTotals = calculateG702Totals(currentPayApp)
+      const calculatedTotals = calculatePayAppTotals(currentPayApp)
       setTotals(calculatedTotals)
     }
   }, [currentPayApp])
@@ -225,10 +225,10 @@ export default function HistoryDetailPage({ params }: { params: { id: string } }
             </CardContent>
           </Card>
 
-          {/* G702 Summary Section */}
+          {/* Payment Summary Section */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">G702 Summary</CardTitle>
+              <CardTitle className="text-lg">Payment Summary</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

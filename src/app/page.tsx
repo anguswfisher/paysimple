@@ -44,11 +44,11 @@ export default function LandingPage() {
           </div>
           
           <h1 className="text-4xl font-extrabold text-white leading-tight tracking-tight max-w-2xl mx-auto mb-4">
-            Automate <span className="text-steel">AIA Contract</span> Payment Schedules
+            Automate <span className="text-steel">Construction Contract</span> Payment Schedules
           </h1>
           
           <p className="text-base text-white/60 max-w-lg mx-auto mb-7 leading-relaxed">
-            Upload your AIA contract documents and let AI extract payment terms, generate compliant schedules, and flag compliance risks in minutes.
+            Upload your construction contract documents and let AI extract payment terms, generate compliant schedules, and flag compliance risks in minutes.
           </p>
           
           <div className="flex items-center justify-center gap-3 mb-3">
@@ -87,7 +87,7 @@ export default function LandingPage() {
               Upload Contract
             </h3>
             <p className="text-sm text-neutral-600 leading-relaxed">
-              Upload your AIA contract documents (PDF, DOCX) and our AI extracts all payment terms automatically.
+              Upload your construction contract documents (PDF, DOCX) and our AI extracts all payment terms automatically.
             </p>
           </div>
           
@@ -137,7 +137,7 @@ export default function LandingPage() {
               <div>
                 <h3 className="font-semibold text-slate mb-2">AI Contract Analysis</h3>
                 <p className="text-sm text-neutral-600">
-                  Automatically extract payment terms, milestones, and retainage from AIA contracts.
+                  Automatically extract payment terms, milestones, and retainage from construction contracts.
                 </p>
               </div>
             </div>

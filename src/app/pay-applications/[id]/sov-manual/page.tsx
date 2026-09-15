@@ -113,7 +113,7 @@ export default function SOVManualPage() {
         },
         {
           type: 'warning',
-          text: 'The total scheduled value must equal your contract sum exactly. A mismatch will cause the G702 calculations to be incorrect.',
+          text: 'The total scheduled value must equal your contract sum exactly. A mismatch will cause the payment summary calculations to be incorrect.',
         },
         {
           type: 'checklist',

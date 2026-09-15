@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { usePayAppStore } from '@/app/pay-applications/store'
-import { calculateG702Totals } from '@/app/pay-applications/calculations'
+import { calculatePayAppTotals } from '@/app/pay-applications/calculations'
 import { AlertTriangle, Save, ArrowRight, X } from 'lucide-react'
 import type { LineItem } from '@/app/pay-applications/types'
 
@@ -80,7 +80,7 @@ export default function WorkspacePage() {
 
   const { lineItems, retainageSettings, materialsStoredEnabled } = currentPayApp
   const retainagePct = retainageSettings.retainagePercent / 100
-  const totals = calculateG702Totals(currentPayApp)
+  const totals = calculatePayAppTotals(currentPayApp)
 
   const warningItems = lineItems.filter(
     (item) => (item.earnedToDate ?? 0) > item.scheduledValue,
@@ -109,7 +109,7 @@ export default function WorkspacePage() {
             )}
           </h1>
           <p className="text-xs text-slate-400 mt-0.5 uppercase tracking-wide font-medium">
-            Schedule of Values · G703
+            Schedule of Values
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -171,7 +171,7 @@ export default function WorkspacePage() {
               <th className="px-3 py-2.5 text-right text-xs font-semibold text-slate-500 uppercase tracking-wide w-28">Retainage</th>
             </tr>
 
-            {/* Row 2 — AIA column letters */}
+            {/* Row 2 — pay application column letters */}
             <tr className="bg-slate-50 border-b-2 border-slate-200">
               <th className="px-3 py-1" />
               <th className="px-3 py-1 text-center text-xs text-slate-400 font-medium">A</th>

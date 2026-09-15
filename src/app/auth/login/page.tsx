@@ -116,12 +116,12 @@ export default function LoginPage() {
           {/* Headline */}
           <div>
             <h2 className="text-[38px] leading-[1.12] font-serif text-white tracking-tight">
-              AIA contracts,<br />
+              Construction contracts,<br />
               <em className="text-blue-300">finally</em> under<br />
               control.
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-white/55 max-w-[360px]">
-              Extract payment terms, generate G702/G703 schedules, and catch
+              Extract payment terms, generate pay application schedules, and catch
               compliance risks — in seconds, not days.
             </p>
           </div>
@@ -196,9 +196,9 @@ export default function LoginPage() {
           {/* Feature pills */}
           <div className="flex flex-wrap gap-1.5">
             {[
-              'AIA A101 / A102 / A103',
+              'Stipulated sum, cost-plus & GMP',
               'Compliance flagging',
-              'G702/G703 export',
+              'Pay application export',
               'Real-time analytics',
             ].map((label) => (
               <span

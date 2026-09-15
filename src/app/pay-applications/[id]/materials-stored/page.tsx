@@ -55,7 +55,7 @@ export default function MaterialsStoredPage() {
         },
         {
           type: 'tip',
-          text: 'Check your contract\'s General Conditions. AIA A201 §9.3.2 covers the requirements for including stored materials in a pay application.',
+          text: 'Check your contract\'s General Conditions — §9.3.2 typically covers the requirements for including stored materials in a pay application.',
         },
         { type: 'divider' },
         {
@@ -78,7 +78,7 @@ export default function MaterialsStoredPage() {
           type: 'section',
           icon: <Warehouse className="w-3.5 h-3.5" />,
           heading: 'How It Appears in the Workspace',
-          body: 'When enabled, the G703 workspace adds a "Materials Stored" column (Column E in AIA format). You\'ll enter the value of newly stored materials each period. The system tracks this separately from work completed.',
+          body: 'When enabled, the schedule of values workspace adds a "Materials Stored" column (Column E in the standard format). You\'ll enter the value of newly stored materials each period. The system tracks this separately from work completed.',
         },
         {
           type: 'glossary',
@@ -89,7 +89,7 @@ export default function MaterialsStoredPage() {
             },
             {
               term: 'Total Completed & Stored',
-              definition: 'Work completed to date plus materials stored to date. This is column F (or G703 column D+E+F) — the basis for calculating payment due.',
+              definition: 'Work completed to date plus materials stored to date. This is column F (or schedule of values column D+E+F) — the basis for calculating payment due.',
             },
           ],
         },
@@ -145,7 +145,7 @@ export default function MaterialsStoredPage() {
             materialsStoredEnabled ? 'bg-teal-50 border-teal-100 text-teal-800' : 'bg-slate/5 border-slate/10 text-slate/50'
           }`}>
             {materialsStoredEnabled
-              ? 'A Materials Stored column will appear in the workspace (G703 Column E). You\'ll track and bill for materials each period.'
+              ? 'A Materials Stored column will appear in the workspace (Schedule of Values Column E). You\'ll track and bill for materials each period.'
               : 'Materials stored columns will be hidden from the workspace. You can change this setting later if needed.'}
           </div>
         </div>

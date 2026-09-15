@@ -193,12 +193,12 @@ export default function SignupPage() {
           <div className="relative z-10 flex-1 flex flex-col justify-center gap-7">
             <div>
               <h1 className="text-4xl font-serif text-white leading-tight mb-1">
-                AIA contracts,<br/>
+                Construction contracts,<br/>
                 <span className="italic text-blue-400">finally</span> under<br/>
                 control.
               </h1>
               <p className="text-white/55 text-sm leading-relaxed max-w-sm mt-1">
-                Extract payment terms, generate G702/G703 schedules, and catch compliance risks — in seconds, not days.
+                Extract payment terms, generate pay application schedules, and catch compliance risks — in seconds, not days.
               </p>
             </div>
           </div>
@@ -296,12 +296,12 @@ export default function SignupPage() {
           {/* Headline */}
           <div>
             <h1 className="text-4xl font-serif text-white leading-tight mb-1">
-              AIA contracts,<br/>
+              Construction contracts,<br/>
               <span className="italic text-blue-400">finally</span> under<br/>
               control.
             </h1>
             <p className="text-white/55 text-sm leading-relaxed max-w-sm mt-1">
-              Extract payment terms, generate G702/G703 schedules, and catch compliance risks — in seconds, not days.
+              Extract payment terms, generate pay application schedules, and catch compliance risks — in seconds, not days.
             </p>
           </div>
 
@@ -351,9 +351,9 @@ export default function SignupPage() {
           {/* Features */}
           <div className="flex flex-wrap gap-1.5">
             {[
-              { icon: '📄', text: 'AIA A101 / A102 / A103' },
+              { icon: '📄', text: 'Stipulated sum, cost-plus & GMP' },
               { icon: '🛡️', text: 'Compliance flagging' },
-              { icon: '📊', text: 'G702/G703 export' },
+              { icon: '📊', text: 'Pay application export' },
               { icon: '📈', text: 'Real-time analytics' }
             ].map((feature, i) => (
               <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 bg-white/6 border border-white/10 rounded-full text-xs font-medium text-white/70">

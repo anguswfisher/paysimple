@@ -46,7 +46,7 @@ export interface ChangeOrderSettings {
   changeOrders: ChangeOrder[]
 }
 
-// ── Line Items (G703) ─────────────────────────────────────────
+// ── Line Items (Schedule of Values) ─────────────────────────────────────────
 
 export interface LineItem {
   id: string
@@ -79,9 +79,9 @@ export interface SignatureInfo {
   notes?: string
 }
 
-// ── G702 Totals ───────────────────────────────────────────────
+// ── Payment Totals ───────────────────────────────────────────────
 
-export interface G702Totals {
+export interface PayAppTotals {
   originalContractSum: number
   netChangeByChangeOrders: number
   contractSumToDate: number
@@ -101,7 +101,7 @@ export interface G702Totals {
 
 export interface FinalizedSnapshot {
   finalizedAt: string
-  g702Totals: G702Totals
+  payAppTotals: PayAppTotals
   lineItems: LineItem[]
   signatureInfo: SignatureInfo
 }

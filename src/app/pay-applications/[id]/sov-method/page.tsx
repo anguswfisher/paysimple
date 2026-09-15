@@ -75,7 +75,7 @@ export default function SOVMethodPage() {
   const guide = (
     <StepGuide
       title="Schedule of Values"
-      subtitle="The SOV is the backbone of every AIA pay application."
+      subtitle="The SOV is the backbone of every construction pay application."
       blocks={[
         {
           type: 'intro',

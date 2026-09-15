@@ -58,7 +58,7 @@ const categoryData: CategoryData[] = [
       {
         id: 'contract_type',
         label: 'Contract type',
-        value: 'AIA A201-2017',
+        value: 'Standard General Conditions',
         confidence: 'high',
         location: { page: 1, section: 'Header' },
         category: 'Contract Basics'
@@ -260,7 +260,7 @@ const categoryData: CategoryData[] = [
       {
         type: 'high',
         title: 'Missing: Late payment interest rate.',
-        description: 'A201 §9.7 allows contractor to stop work if payment is late, but no interest rate is specified. Recommend adding a rate (typically prime + 2%).'
+        description: 'General Conditions §9.7 allows contractor to stop work if payment is late, but no interest rate is specified. Recommend adding a rate (typically prime + 2%).'
       },
       {
         type: 'medium',
@@ -404,7 +404,7 @@ export default function ExtractionPage() {
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-sm font-semibold text-slate">Contract document</h2>
-                <p className="text-xs text-neutral-500">AIA A201-2017 • 24 pages</p>
+                <p className="text-xs text-neutral-500">Standard General Conditions • 24 pages</p>
               </div>
               <div className="flex items-center gap-2">
                 <div className="flex items-center gap-1 border border-neutral-300 rounded">
@@ -436,7 +436,7 @@ export default function ExtractionPage() {
               <div className="bg-white p-6 shadow-sm min-h-[800px]">
                 <div className="space-y-4">
                   <div className="text-center">
-                    <h1 className="text-lg font-bold text-slate mb-2">AIA DOCUMENT A201-2017</h1>
+                    <h1 className="text-lg font-bold text-slate mb-2">STANDARD GENERAL CONDITIONS</h1>
                     <h2 className="text-base font-semibold text-slate">GENERAL CONDITIONS OF THE CONTRACT FOR CONSTRUCTION</h2>
                   </div>
                   

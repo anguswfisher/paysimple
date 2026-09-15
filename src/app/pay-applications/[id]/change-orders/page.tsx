@@ -116,7 +116,7 @@ export default function ChangeOrdersPage() {
             },
             {
               term: 'Net Change',
-              definition: 'The cumulative change order amount — positive for additions, negative for deductions. Shown on the G702 cover sheet.',
+              definition: 'The cumulative change order amount — positive for additions, negative for deductions. Shown on the payment summary cover sheet.',
             },
           ],
         },

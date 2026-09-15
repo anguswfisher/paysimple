@@ -15,7 +15,7 @@ export interface UserSettings {
   notify_weekly_summary: boolean
   
   // AI Extraction Preferences
-  default_contract_type: 'AIA A101' | 'AIA A102' | 'AIA A103'
+  default_contract_type: 'Stipulated Sum' | 'Cost Plus with GMP' | 'Cost Plus'
   flag_pay_when_paid: boolean
   auto_generate_schedule: boolean
   default_retainage_threshold: '5%' | '10%' | '15%'
@@ -34,7 +34,7 @@ export interface NotificationSettings {
 }
 
 export interface AIPreferences {
-  default_contract_type: 'AIA A101' | 'AIA A102' | 'AIA A103'
+  default_contract_type: 'Stipulated Sum' | 'Cost Plus with GMP' | 'Cost Plus'
   flag_pay_when_paid: boolean
   auto_generate_schedule: boolean
   default_retainage_threshold: '5%' | '10%' | '15%'

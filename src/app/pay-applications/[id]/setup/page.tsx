@@ -20,7 +20,7 @@ export default function SetupPage() {
       blocks={[
         {
           type: 'intro',
-          text: 'Setup covers everything on the cover sheet of the AIA G702 — who the parties are, what the project is called, and what billing period this application covers.',
+          text: 'Setup covers everything on the cover sheet of the payment summary — who the parties are, what the project is called, and what billing period this application covers.',
         },
         { type: 'divider' },
         {

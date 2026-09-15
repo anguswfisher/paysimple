@@ -1,6 +1,6 @@
 // Placeholder for AI prompts
 export const EXTRACTION_PROMPT = `
-Extract payment terms from this AIA contract document.
+Extract payment terms from this construction contract document.
 Focus on:
 - Contract sum and payment schedule
 - Retainage terms and rates

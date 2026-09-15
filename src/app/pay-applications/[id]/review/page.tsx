@@ -26,8 +26,8 @@ export default function ReviewPage() {
           icon: <ClipboardCheck className="w-3.5 h-3.5" />,
           heading: 'What Gets Reviewed',
           body: [
-            'G702 Summary — contract sum, retainage, change orders, and current payment due.',
-            'G703 Continuation Sheet — each line item\'s work completed, balance to finish, and % complete.',
+            'Payment Summary — contract sum, retainage, change orders, and current payment due.',
+            'Continuation Sheet — each line item\'s work completed, balance to finish, and % complete.',
             'Arithmetic — all totals must foot (add up) correctly across every column.',
             'Period consistency — work billed this period should not exceed balance to finish.',
           ],
@@ -42,7 +42,7 @@ export default function ReviewPage() {
           icon: <Shield className="w-3.5 h-3.5" />,
           heading: 'Common Rejection Reasons',
           body: [
-            'Totals don\'t match between G702 and G703.',
+            'Totals don\'t match between the payment summary and the schedule of values.',
             'Application number out of sequence.',
             'Change orders included without written approval documentation.',
             'Overbilling — "this period" exceeds remaining balance on a line item.',
@@ -58,14 +58,14 @@ export default function ReviewPage() {
           type: 'section',
           icon: <Send className="w-3.5 h-3.5" />,
           heading: 'Submission',
-          body: 'After review you\'ll send the application to the architect for certification. The architect has a contractually defined window (typically 7 days under AIA A201) to either certify or issue a written explanation for non-certification.',
+          body: 'After review you\'ll send the application to the architect for certification. The architect has a contractually defined window (typically 7 days under standard general conditions) to either certify or issue a written explanation for non-certification.',
         },
         {
           type: 'glossary',
           terms: [
             {
               term: 'Certificate for Payment',
-              definition: 'The architect\'s written certification (on the G702 form) that the work described in the pay application has been completed. This triggers the owner\'s obligation to pay.',
+              definition: 'The architect\'s written certification (on the payment summary) that the work described in the pay application has been completed. This triggers the owner\'s obligation to pay.',
             },
             {
               term: 'Pencil Copy',

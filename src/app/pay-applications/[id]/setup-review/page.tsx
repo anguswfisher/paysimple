@@ -40,7 +40,7 @@ export default function SetupReviewPage() {
     {
       title: 'Billing Format',
       icon: <Table className="w-4 h-4" />,
-      value: billingFormat === 'schedule-of-values' ? 'Schedule of Values (G703)' : 'Total Only',
+      value: billingFormat === 'schedule-of-values' ? 'Schedule of Values' : 'Total Only',
       editHref: `/pay-applications/${currentPayApp.id}/billing-format`,
     },
     {
@@ -85,7 +85,7 @@ export default function SetupReviewPage() {
           icon: <ClipboardList className="w-3.5 h-3.5" />,
           heading: 'What to Check',
           body: [
-            'Billing Format — does your contract require a G703 Schedule of Values?',
+            'Billing Format — does your contract require a Schedule of Values?',
             'Retainage % — does it match the exact rate in your contract?',
             'Change Orders — are all listed COs formally approved in writing?',
             'Materials Stored — do you have on-site materials to bill for?',
@@ -100,7 +100,7 @@ export default function SetupReviewPage() {
           type: 'section',
           icon: <CheckCircle2 className="w-3.5 h-3.5" />,
           heading: "What's Next — Schedule of Values",
-          body: 'After this review you\'ll build your Schedule of Values (G703). This is the line-by-line breakdown of your contract — each work division gets its own row with a scheduled value. You\'ll choose how to create it: import from a previous application, enter manually, or upload a spreadsheet.',
+          body: 'After this review you\'ll build your Schedule of Values. This is the line-by-line breakdown of your contract — each work division gets its own row with a scheduled value. You\'ll choose how to create it: import from a previous application, enter manually, or upload a spreadsheet.',
         },
         {
           type: 'checklist',

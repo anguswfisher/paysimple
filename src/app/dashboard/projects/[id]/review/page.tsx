@@ -12,7 +12,7 @@ export default function ReviewPage() {
       <div className="flex-1 border-r border-neutral-200 bg-white flex flex-col">
         <div className="p-4 border-b border-neutral-200 flex-shrink-0">
           <h2 className="text-sm font-semibold text-slate">Contract Document</h2>
-          <p className="text-xs text-neutral-500">AIA A201-2017 - Office Building Construction</p>
+          <p className="text-xs text-neutral-500">Standard General Conditions - Office Building Construction</p>
         </div>
         <div className="flex-1 p-4 overflow-auto">
           <div className="bg-neutral-50 rounded-lg p-8 h-full flex items-center justify-center text-neutral-400">

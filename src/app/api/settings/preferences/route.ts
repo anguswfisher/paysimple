@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
           notify_lien_deadlines: true,
           notify_team_activity: false,
           notify_weekly_summary: true,
-          default_contract_type: 'AIA A101',
+          default_contract_type: 'Stipulated Sum',
           flag_pay_when_paid: true,
           auto_generate_schedule: true,
           default_retainage_threshold: '10%'
@@ -205,7 +205,7 @@ export async function PUT(request: NextRequest) {
         notify_lien_deadlines: true,
         notify_team_activity: false,
         notify_weekly_summary: true,
-        default_contract_type: 'AIA A101',
+        default_contract_type: 'Stipulated Sum',
         flag_pay_when_paid: true,
         auto_generate_schedule: true,
         default_retainage_threshold: '10%',

@@ -1,32 +1,32 @@
-# PaySimple: AI-Powered AIA Construction Contract Analysis & Pay Applications
+# PaySimple: AI-Powered Construction Contract Analysis & Pay Applications
 
 ## About This Project
 
-**PaySimple is a portfolio project** that demonstrates AI product development skills combined with deep expertise in construction finance and AIA contracts.
+**PaySimple is a portfolio project** that demonstrates AI product development skills combined with deep expertise in construction finance and construction contracts.
 
-The project tackles real problems: construction contractors manually extract payment terms from AIA contracts, build payment schedules in spreadsheets, struggle with compliance risks, and manage complex pay application workflows. PaySimple automates these workflows using Claude AI, combining technical product skills with domain knowledge from 5+ years of hands-on AIA contract experience.
+The project tackles real problems: construction contractors manually extract payment terms from contracts, build payment schedules in spreadsheets, struggle with compliance risks, and manage complex pay application workflows. PaySimple automates these workflows using Claude AI, combining technical product skills with domain knowledge from 5+ years of hands-on construction contract experience.
 
 ---
 
 ## What PaySimple Does
 
-**PaySimple** extracts critical payment terms from AIA construction contracts, auto-generates payment schedules, and flags compliance risks—all powered by Claude AI.
+**PaySimple** extracts critical payment terms from construction contracts, auto-generates payment schedules, and flags compliance risks—all powered by Claude AI.
 
 ### Core Features
 
-- **Contract Upload & Analysis**: Upload AIA construction contracts (docx or PDF). Claude extracts payment terms, key dates, and risk flags in seconds.
+- **Contract Upload & Analysis**: Upload construction contracts (docx or PDF). Claude extracts payment terms, key dates, and risk flags in seconds.
 - **Payment Schedule Generation**: Auto-generate schedules based on contract terms (progress draws, retainage, lien waivers, prompt payment rules).
 - **Compliance Risk Detection**: Flag pay-when-paid vs. pay-if-paid clauses, retainage triggers, substantial completion dependencies, and state-specific prompt payment act violations.
-- **Pay Application Management**: Complete AIA G702/G703 pay application workflow with 6-step wizard, line item management, and automated calculations.
+- **Pay Application Management**: Complete pay application workflow with 6-step wizard, line item management, and automated calculations.
 - **Database Integration**: Full PostgreSQL integration with Supabase for persistent storage, user management, and data security.
 - **History & Corrections**: Complete audit trail with history views, corrected draft creation, and finalization workflows.
 - **Export & Dashboard**: View results in-app, download schedules (Excel/PDF), manage multiple projects, and track payment application status.
 
-### Why AIA-Specific?
+### Why Construction-Specific?
 
-Generic construction payment tools exist. But they don't understand AIA nuances:
+Generic construction payment tools exist. But they don't understand construction contract nuances:
 - Retainage release mechanics tied to substantial completion
-- G702/G703 payment application procedures
+- Construction payment application procedures
 - Stored materials vs. incorporated materials distinctions
 - State prompt payment law variations
 - Lien waiver timing and release conditions
@@ -54,7 +54,7 @@ PaySimple speaks this language.
   - Type-safe data mapping
 - **History Management**: Complete audit trail
   - History list with search and filtering
-  - Detailed history views with G702 calculations
+  - Detailed history views with payment summary calculations
   - Corrected draft creation from finalized apps
   - Finalization workflows with immutable snapshots
 - **State Management**: Zustand store with TypeScript
@@ -100,7 +100,7 @@ This isn't a generic chatbot or "AI app template." It solves a specific market p
 
 ### 2. **Thoughtful UX Decisions**
 - **Upload-first, register-to-view**: Product decision that reduces friction (no signup friction) while capturing users (see value before committing).
-- **AIA-focused feature set**: Not a catch-all; specificity shows product thinking (who is the user? what do they actually need?).
+- **Construction-focused feature set**: Not a catch-all; specificity shows product thinking (who is the user? what do they actually need?).
 - **Multi-format export**: Users need Excel for their workflows; we export accordingly.
 
 ### 3. **Real API Integration**
@@ -110,7 +110,7 @@ Uses Claude API end-to-end, not just a UI wrapper. Demonstrates understanding of
 Real auth, user data persistence, and multi-tenancy with PostgreSQL and Supabase—not localStorage and in-memory state.
 
 ### 5. **Domain Expertise**
-5+ years of hands-on AIA contract experience means the feature set, risk flags, UX, and pay application workflows are credible. Not generic; genuinely informed by the problem space.
+5+ years of hands-on construction contract experience means the feature set, risk flags, UX, and pay application workflows are credible. Not generic; genuinely informed by the problem space.
 
 ### 6. **Full-Stack Implementation**
 Complete pay application system with database integration, state management, and production-ready architecture—not just UI mockups.
@@ -238,7 +238,7 @@ Visit `http://localhost:3000` to:
 
 - **Scope clarity**: Phased build with completed pay application system
 - **Technical depth**: Next.js, Supabase, Zustand, TypeScript, full-stack architecture
-- **Domain expertise**: AIA contract knowledge shapes every feature (retainage, G702/G703, compliance)
+- **Domain expertise**: construction contract knowledge shapes every feature (retainage, pay applications, compliance)
 - **Product thinking**: Deliberate UX decisions (6-step consolidation, specific feature set, export flexibility)
 - **Production-ready**: Complete implementation with database integration, not just mockups
 
@@ -251,7 +251,7 @@ These are intentionally *not* in the current scope to keep focus tight:
 ### Contract Analysis Enhancements
 - Team collaboration (share contracts, assign tasks)
 - Contract comparison (side-by-side term diffing)
-- Template library (pre-built risk checks for common AIA variants)
+- Template library (pre-built risk checks for common contract variants)
 - Webhook integration (e.g., notify when retainage release is due)
 
 ### Pay Application Extensions
@@ -273,7 +273,7 @@ These are intentionally *not* in the current scope to keep focus tight:
 **PaySimple is actively developed** with a production-ready Pay Applications system and ongoing contract analysis features. The project demonstrates:
 
 - ✅ **Full-stack development** with database integration
-- ✅ **Domain expertise** in AIA contracts and construction finance
+- ✅ **Domain expertise** in construction contracts and construction finance
 - ✅ **Product thinking** with user-centered design
 - ✅ **Technical excellence** with TypeScript, modern React patterns, and scalable architecture
 

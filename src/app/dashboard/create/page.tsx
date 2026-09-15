@@ -39,7 +39,7 @@ export default function CreateProjectPage() {
   ]
 
   const suggestedTags = [
-    'AIA Contract', 'Monthly Payments', '5% Retainage', 'Public Project', 
+    'Construction Contract', 'Monthly Payments', '5% Retainage', 'Public Project', 
     'Fast Track', 'Design-Build', 'LEED', 'Union Labor'
   ]
 

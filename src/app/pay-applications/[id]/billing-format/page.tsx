@@ -21,7 +21,7 @@ const BILLING_FORMATS: {
 }[] = [
   {
     format: 'schedule-of-values',
-    title: 'Schedule of Values (G703)',
+    title: 'Schedule of Values',
     subtitle: 'Detailed line item tracking',
     description: 'Track individual work items, materials, and retainage with automatic calculations',
     recommended: true,
@@ -39,7 +39,7 @@ const BILLING_FORMATS: {
     features: [
       'Simplified entry',
       'Faster to complete',
-      'Still generates G702 summary',
+      'Still generates payment summary',
     ],
   },
 ]
@@ -77,28 +77,28 @@ export default function BillingFormatPage() {
       blocks={[
         {
           type: 'intro',
-          text: 'The billing format controls how you present your work to the owner or architect. Most contracts require or strongly prefer the Schedule of Values (G703) format.',
+          text: 'The billing format controls how you present your work to the owner or architect. Most contracts require or strongly prefer the Schedule of Values format.',
         },
         { type: 'divider' },
         {
           type: 'section',
           icon: <TableProperties className="w-3.5 h-3.5" />,
-          heading: 'Schedule of Values (G703)',
+          heading: 'Schedule of Values',
           body: [
-            'The G703 is the continuation sheet attached to the G702 summary. It lists every work division as a separate line item with its own scheduled value, work-to-date, and balance.',
-            'This format is required on virtually all AIA contracts and gives the architect detailed visibility into project progress before certifying payment.',
+            'The schedule of values is the continuation sheet attached to the payment summary. It lists every work division as a separate line item with its own scheduled value, work-to-date, and balance.',
+            'This format is required on virtually all construction contracts and gives the architect detailed visibility into project progress before certifying payment.',
           ],
         },
         {
           type: 'tip',
-          text: 'If your contract references AIA documents, always use Schedule of Values. The architect\'s certification is tied to the G703 line items.',
+          text: 'If your contract references standard industry forms, always use Schedule of Values. The architect\'s certification is tied to the schedule of values line items.',
         },
         { type: 'divider' },
         {
           type: 'section',
           icon: <AlignLeft className="w-3.5 h-3.5" />,
           heading: 'Total Only',
-          body: 'The Total Only format skips the G703 and submits just the G702 summary with a single contract sum and amount billed. This is appropriate for small projects, cost-plus contracts, or when the owner has waived the G703 requirement.',
+          body: 'The Total Only format skips the schedule of values and submits just the payment summary with a single contract sum and amount billed. This is appropriate for small projects, cost-plus contracts, or when the owner has waived the schedule of values requirement.',
         },
         {
           type: 'warning',
@@ -109,12 +109,12 @@ export default function BillingFormatPage() {
           type: 'glossary',
           terms: [
             {
-              term: 'G702',
-              definition: 'The AIA Application and Certificate for Payment — the cover sheet listing contract sum, work completed, retainage, and payment due.',
+              term: 'Payment Summary',
+              definition: 'The pay application cover sheet — lists contract sum, work completed, retainage, and payment due.',
             },
             {
-              term: 'G703',
-              definition: 'The AIA Continuation Sheet — the line-item breakdown that supports the G702 totals. Architects typically review this before certifying.',
+              term: 'Schedule of Values',
+              definition: 'The continuation sheet — the line-item breakdown that supports the payment summary totals. Architects typically review this before certifying.',
             },
           ],
         },
@@ -122,7 +122,7 @@ export default function BillingFormatPage() {
           type: 'checklist',
           heading: 'How to decide',
           items: [
-            'Read your contract — does it reference G703 or a schedule of values?',
+            'Read your contract — does it require a schedule of values?',
             'Ask your architect what format they expect to certify',
             'If in doubt, use Schedule of Values — it\'s universally accepted',
           ],

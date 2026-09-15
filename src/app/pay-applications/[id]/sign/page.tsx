@@ -26,9 +26,9 @@ export default function SignPage() {
           icon: <Users className="w-3.5 h-3.5" />,
           heading: 'Who Signs What',
           body: [
-            'Contractor — signs the G702 certifying the application is accurate and amounts are owed.',
-            'Architect — countersigns the G702 Certificate for Payment once they\'ve reviewed and approved.',
-            'Owner — does not sign the G702; payment is triggered by the architect\'s certification.',
+            'Contractor — signs the payment summary certifying the application is accurate and amounts are owed.',
+            'Architect — countersigns the Certificate for Payment once they\'ve reviewed and approved.',
+            'Owner — does not sign the payment summary; payment is triggered by the architect\'s certification.',
           ],
         },
         {
@@ -58,7 +58,7 @@ export default function SignPage() {
           terms: [
             {
               term: 'Sworn Statement',
-              definition: 'A signed declaration that the information in the pay application is true and accurate, often required alongside the G702.',
+              definition: 'A signed declaration that the information in the pay application is true and accurate, often required alongside the payment summary.',
             },
             {
               term: 'Lien Waiver',

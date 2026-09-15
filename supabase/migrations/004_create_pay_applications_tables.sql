@@ -27,7 +27,7 @@ create table pay_applications (
   status                pay_app_status not null default 'draft',
   entry_mode            entry_mode not null default 'guided',
 
-  -- Basics (G702 header fields)
+  -- Basics (payment summary header fields)
   project_name          text not null default '',
   owner_name            text not null default '',
   contractor_name       text not null default '',
@@ -67,7 +67,7 @@ create table pay_applications (
   correction_reason     text,
   correction_notes      text,
 
-  -- Finalized snapshot: G702 totals frozen at finalization
+  -- Finalized snapshot: payment summary totals frozen at finalization
   -- Stored as JSONB so the historical record is immutable even if
   -- line items are later changed on a corrected draft.
   finalized_snapshot    jsonb,
@@ -79,11 +79,11 @@ create table pay_applications (
 );
 
 comment on table pay_applications is
-  'AIA G702/G703 pay applications — one row per application, any status.';
+  'construction pay application pay applications — one row per application, any status.';
 
 comment on column pay_applications.finalized_snapshot is
-  'Immutable JSON snapshot of G702 totals + line items taken at finalization. '
-  'Shape: { g702Totals: G702Totals, lineItems: LineItem[], signatureInfo: SignatureInfo, finalizedAt: string }';
+  'Immutable JSON snapshot of payment summary totals + line items taken at finalization. '
+  'Shape: { payAppTotals: PayAppTotals, lineItems: LineItem[], signatureInfo: SignatureInfo, finalizedAt: string }';
 
 comment on column pay_applications.completed_steps is
   'Array of wizard step numbers (1–12) the user has completed. Used to resume mid-wizard.';
@@ -91,7 +91,7 @@ comment on column pay_applications.completed_steps is
 
 -- ─────────────────────────────────────────
 -- pay_application_line_items
--- G703 Schedule of Values rows.
+-- Schedule of Values rows.
 -- ─────────────────────────────────────────
 
 create table pay_application_line_items (
@@ -134,13 +134,13 @@ create table pay_application_line_items (
 );
 
 comment on table pay_application_line_items is
-  'G703 Schedule of Values line items. Computed columns mirror calculateLineItem() in the app layer. '
+  'Schedule of Values line items. Computed columns mirror calculateLineItem() in the app layer. '
   'retainage_held and percent_complete are intentionally omitted as generated columns '
   'because they depend on retainage_percent from the parent pay_application row — '
   'compute them in the application layer or a view.';
 
 comment on column pay_application_line_items.sort_order is
-  'Controls display order in the G703 grid. Increment by 10 to leave room for inserts.';
+  'Controls display order in the schedule of values grid. Increment by 10 to leave room for inserts.';
 
 
 -- ─────────────────────────────────────────
@@ -327,12 +327,12 @@ create policy "Users can delete change orders on their pay applications"
 
 
 -- ─────────────────────────────────────────
--- CONVENIENCE VIEW: g703_line_items_computed
+-- CONVENIENCE VIEW: sov_line_items_computed
 -- Joins back to parent for retainage_percent so the app
 -- can query fully-computed line item data in one shot.
 -- ─────────────────────────────────────────
 
-create or replace view g703_line_items_computed as
+create or replace view sov_line_items_computed as
 select
   li.id,
   li.pay_application_id,
@@ -365,6 +365,6 @@ select
 from pay_application_line_items li
 join pay_applications pa on pa.id = li.pay_application_id;
 
-comment on view g703_line_items_computed is
-  'Fully computed G703 line item view. Includes retainage_held and percent_complete '
+comment on view sov_line_items_computed is
+  'Fully computed schedule of values line item view. Includes retainage_held and percent_complete '
   'which require the parent retainage_percent. RLS is enforced via the underlying tables.';

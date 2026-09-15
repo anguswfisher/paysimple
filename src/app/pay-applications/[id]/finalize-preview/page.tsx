@@ -9,8 +9,8 @@ import { Download, CheckCircle, FileText } from 'lucide-react'
 
 export default function FinalizePreviewPage() {
   const router = useRouter()
-  const { currentPayApp, getG702Totals } = usePayAppStore()
-  const [activeTab, setActiveTab] = useState<'g702' | 'g703'>('g702')
+  const { currentPayApp, getPayAppTotals } = usePayAppStore()
+  const [activeTab, setActiveTab] = useState<'summary' | 'sov'>('summary')
 
   useEffect(() => {
     // This page reads from currentPayApp, no additional loading needed
@@ -41,7 +41,7 @@ export default function FinalizePreviewPage() {
     })
   }
 
-  const totals = getG702Totals()
+  const totals = getPayAppTotals()
 
   if (!currentPayApp || !totals) {
     return (
@@ -96,41 +96,41 @@ export default function FinalizePreviewPage() {
           <div className="bg-white rounded-lg border border-slate/20 mb-6">
             <div className="flex border-b border-slate/10">
               <button
-                onClick={() => setActiveTab('g702')}
+                onClick={() => setActiveTab('summary')}
                 className={`
                   flex-1 px-4 py-3 text-sm font-medium transition-colors
-                  ${activeTab === 'g702'
+                  ${activeTab === 'summary'
                     ? 'text-teal-600 border-b-2 border-teal-600 bg-teal-50'
                     : 'text-slate/600 hover:text-slate-900'
                   }
                 `}
               >
-                G702 Summary
+                Payment Summary
               </button>
               <button
-                onClick={() => setActiveTab('g703')}
+                onClick={() => setActiveTab('sov')}
                 className={`
                   flex-1 px-4 py-3 text-sm font-medium transition-colors
-                  ${activeTab === 'g703'
+                  ${activeTab === 'sov'
                     ? 'text-teal-600 border-b-2 border-teal-600 bg-teal-50'
                     : 'text-slate/600 hover:text-slate-900'
                   }
                 `}
               >
-                G703 Schedule of Values
+                Schedule of Values
               </button>
             </div>
 
             {/* Tab Content */}
             <div className="p-6">
-              {activeTab === 'g702' ? (
-                // G702 Tab
+              {activeTab === 'summary' ? (
+                // Payment Summary Tab
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <FileText className="w-6 h-6 text-slate/60" />
                       <h2 className="text-xl font-semibold text-slate-900">
-                        AIA Document G702
+                        Pay Application Summary
                       </h2>
                     </div>
                     <Badge className="bg-green-100 text-green-800 border-green-200">
@@ -172,7 +172,7 @@ export default function FinalizePreviewPage() {
                     </div>
                   </div>
 
-                  {/* G702 Totals */}
+                  {/* Payment Totals */}
                   <div className="space-y-2">
                     <h3 className="text-lg font-semibold text-slate-900">Application and Certificate for Payment</h3>
                     <div className="bg-white border border-slate/20 rounded-lg overflow-hidden">
@@ -280,13 +280,13 @@ export default function FinalizePreviewPage() {
                   )}
                 </div>
               ) : (
-                // G703 Tab
+                // Schedule of Values Tab
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <FileText className="w-6 h-6 text-slate/60" />
                       <h2 className="text-xl font-semibold text-slate-900">
-                        AIA Document G703
+                        Schedule of Values
                       </h2>
                     </div>
                     <Badge variant="outline">

@@ -9,7 +9,7 @@ import { CheckCircle, Info } from 'lucide-react'
 
 export default function FinalizeConfirmPage() {
   const router = useRouter()
-  const { currentPayApp, getG702Totals } = usePayAppStore()
+  const { currentPayApp, getPayAppTotals } = usePayAppStore()
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
@@ -53,7 +53,7 @@ export default function FinalizeConfirmPage() {
     })
   }
 
-  const totals = getG702Totals()
+  const totals = getPayAppTotals()
 
   if (!currentPayApp || !totals) {
     return (
@@ -132,7 +132,7 @@ export default function FinalizeConfirmPage() {
                       What happens next?
                     </div>
                     <div className="text-sm text-blue-800">
-                      After signing, your pay application will be finalized. You'll be able to preview and download the completed G702 and G703 forms.
+                      After signing, your pay application will be finalized. You'll be able to preview and download the completed payment summary and schedule of values.
                     </div>
                   </div>
                 </div>

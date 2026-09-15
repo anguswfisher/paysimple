@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
   title: "PaySimple - AI-Powered Construction Payment Scheduling",
-  description: "Automatically extract payment terms from AIA contracts and generate compliant payment schedules with retainage calculations.",
+  description: "Automatically extract payment terms from construction contracts and generate compliant payment schedules with retainage calculations.",
 };
 
 export default function RootLayout({

@@ -19,7 +19,7 @@ export default function ProjectPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-slate">Office Building Project</h1>
-          <p className="text-slate/70">AIA Payment Schedule - G701/G702</p>
+          <p className="text-slate/70">Construction Payment Schedule</p>
         </div>
         <Button variant="outline">
           <FileText className="mr-2 h-4 w-4" />
@@ -37,7 +37,7 @@ export default function ProjectPage() {
               Upload Contract Documents
             </CardTitle>
             <CardDescription>
-              Upload your AIA contract documents to begin the payment scheduling process
+              Upload your construction contract documents to begin the payment scheduling process
             </CardDescription>
           </CardHeader>
           <CardContent>
