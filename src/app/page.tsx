@@ -57,9 +57,11 @@ export default function LandingPage() {
                 Create Account
               </Button>
             </Link>
-            <Button variant="outline" size="lg" className="border-white/25 text-white/80 hover:border-white/50 hover:text-white">
+            <Link href="/demo">
+              <Button variant="outline" size="lg" className="border-white/25 text-white/80 hover:border-white/50 hover:text-white">
                 View Demo
-            </Button>
+              </Button>
+            </Link>
           </div>
           
           <p className="text-xs text-white/35">

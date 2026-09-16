@@ -152,6 +152,12 @@ export const usePayAppStore = create<PayAppState>()(
 
       loadPayApps: async (userId: string) => {
         try {
+          const { isDemoActive } = await import('@/lib/demo/mode')
+          if (isDemoActive()) {
+            const { DEMO_PAY_APPS } = await import('@/lib/demo/data')
+            set({ payApps: DEMO_PAY_APPS })
+            return
+          }
           const { loadPayApplications } = await import('@/app/pay-applications/actions')
           const payApps = await loadPayApplications(userId)
           set({ payApps })
@@ -162,6 +168,13 @@ export const usePayAppStore = create<PayAppState>()(
 
       loadPayAppById: async (id: string, userId: string) => {
         try {
+          const { isDemoActive } = await import('@/lib/demo/mode')
+          if (isDemoActive()) {
+            const { getDemoPayApp } = await import('@/lib/demo/data')
+            const demo = getDemoPayApp(id)
+            if (demo) set({ currentPayApp: demo })
+            return
+          }
           const { loadPayApplicationById } = await import('@/app/pay-applications/actions')
           const payApp = await loadPayApplicationById(id, userId)
           if (payApp) {

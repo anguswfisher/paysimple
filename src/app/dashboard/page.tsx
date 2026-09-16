@@ -30,7 +30,7 @@ export default function DashboardPage() {
     total: projects.length,
     active: projects.filter(p => p.status === 'uploaded' || p.status === 'processing').length,
     pending: projects.filter(p => p.status === 'reviewed').length,
-    totalValue: projects.reduce((sum, p) => sum + (p.contract_value || 0), 0)
+    totalValue: projects.reduce((sum, p) => sum + Number(p.contract_value || 0), 0)
   }
 
   return (
