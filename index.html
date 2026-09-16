@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PaySimple — AI-Powered Construction Contract Analysis</title>
+<meta name="description" content="A portfolio project that extracts payment terms from construction contracts, generates payment schedules, and flags compliance risks — powered by Claude AI.">
+<meta property="og:title" content="PaySimple — AI-Powered Construction Contract Analysis">
+<meta property="og:description" content="Extract payment terms, generate schedules, and flag compliance risks from construction contracts.">
+<meta property="og:image" content="demo-screenshots/05-dashboard.png">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  /* Design tokens lifted from the app's globals.css */
+  :root {
+    --navy:        #1B4F72;
+    --navy-deep:   #16415e;
+    --shell:       #1e3a4f;
+    --steel:       #2E86C1;
+    --blue:        #3b82f6;
+    --blue-light:  #60b4f5;
+    --concrete:    #F2F4F5;
+    --slate:       #2C3E50;
+    --warm-white:  #FAFBFC;
+    --success:     #27AE60;
+    --warning:     #F39C12;
+    --danger:      #E74C3C;
+    --teal:        #0d9488;
+    --gold:        #D4A843;
+
+    --line:        #e3e8ed;
+    --muted:       #64748b;
+
+    --sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --serif: 'Source Serif 4', ui-serif, Georgia, serif;
+
+    --wrap: 1140px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; scroll-padding-top: 78px; }
+
+  body {
+    margin: 0;
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--slate);
+    background: var(--warm-white);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 24px; }
+
+  a { color: var(--steel); }
+
+  /* ── Nav ─────────────────────────────────────────────── */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(250,251,252,.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 62px;
+  }
+  .brand {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 19px; font-weight: 700; letter-spacing: -.02em;
+    color: var(--slate); text-decoration: none;
+  }
+  .brand .mark {
+    width: 30px; height: 30px; border-radius: 8px;
+    background: var(--blue); color: #fff;
+    display: grid; place-items: center; font-size: 15px; font-weight: 800;
+  }
+  .brand .wordmark { display: inline; }
+  .brand em { font-style: normal; color: var(--steel); }
+  .nav-links { display: flex; align-items: center; gap: 26px; }
+  .nav-links a {
+    font-size: 14px; font-weight: 500; color: var(--muted); text-decoration: none;
+  }
+  .nav-links a:hover { color: var(--slate); }
+  @media (max-width: 720px) { .nav-links a.hide-sm { display: none; } }
+
+  /* ── Hero ────────────────────────────────────────────── */
+  .hero {
+    position: relative; overflow: hidden;
+    background: var(--shell);
+    color: #fff;
+    padding: 84px 0 96px;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+  .hero::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 60% 50% at 78% 18%, rgba(59,130,246,.20) 0%, transparent 70%),
+      radial-gradient(ellipse 45% 55% at 12% 85%, rgba(46,134,193,.14) 0%, transparent 65%);
+  }
+  .hero .wrap { position: relative; z-index: 1; text-align: center; }
+
+  .pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px; border-radius: 999px;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.14);
+    font-size: 12.5px; font-weight: 600; letter-spacing: .02em;
+    color: rgba(255,255,255,.88);
+    margin-bottom: 22px;
+  }
+  .pill .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--success); box-shadow: 0 0 0 3px rgba(39,174,96,.22);
+  }
+
+  h1.hero-title {
+    font-size: clamp(34px, 5.4vw, 60px);
+    line-height: 1.08; letter-spacing: -.025em;
+    font-weight: 800; margin: 0 0 18px;
+  }
+  h1.hero-title .accent { color: var(--blue-light); }
+
+  .hero-sub {
+    font-size: clamp(16px, 2vw, 19px);
+    color: rgba(255,255,255,.72);
+    max-width: 640px; margin: 0 auto 30px;
+  }
+
+  .cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 9px;
+    height: 46px; padding: 0 22px; border-radius: 10px;
+    font-size: 14.5px; font-weight: 600; text-decoration: none;
+    transition: all .15s ease; border: 1px solid transparent;
+  }
+  .btn-primary { background: #fff; color: var(--shell); }
+  .btn-primary:hover { background: var(--concrete); transform: translateY(-1px); }
+  .btn-ghost {
+    background: transparent; color: rgba(255,255,255,.9);
+    border-color: rgba(255,255,255,.28);
+  }
+  .btn-ghost:hover { border-color: rgba(255,255,255,.6); color: #fff; }
+
+  .hero-note {
+    margin-top: 22px; font-size: 12.5px; color: rgba(255,255,255,.42);
+  }
+
+  /* ── Stack strip ─────────────────────────────────────── */
+  .strip {
+    background: #fff; border-bottom: 1px solid var(--line);
+    padding: 20px 0;
+  }
+  .strip-inner {
+    display: flex; flex-wrap: wrap; gap: 10px 34px;
+    justify-content: center; align-items: center;
+    font-size: 13px; font-weight: 600; color: var(--muted);
+    letter-spacing: .01em;
+  }
+  .strip-inner span { display: inline-flex; align-items: center; gap: 8px; }
+  .strip-inner span::before {
+    content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--steel);
+  }
+
+  /* ── Sections ────────────────────────────────────────── */
+  section.band { padding: 76px 0; }
+  section.band.alt { background: #fff; border-block: 1px solid var(--line); }
+
+  .eyebrow {
+    font-size: 11.5px; font-weight: 700; letter-spacing: .13em;
+    text-transform: uppercase; color: var(--steel); margin-bottom: 10px;
+  }
+  h2.section-title {
+    font-family: var(--serif);
+    font-size: clamp(26px, 3.4vw, 36px);
+    line-height: 1.18; letter-spacing: -.015em;
+    font-weight: 600; margin: 0 0 14px;
+  }
+  .lede { font-size: 17px; color: var(--muted); max-width: 720px; }
+  .section-head { margin-bottom: 40px; }
+  .section-head.center { text-align: center; }
+  .section-head.center .lede { margin-inline: auto; }
+
+  /* ── Feature grid ────────────────────────────────────── */
+  .features {
+    display: grid; gap: 18px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+  .feature {
+    background: #fff; border: 1px solid var(--line); border-radius: 14px;
+    padding: 24px;
+  }
+  section.alt .feature { background: var(--warm-white); }
+  .feature .ico {
+    width: 38px; height: 38px; border-radius: 10px;
+    display: grid; place-items: center; margin-bottom: 14px;
+    background: rgba(46,134,193,.10); color: var(--steel);
+  }
+  .feature h3 { font-size: 16px; font-weight: 700; margin: 0 0 6px; letter-spacing: -.01em; }
+  .feature p { font-size: 14.5px; color: var(--muted); margin: 0; }
+
+  /* ── Showcase ────────────────────────────────────────── */
+  .shot {
+    display: block; width: 100%; border: 1px solid var(--line);
+    border-radius: 14px; overflow: hidden; background: #fff;
+    box-shadow: 0 1px 2px rgba(16,32,48,.04), 0 12px 32px -14px rgba(16,32,48,.22);
+    cursor: zoom-in; transition: transform .18s ease, box-shadow .18s ease;
+    padding: 0; appearance: none; text-align: left; font: inherit; color: inherit;
+  }
+  .shot:hover { transform: translateY(-3px); box-shadow: 0 1px 2px rgba(16,32,48,.05), 0 22px 46px -16px rgba(16,32,48,.30); }
+  .shot img { display: block; width: 100%; height: auto; }
+  .shot figcaption {
+    padding: 13px 16px; border-top: 1px solid var(--line);
+    font-size: 13.5px; font-weight: 600;
+  }
+  .shot figcaption small { display: block; font-weight: 400; color: var(--muted); margin-top: 2px; }
+
+  .feature-shot { margin-bottom: 26px; }
+
+  .gallery {
+    display: grid; gap: 22px;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  }
+
+  /* ── Bullets ─────────────────────────────────────────── */
+  ul.ticks { list-style: none; margin: 0; padding: 0; display: grid; gap: 11px; }
+  ul.ticks li {
+    display: flex; gap: 11px; align-items: flex-start;
+    font-size: 15.5px; color: var(--slate);
+  }
+  ul.ticks svg { flex: none; margin-top: 3px; color: var(--success); }
+
+  /* ── Table ───────────────────────────────────────────── */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; background: #fff; }
+  table { width: 100%; border-collapse: collapse; min-width: 640px; font-size: 14.5px; }
+  th, td { padding: 13px 18px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+  thead th {
+    background: var(--concrete); font-size: 11.5px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .07em; color: var(--muted);
+  }
+  tbody tr:last-child td { border-bottom: 0; }
+  td strong { font-weight: 650; }
+  td.why { color: var(--muted); }
+
+  /* ── Numbered cards ──────────────────────────────────── */
+  .signals { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); }
+  .signal {
+    background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 24px;
+    position: relative;
+  }
+  section.alt .signal { background: var(--warm-white); }
+  .signal .num {
+    font-family: var(--serif); font-size: 13px; font-weight: 600;
+    color: var(--steel); letter-spacing: .06em; margin-bottom: 9px;
+  }
+  .signal h3 { font-size: 16px; font-weight: 700; margin: 0 0 7px; letter-spacing: -.01em; }
+  .signal p { font-size: 14.5px; color: var(--muted); margin: 0; }
+
+  /* ── Callout ─────────────────────────────────────────── */
+  .callout {
+    background: var(--shell); color: #fff; border-radius: 16px;
+    padding: 38px 34px; text-align: center; position: relative; overflow: hidden;
+  }
+  .callout::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 55% 60% at 80% 10%, rgba(59,130,246,.22) 0%, transparent 70%);
+  }
+  .callout > * { position: relative; z-index: 1; }
+  .callout h2 { font-family: var(--serif); font-size: clamp(24px,3vw,32px); margin: 0 0 12px; font-weight: 600; }
+  .callout p { color: rgba(255,255,255,.72); max-width: 560px; margin: 0 auto 24px; font-size: 16px; }
+
+  /* ── Footer ──────────────────────────────────────────── */
+  footer {
+    padding: 40px 0 56px; border-top: 1px solid var(--line);
+    font-size: 13.5px; color: var(--muted);
+  }
+  .foot-inner { display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; align-items: center; }
+
+  /* ── Lightbox ────────────────────────────────────────── */
+  dialog.lb {
+    border: 0; padding: 0; background: transparent;
+    max-width: 96vw; max-height: 94vh;
+  }
+  dialog.lb::backdrop { background: rgba(16,24,34,.86); backdrop-filter: blur(3px); }
+  dialog.lb img { display: block; max-width: 96vw; max-height: 86vh; border-radius: 10px; }
+  dialog.lb .lb-cap {
+    color: rgba(255,255,255,.82); font-size: 13.5px; text-align: center;
+    padding-top: 12px;
+  }
+  dialog.lb .lb-close {
+    position: fixed; top: 18px; right: 22px;
+    width: 38px; height: 38px; border-radius: 50%;
+    background: rgba(255,255,255,.12); color: #fff; border: 0;
+    font-size: 20px; cursor: pointer; line-height: 1;
+  }
+  dialog.lb .lb-close:hover { background: rgba(255,255,255,.22); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top">
+      <span class="mark">$</span><span class="wordmark"><em>Pay</em>Simple</span>
+    </a>
+    <div class="nav-links">
+      <a href="#what" class="hide-sm">What it does</a>
+      <a href="#screens">Screens</a>
+      <a href="#stack" class="hide-sm">Stack</a>
+      <a href="https://github.com/anguswfisher/paysimple">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="pill"><span class="dot"></span> Portfolio project · AI-powered construction payments</div>
+    <h1 class="hero-title">
+      Automate <span class="accent">construction contract</span><br>payment schedules
+    </h1>
+    <p class="hero-sub">
+      PaySimple extracts critical payment terms from construction contracts,
+      auto-generates payment schedules, and flags compliance risks — all powered by Claude AI.
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#screens">
+        See the screens
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a class="btn btn-ghost" href="https://github.com/anguswfisher/paysimple">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.9 5.33.9 11.6c0 4.9 3.17 9.05 7.57 10.52.55.1.76-.24.76-.53v-1.9c-3.08.67-3.73-1.32-3.73-1.32-.5-1.29-1.23-1.63-1.23-1.63-1-.69.08-.67.08-.67 1.11.08 1.7 1.15 1.7 1.15.99 1.7 2.6 1.21 3.23.92.1-.72.39-1.21.7-1.49-2.46-.28-5.05-1.23-5.05-5.48 0-1.21.43-2.2 1.15-2.98-.12-.28-.5-1.41.1-2.94 0 0 .94-.3 3.07 1.14a10.6 10.6 0 0 1 5.6 0c2.13-1.44 3.06-1.14 3.06-1.14.61 1.53.23 2.66.11 2.94.72.78 1.15 1.77 1.15 2.98 0 4.26-2.6 5.2-5.07 5.47.4.35.76 1.02.76 2.06v3.06c0 .3.2.64.77.53a11.11 11.11 0 0 0 7.56-10.52C23.1 5.33 18.27.5 12 .5Z"/></svg>
+        View the repo
+      </a>
+    </div>
+    <p class="hero-note">Educational demo · Portfolio project · Not an official product</p>
+  </div>
+</header>
+
+<div class="strip">
+  <div class="wrap strip-inner">
+    <span>Next.js 14</span>
+    <span>TypeScript</span>
+    <span>Claude AI</span>
+    <span>Supabase</span>
+    <span>Tailwind + shadcn/ui</span>
+    <span>Zustand</span>
+  </div>
+</div>
+
+<!-- ── About ───────────────────────────────────────────── -->
+<section class="band" id="what">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">About this project</div>
+      <h2 class="section-title">Contractors lose days to spreadsheets<br>and buried contract clauses.</h2>
+      <p class="lede">
+        Construction contractors manually extract payment terms from contracts, build payment
+        schedules in spreadsheets, struggle with compliance risks, and manage complex pay
+        application workflows. PaySimple automates these workflows using Claude AI — combining
+        technical product skills with domain knowledge from 5+ years of hands-on construction
+        contract experience.
+      </p>
+    </div>
+
+    <button class="shot feature-shot" data-src="demo-screenshots/03-demo-intro-midway.png" data-cap="AI contract analysis — staged extraction with a live log">
+      <img src="demo-screenshots/03-demo-intro-midway.png" alt="PaySimple analyzing a construction contract, showing staged progress and a live extraction log" loading="lazy">
+      <figcaption>
+        Contract analysis in progress
+        <small>Reads the document, identifies the agreement type, extracts payment terms, builds the schedule, then checks compliance risk.</small>
+      </figcaption>
+    </button>
+  </div>
+</section>
+
+<!-- ── Features ────────────────────────────────────────── -->
+<section class="band alt">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Core features</div>
+      <h2 class="section-title">What PaySimple does</h2>
+    </div>
+
+    <div class="features">
+      <div class="feature">
+        <div class="ico"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg></div>
+        <h3>Contract upload &amp; analysis</h3>
+        <p>Upload construction contracts (DOCX or PDF). Claude extracts payment terms, key dates, and risk flags in seconds.</p>
+      </div>
+      <div class="feature">
+        <div class="ico"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+        <h3>Payment schedule generation</h3>
+        <p>Auto-generate schedules from contract terms — progress draws, retainage, lien waivers, and prompt payment rules.</p>
+      </div>
+      <div class="feature">
+        <div class="ico"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg></div>
+        <h3>Compliance risk detection</h3>
+        <p>Flags pay-when-paid vs. pay-if-paid clauses, retainage triggers, completion dependencies, and prompt payment act violations.</p>
+      </div>
+      <div class="feature">
+        <div class="ico"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M9 15h6M9 11h3"/></svg></div>
+        <h3>Pay application management</h3>
+        <p>A complete workflow with a six-step wizard, line-item management, and automated calculations.</p>
+      </div>
+      <div class="feature">
+        <div class="ico"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5M3 12a9 3 0 0 0 18 0"/></svg></div>
+        <h3>Database integration</h3>
+        <p>PostgreSQL via Supabase for persistent storage, user management, and row-level security.</p>
+      </div>
+      <div class="feature">
+        <div class="ico"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></div>
+        <h3>History &amp; corrections</h3>
+        <p>A complete audit trail with history views, corrected draft creation, and finalization workflows.</p>
+      </div>
+      <div class="feature">
+        <div class="ico"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></div>
+        <h3>Export &amp; dashboard</h3>
+        <p>Download schedules as Excel or PDF, manage multiple projects, and track application status.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Screens ─────────────────────────────────────────── -->
+<section class="band" id="screens">
+  <div class="wrap">
+    <div class="section-head center">
+      <div class="eyebrow">Product screens</div>
+      <h2 class="section-title">A look inside</h2>
+      <p class="lede">Captured from the interactive demo environment, seeded with a full book of work for an example contractor. Click any screen to enlarge.</p>
+    </div>
+
+    <div class="gallery">
+      <button class="shot" data-src="demo-screenshots/05-dashboard.png" data-cap="Dashboard — portfolio roll-ups and open compliance findings">
+        <img src="demo-screenshots/05-dashboard.png" alt="Dashboard showing contract value, billed to date, compliance score and open risk flags" loading="lazy">
+        <figcaption>Dashboard<small>Portfolio roll-ups, active projects, and findings that need attention.</small></figcaption>
+      </button>
+
+      <button class="shot" data-src="demo-screenshots/06-projects.png" data-cap="Projects — contracts, progress, and retainage held">
+        <img src="demo-screenshots/06-projects.png" alt="Projects list with contract values, progress bars, and compliance flags" loading="lazy">
+        <figcaption>Projects<small>Every contract with progress, amount billed, and retainage held.</small></figcaption>
+      </button>
+
+      <button class="shot" data-src="demo-screenshots/09-pay-applications.png" data-cap="Pay applications — drafts, finalized, and corrected drafts">
+        <img src="demo-screenshots/09-pay-applications.png" alt="Pay applications table with status badges and amounts requested" loading="lazy">
+        <figcaption>Pay applications<small>Drafts, finalized applications, and corrected drafts in one register.</small></figcaption>
+      </button>
+
+      <button class="shot" data-src="demo-screenshots/10-pay-app-finalized.png" data-cap="Pay application detail — schedule of values with full money columns">
+        <img src="demo-screenshots/10-pay-app-finalized.png" alt="Finalized pay application showing payment due, certification, and a full schedule of values" loading="lazy">
+        <figcaption>Pay application detail<small>Payment due, certification, and a line-by-line schedule of values.</small></figcaption>
+      </button>
+
+      <button class="shot" data-src="demo-screenshots/08-upload-analyzing.png" data-cap="Contract extraction running inside the app shell">
+        <img src="demo-screenshots/08-upload-analyzing.png" alt="Contract extraction running inside the application, showing pipeline stages and a live log" loading="lazy">
+        <figcaption>Extraction in context<small>The analysis pipeline running against a sample contract.</small></figcaption>
+      </button>
+
+      <button class="shot" data-src="demo-screenshots/07-upload-idle.png" data-cap="Contract upload">
+        <img src="demo-screenshots/07-upload-idle.png" alt="Contract upload screen with drag and drop and a sample contract option" loading="lazy">
+        <figcaption>Contract upload<small>Drag and drop, or run the walkthrough on a sample contract.</small></figcaption>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ── Why construction ────────────────────────────────── -->
+<section class="band alt">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Why construction-specific?</div>
+      <h2 class="section-title">Generic payment tools don't<br>speak this language.</h2>
+      <p class="lede">Generic construction payment tools exist. But they don't understand construction contract nuances:</p>
+    </div>
+    <ul class="ticks">
+      <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Retainage release mechanics tied to substantial completion</li>
+      <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Construction payment application procedures</li>
+      <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Stored materials vs. incorporated materials distinctions</li>
+      <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> State prompt payment law variations</li>
+      <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Lien waiver timing and release conditions</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ── Stack ───────────────────────────────────────────── -->
+<section class="band" id="stack">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Technical stack</div>
+      <h2 class="section-title">Built to be defensible,<br>not just demo-able.</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Layer</th><th>Choice</th><th>Rationale</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Frontend</strong></td><td>Next.js 14, TypeScript, Tailwind, shadcn/ui</td><td class="why">Modern, type-safe, fast builds, accessible components out of the box</td></tr>
+          <tr><td><strong>AI engine</strong></td><td>Claude 3.5 Sonnet via API</td><td class="why">Superior reasoning for legal and financial documents, structured extraction</td></tr>
+          <tr><td><strong>Auth &amp; backend</strong></td><td>Supabase (PostgreSQL + auth)</td><td class="why">Built-in row-level security, file storage, real-time database</td></tr>
+          <tr><td><strong>State management</strong></td><td>Zustand with TypeScript</td><td class="why">Optimistic updates, server action integration, type safety</td></tr>
+          <tr><td><strong>Document export</strong></td><td><code>docx</code>, <code>xlsx</code>, jsPDF</td><td class="why">Standard formats for contractors; Excel for payment scheduling is critical</td></tr>
+          <tr><td><strong>Deployment</strong></td><td>Vercel</td><td class="why">Seamless Next.js integration, preview environments, serverless functions</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ── Signals ─────────────────────────────────────────── -->
+<section class="band alt">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Why this project signals product skills</div>
+      <h2 class="section-title">Six things this demonstrates</h2>
+    </div>
+    <div class="signals">
+      <div class="signal">
+        <div class="num">01</div>
+        <h3>Not a tutorial clone</h3>
+        <p>This isn't a generic chatbot or AI app template. It solves a specific market problem with domain-informed architecture.</p>
+      </div>
+      <div class="signal">
+        <div class="num">02</div>
+        <h3>Thoughtful UX decisions</h3>
+        <p>Upload-first then register-to-view reduces friction while capturing users. A construction-focused feature set shows product thinking, not a catch-all.</p>
+      </div>
+      <div class="signal">
+        <div class="num">03</div>
+        <h3>Real API integration</h3>
+        <p>Uses the Claude API end to end, not a UI wrapper — prompt engineering, structured outputs, error handling, and cost optimization.</p>
+      </div>
+      <div class="signal">
+        <div class="num">04</div>
+        <h3>Database &amp; auth</h3>
+        <p>Real auth, user data persistence, and multi-tenancy with PostgreSQL and Supabase — not localStorage and in-memory state.</p>
+      </div>
+      <div class="signal">
+        <div class="num">05</div>
+        <h3>Domain expertise</h3>
+        <p>5+ years of hands-on construction contract experience means the feature set, risk flags, UX, and workflows are credible rather than generic.</p>
+      </div>
+      <div class="signal">
+        <div class="num">06</div>
+        <h3>Full-stack implementation</h3>
+        <p>A complete pay application system with database integration, state management, and production-ready architecture — not just UI mockups.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Callout ─────────────────────────────────────────── -->
+<section class="band">
+  <div class="wrap">
+    <div class="callout">
+      <h2>Read the code</h2>
+      <p>The full source, the seeded demo environment, and the screenshot pipeline that generated this page are all in the repository.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="https://github.com/anguswfisher/paysimple">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.9 5.33.9 11.6c0 4.9 3.17 9.05 7.57 10.52.55.1.76-.24.76-.53v-1.9c-3.08.67-3.73-1.32-3.73-1.32-.5-1.29-1.23-1.63-1.23-1.63-1-.69.08-.67.08-.67 1.11.08 1.7 1.15 1.7 1.15.99 1.7 2.6 1.21 3.23.92.1-.72.39-1.21.7-1.49-2.46-.28-5.05-1.23-5.05-5.48 0-1.21.43-2.2 1.15-2.98-.12-.28-.5-1.41.1-2.94 0 0 .94-.3 3.07 1.14a10.6 10.6 0 0 1 5.6 0c2.13-1.44 3.06-1.14 3.06-1.14.61 1.53.23 2.66.11 2.94.72.78 1.15 1.77 1.15 2.98 0 4.26-2.6 5.2-5.07 5.47.4.35.76 1.02.76 2.06v3.06c0 .3.2.64.77.53a11.11 11.11 0 0 0 7.56-10.52C23.1 5.33 18.27.5 12 .5Z"/></svg>
+          anguswfisher/paysimple
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-inner">
+    <div><strong>PaySimple</strong> — AI-powered construction contract analysis &amp; pay applications</div>
+    <div>Portfolio project · Educational demo · Not an official product</div>
+  </div>
+</footer>
+
+<dialog class="lb" id="lightbox">
+  <button class="lb-close" aria-label="Close">&times;</button>
+  <img alt="">
+  <div class="lb-cap"></div>
+</dialog>
+
+<script>
+  (function () {
+    var dlg = document.getElementById('lightbox');
+    if (!dlg || typeof dlg.showModal !== 'function') return; // graceful no-op
+    var img = dlg.querySelector('img');
+    var cap = dlg.querySelector('.lb-cap');
+
+    document.querySelectorAll('.shot').forEach(function (el) {
+      el.addEventListener('click', function () {
+        img.src = el.dataset.src;
+        img.alt = el.dataset.cap || '';
+        cap.textContent = el.dataset.cap || '';
+        dlg.showModal();
+      });
+    });
+
+    dlg.querySelector('.lb-close').addEventListener('click', function () { dlg.close(); });
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+  })();
+</script>
+
+</body>
+</html>
