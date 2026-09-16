@@ -55,15 +55,9 @@ export default function PayApplicationsPage() {
   if (payApps.length === 0) {
     return (
       <div className="flex-1 p-6">
-        {/* Page Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900">Pay Applications</h1>
-            <p className="text-slate/70 mt-1">
-              Create, manage, and track your construction pay applications
-            </p>
-          </div>
-          <Button 
+        {/* Title comes from the app topbar; this row carries the page action. */}
+        <div className="flex items-center justify-end mb-8">
+          <Button
             onClick={() => router.push('/pay-applications/new')}
             className="bg-teal-600 hover:bg-teal-700 text-white"
           >
@@ -99,15 +93,9 @@ export default function PayApplicationsPage() {
 
   return (
     <div className="flex-1 p-6">
-      {/* Page Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Pay Applications</h1>
-          <p className="text-slate/70 mt-1">
-            Create, manage, and track your construction pay applications
-          </p>
-        </div>
-        <Button 
+      {/* Title comes from the app topbar; this row carries the page action. */}
+      <div className="flex items-center justify-end mb-8">
+        <Button
           onClick={() => router.push('/pay-applications/new')}
           className="bg-teal-600 hover:bg-teal-700 text-white"
         >

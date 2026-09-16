@@ -121,7 +121,7 @@ export default function WorkspacePage() {
             Save & Exit
           </button>
           <button
-            onClick={() => router.push(`/pay-applications/${currentPayApp.id}/review`)}
+            onClick={() => router.push(`/pay-applications/${currentPayApp.id}/summary`)}
             className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium bg-teal-600 text-white rounded-md hover:bg-teal-700 transition-colors"
           >
             Review Summary

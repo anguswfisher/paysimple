@@ -168,13 +168,53 @@ export interface PayAppStep {
 }
 
 export const PAY_APP_STEPS: PayAppStep[] = [
-  { step: 1, label: 'Setup',     route: 'setup' },
-  { step: 2, label: 'Billing',   route: 'billing-settings' },
-  { step: 3, label: 'SOV',       route: 'sov' },
+  { step: 1, label: 'Setup',     route: 'basics' },
+  { step: 2, label: 'Billing',   route: 'retainage' },
+  { step: 3, label: 'SOV',       route: 'sov-method' },
   { step: 4, label: 'Workspace', route: 'workspace' },
-  { step: 5, label: 'Review',    route: 'review' },
-  { step: 6, label: 'Sign',      route: 'sign' },
+  { step: 5, label: 'Review',    route: 'summary' },
+  { step: 6, label: 'Sign',      route: 'finalize-confirm' },
 ]
+
+// Each step is presented to the user as one of six, but is made up of several
+// screens. This maps every screen back to the step it belongs to, so the
+// stepper can report an honest "Step N of 6" on every screen in the flow.
+// `route` above is the screen a step is entered at.
+export const STEP_BY_ROUTE: Record<string, number> = {
+  // 1 — Setup
+  'basics': 1,
+  'billing-format': 1,
+  // 2 — Billing
+  'retainage': 2,
+  'change-orders': 2,
+  'materials-stored': 2,
+  'setup-review': 2,
+  // 3 — Schedule of Values
+  'sov-method': 3,
+  'sov-manual': 3,
+  'sov-import': 3,
+  'sov-upload': 3,
+  'sov-clipboard': 3,
+  // 4 — Workspace
+  'workspace': 4,
+  // 5 — Review
+  'summary': 5,
+  'checks': 5,
+  'review-checklist': 5,
+  // 6 — Sign
+  'finalize-confirm': 6,
+  'finalize-sign': 6,
+  'finalize-preview': 6,
+  'finalize-success': 6,
+}
+
+/** Resolves the current step from a wizard pathname. */
+export function stepFromPathname(pathname: string | null | undefined): number | null {
+  if (!pathname) return null
+  const last = pathname.split('/').filter(Boolean).pop()
+  if (!last) return null
+  return STEP_BY_ROUTE[last] ?? null
+}
 
 // ── Supabase row shape (snake_case from DB) ───────────────────
 // Used in fromSupabaseRow() to map DB rows → PayApp

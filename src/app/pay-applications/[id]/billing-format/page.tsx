@@ -147,10 +147,12 @@ export default function BillingFormatPage() {
         <div className="flex-1 overflow-y-auto px-8 py-7">
           <div className="space-y-4">
             {BILLING_FORMATS.map((bf) => (
-              <div
+              <button
                 key={bf.format}
+                type="button"
+                aria-pressed={selectedFormat === bf.format}
                 onClick={() => setSelectedFormat(bf.format)}
-                className={`cursor-pointer rounded-xl border p-5 transition-all duration-200 bg-white shadow-sm ${
+                className={`w-full text-left rounded-xl border p-5 transition-all duration-200 bg-white shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 ${
                   selectedFormat === bf.format
                     ? 'border-teal-500 ring-2 ring-teal-500/20'
                     : 'border-slate/15 hover:border-slate/30'
@@ -178,7 +180,7 @@ export default function BillingFormatPage() {
                     </li>
                   ))}
                 </ul>
-              </div>
+              </button>
             ))}
           </div>
         </div>

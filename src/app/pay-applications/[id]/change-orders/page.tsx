@@ -140,9 +140,12 @@ export default function ChangeOrdersPage() {
         <div className="flex-1 overflow-y-auto px-8 py-7 space-y-5">
 
           {/* Toggle */}
-          <div
+          <button
+            type="button"
+            role="switch"
+            aria-checked={hasChangeOrders}
             onClick={() => setHasChangeOrders(!hasChangeOrders)}
-            className={`cursor-pointer rounded-xl border p-5 bg-white shadow-sm transition-all duration-200 ${
+            className={`w-full text-left rounded-xl border p-5 bg-white shadow-sm transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 ${
               hasChangeOrders ? 'border-teal-500 ring-2 ring-teal-500/20' : 'border-slate/15 hover:border-slate/30'
             }`}
           >
@@ -155,7 +158,7 @@ export default function ChangeOrdersPage() {
                 <div className="text-xs text-slate/50 mt-0.5">Only include change orders approved in writing</div>
               </div>
             </div>
-          </div>
+          </button>
 
           {hasChangeOrders && (
             <>

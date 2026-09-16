@@ -113,9 +113,12 @@ export default function MaterialsStoredPage() {
         <div className="flex-1 overflow-y-auto px-8 py-7 space-y-5">
 
           {/* Toggle card */}
-          <div
+          <button
+            type="button"
+            role="switch"
+            aria-checked={materialsStoredEnabled}
             onClick={() => setMaterialsStoredEnabled(!materialsStoredEnabled)}
-            className={`cursor-pointer rounded-xl border p-6 bg-white shadow-sm transition-all duration-200 ${
+            className={`w-full text-left rounded-xl border p-6 bg-white shadow-sm transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 ${
               materialsStoredEnabled ? 'border-teal-500 ring-2 ring-teal-500/20' : 'border-slate/15 hover:border-slate/30'
             }`}
           >
@@ -138,7 +141,7 @@ export default function MaterialsStoredPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </button>
 
           {/* Status info */}
           <div className={`rounded-xl border p-4 text-sm transition-all ${

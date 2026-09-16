@@ -87,19 +87,22 @@ export default function NewPayApplicationPage() {
       <div className="flex-1 p-6">
         <div className="max-w-2xl mx-auto space-y-4">
           {/* Entry Mode Cards */}
-          {ENTRY_MODES.map((entry) => (
-            <Card
-              key={entry.mode}
-              className={`
-                cursor-pointer transition-all duration-200
-                ${selectedMode === entry.mode
-                  ? 'border-teal-600 bg-teal-50/30'
-                  : 'border-slate/20 hover:border-slate/40'
-                }
-              `}
-              onClick={() => setSelectedMode(entry.mode)}
-            >
-              <CardContent className="p-6">
+          <div className="space-y-4" role="group" aria-label="How would you like to get started?">
+            {ENTRY_MODES.map((entry) => (
+              <button
+                key={entry.mode}
+                type="button"
+                aria-pressed={selectedMode === entry.mode}
+                onClick={() => setSelectedMode(entry.mode)}
+                className={`
+                  w-full text-left rounded-xl border bg-white p-6 transition-all duration-200
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2
+                  ${selectedMode === entry.mode
+                    ? 'border-teal-600 bg-teal-50/30'
+                    : 'border-slate/20 hover:border-slate/40'
+                  }
+                `}
+              >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
@@ -116,16 +119,16 @@ export default function NewPayApplicationPage() {
                       {entry.description}
                     </p>
                   </div>
-                  
+
                   {selectedMode === entry.mode && (
-                    <div className="w-6 h-6 bg-teal-600 rounded-full flex items-center justify-center">
+                    <div className="w-6 h-6 bg-teal-600 rounded-full flex items-center justify-center shrink-0">
                       <Check className="w-4 h-4 text-white" />
                     </div>
                   )}
                 </div>
-              </CardContent>
-            </Card>
-          ))}
+              </button>
+            ))}
+          </div>
 
           {/* Divider */}
           <div className="flex items-center gap-4 py-4">
@@ -134,25 +137,25 @@ export default function NewPayApplicationPage() {
             <div className="flex-1 h-px bg-slate/20" />
           </div>
 
-          {/* Classic Editor Card */}
-          <Card 
-            className="border-slate/20 hover:border-slate/40 cursor-pointer transition-all duration-200"
+          {/* Classic Editor — navigates straight away, so it reads as a link-style
+              action rather than another selectable option */}
+          <button
+            type="button"
             onClick={handleClassicEditor}
+            className="w-full text-left rounded-xl border border-slate/20 bg-white p-6 hover:border-slate/40 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
           >
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold text-slate-900 mb-2">
-                    Classic Editor
-                  </h3>
-                  <p className="text-slate/70">
-                    Traditional form-based interface for experienced users
-                  </p>
-                </div>
-                <ArrowRight className="w-5 h-5 text-slate/40" />
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                  Classic Editor
+                </h3>
+                <p className="text-slate/70">
+                  Traditional form-based interface for experienced users
+                </p>
               </div>
-            </CardContent>
-          </Card>
+              <ArrowRight className="w-5 h-5 text-slate/40 shrink-0" />
+            </div>
+          </button>
         </div>
       </div>
 

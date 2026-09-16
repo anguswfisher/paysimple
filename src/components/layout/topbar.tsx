@@ -150,6 +150,26 @@ export function Topbar() {
 
   // Get page title and subtitle based on current path
   const getPageInfo = () => {
+    // Checked before the rest: pay application routes live outside /dashboard,
+    // so without this they fall through to the "Dashboard" default.
+    if (pathname?.startsWith('/pay-applications')) {
+      if (pathname.includes('/history')) {
+        return {
+          title: 'Pay Application History',
+          subtitle: 'Finalized and draft applications'
+        }
+      }
+      if (pathname === '/pay-applications' || pathname === '/pay-applications/new') {
+        return {
+          title: 'Pay Applications',
+          subtitle: 'Create, manage, and track your construction pay applications'
+        }
+      }
+      return {
+        title: 'Pay Application',
+        subtitle: 'Complete each step to submit for certification'
+      }
+    }
     if (pathname?.includes('/analytics')) {
       return {
         title: 'Analytics',
