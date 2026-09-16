@@ -30,7 +30,7 @@ export default function DashboardLayout({
   return (
     <div className="h-screen bg-gray-50 flex">
       <Sidebar />
-      <div className="flex-1 flex flex-col min-h-0 ml-[215px]">
+      <div className="flex-1 min-w-0 flex flex-col min-h-0 ml-[215px]">
         <Topbar />
         <main className="flex-1 overflow-auto p-6 mt-[60px]">
           <DemoBanner />

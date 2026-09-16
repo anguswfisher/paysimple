@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase/client'
 import { User } from '@supabase/supabase-js'
-import { isDemoActive, demoUser } from '@/lib/demo/mode'
+import { isDemoActive, demoUser, disableDemo } from '@/lib/demo/mode'
 
 type SupabaseContextType = {
   user: User | null
@@ -44,7 +44,6 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     if (isDemoActive()) {
-      const { disableDemo } = await import('@/lib/demo/mode')
       disableDemo()
       setUser(null)
       return

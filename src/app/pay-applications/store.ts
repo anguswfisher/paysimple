@@ -11,6 +11,7 @@
 //   const { currentPayApp, updateBasics, markStepCompleted } = usePayAppStore()
 // ─────────────────────────────────────────────────────────────
 
+import { isDemoActive } from '@/lib/demo/mode'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import type {
@@ -152,7 +153,6 @@ export const usePayAppStore = create<PayAppState>()(
 
       loadPayApps: async (userId: string) => {
         try {
-          const { isDemoActive } = await import('@/lib/demo/mode')
           if (isDemoActive()) {
             const { DEMO_PAY_APPS } = await import('@/lib/demo/data')
             set({ payApps: DEMO_PAY_APPS })
@@ -168,7 +168,6 @@ export const usePayAppStore = create<PayAppState>()(
 
       loadPayAppById: async (id: string, userId: string) => {
         try {
-          const { isDemoActive } = await import('@/lib/demo/mode')
           if (isDemoActive()) {
             const { getDemoPayApp } = await import('@/lib/demo/data')
             const demo = getDemoPayApp(id)
