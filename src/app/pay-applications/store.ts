@@ -12,6 +12,7 @@
 // ─────────────────────────────────────────────────────────────
 
 import { isDemoActive } from '@/lib/demo/mode'
+import { DEMO_PAY_APPS, getDemoPayApp } from '@/lib/demo/data'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import type {
@@ -154,7 +155,6 @@ export const usePayAppStore = create<PayAppState>()(
       loadPayApps: async (userId: string) => {
         try {
           if (isDemoActive()) {
-            const { DEMO_PAY_APPS } = await import('@/lib/demo/data')
             set({ payApps: DEMO_PAY_APPS })
             return
           }
@@ -169,7 +169,6 @@ export const usePayAppStore = create<PayAppState>()(
       loadPayAppById: async (id: string, userId: string) => {
         try {
           if (isDemoActive()) {
-            const { getDemoPayApp } = await import('@/lib/demo/data')
             const demo = getDemoPayApp(id)
             if (demo) set({ currentPayApp: demo })
             return

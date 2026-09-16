@@ -4,14 +4,17 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { Upload, FileText, AlertCircle, CheckCircle, ArrowRight } from 'lucide-react'
+import { Upload, FileText, AlertCircle, CheckCircle, ArrowRight, Sparkles } from 'lucide-react'
+import { AiProcessingSimulator } from '@/components/demo/AiProcessingSimulator'
 import { useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase/client'
 import { updateProject, updateProjectStatus } from '@/lib/database/projects'
 
 export default function UploadPage() {
-  const [uploadState, setUploadState] = useState<'idle' | 'uploading' | 'processing' | 'complete'>('idle')
+  const [uploadState, setUploadState] = useState<
+    'idle' | 'uploading' | 'processing' | 'complete' | 'sample'
+  >('idle')
   const [uploadProgress, setUploadProgress] = useState(0)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -39,6 +42,13 @@ export default function UploadPage() {
 
     setErrorMessage(null)
     setSelectedFile(file)
+  }
+
+  // Runs the scripted extraction against sample data instead of a real file,
+  // so the workflow can be walked end to end without a contract to hand.
+  const handleSampleContract = () => {
+    setErrorMessage(null)
+    setUploadState('sample')
   }
 
   const handleUpload = async () => {
@@ -142,6 +152,26 @@ export default function UploadPage() {
                     </Button>
                   </label>
 
+                  {!selectedFile && (
+                    <div className="mt-5 pt-5 border-t border-dashed border-neutral-200">
+                      <p className="text-xs text-neutral-500 mb-2.5">
+                        No contract to hand?
+                      </p>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={handleSampleContract}
+                        className="border-steel/40 text-steel hover:bg-steel/5 hover:border-steel"
+                      >
+                        <Sparkles className="w-4 h-4 mr-2" />
+                        Use a sample contract
+                      </Button>
+                      <p className="text-[11px] text-neutral-400 mt-2">
+                        Runs the extraction on an example project. Nothing is uploaded.
+                      </p>
+                    </div>
+                  )}
+
                   {selectedFile && (
                     <div className="mt-4 p-3 bg-concrete rounded-lg">
                       <div className="flex items-center justify-between">
@@ -206,6 +236,28 @@ export default function UploadPage() {
                   <p className="text-xs text-neutral-500">Supports PDF, DOC, and DOCX files</p>
                 </CardContent>
               </Card>
+            </div>
+          </div>
+        )}
+
+        {uploadState === 'sample' && (
+          <div className="w-full max-w-2xl">
+            <div className="rounded-2xl border border-neutral-200 bg-white p-8">
+              <AiProcessingSimulator
+                fileName="Sample — Northgate Medical Agreement.pdf"
+                onComplete={() =>
+                  router.push(`/dashboard/projects/${projectId}/extraction`)
+                }
+              />
+            </div>
+            <div className="mt-4 text-center">
+              <button
+                type="button"
+                onClick={() => setUploadState('idle')}
+                className="text-sm font-medium text-neutral-500 hover:text-slate transition-colors rounded px-2 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-steel"
+              >
+                Cancel
+              </button>
             </div>
           </div>
         )}

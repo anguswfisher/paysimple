@@ -36,13 +36,16 @@ export default function DemoPage() {
             <em className="not-italic text-blue-500">Pay</em>Simple
           </span>
         </Link>
-        <button
-          type="button"
-          onClick={goToDashboard}
+        {/* A real link, not a click handler: if the page fails to hydrate the
+            simulation stalls, and a <button> would leave the visitor stranded
+            here with no way out. An anchor still works with zero JS. */}
+        <Link
+          href="/dashboard"
+          onClick={() => enableDemo()}
           className="text-sm font-medium text-slate/55 hover:text-slate-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded px-2 py-1"
         >
           Skip to dashboard →
-        </button>
+        </Link>
       </header>
 
       {/* Simulation */}

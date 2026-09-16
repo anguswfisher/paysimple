@@ -1,6 +1,7 @@
 import { supabase } from '@/lib/supabase/client'
 import { Database } from '@/types/database'
 import { isDemoActive } from '@/lib/demo/mode'
+import { DEMO_PROJECTS, getDemoProject } from '@/lib/demo/data'
 
 type ProjectRow = Database['public']['Tables']['projects']['Row']
 type ProjectInsert = Database['public']['Tables']['projects']['Insert']
@@ -68,7 +69,6 @@ export async function createProject(data: CreateProjectData): Promise<Project> {
 
 export async function getUserProjects(): Promise<Project[]> {
   if (isDemoActive()) {
-    const { DEMO_PROJECTS } = await import('@/lib/demo/data')
     return DEMO_PROJECTS
   }
 
@@ -95,7 +95,6 @@ export async function getUserProjects(): Promise<Project[]> {
 
 export async function getProject(projectId: string): Promise<Project> {
   if (isDemoActive()) {
-    const { getDemoProject } = await import('@/lib/demo/data')
     const demo = getDemoProject(projectId)
     if (demo) return demo
     throw new Error('Project not found')
