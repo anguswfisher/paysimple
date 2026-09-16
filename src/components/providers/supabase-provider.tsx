@@ -3,7 +3,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase/client'
 import { User } from '@supabase/supabase-js'
-import { isDemoActive, demoUser, disableDemo } from '@/lib/demo/mode'
 
 type SupabaseContextType = {
   user: User | null
@@ -18,13 +17,6 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Demo mode supplies its own user so seeded screens render immediately.
-    if (isDemoActive()) {
-      setUser(demoUser())
-      setLoading(false)
-      return
-    }
-
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null)
@@ -43,11 +35,6 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const signOut = async () => {
-    if (isDemoActive()) {
-      disableDemo()
-      setUser(null)
-      return
-    }
     await supabase.auth.signOut()
   }
 

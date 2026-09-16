@@ -1,6 +1,5 @@
 'use client'
 
-import { DemoBanner } from '@/components/demo/DemoBanner'
 import { Sidebar } from '@/components/layout/sidebar'
 import { Topbar } from '@/components/layout/topbar'
 
@@ -24,8 +23,7 @@ export default function PayApplicationsLayout({
         <Topbar />
         <main className="flex-1 flex flex-col min-h-0 overflow-auto mt-[60px]">
           <div className="px-6 pt-6 empty:hidden">
-            <DemoBanner />
-          </div>
+            </div>
           {children}
         </main>
       </div>

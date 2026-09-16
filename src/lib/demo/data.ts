@@ -36,6 +36,15 @@ const iso = (daysFromNow: number) => {
 }
 const dateOnly = (daysFromNow: number) => iso(daysFromNow).slice(0, 10)
 
+// ── Account ───────────────────────────────────────────────────
+
+export const DEMO_ACCOUNT = {
+  name: 'Dana Whitfield',
+  title: 'Project Executive',
+  company: 'Meridian Builders',
+  email: 'dana@meridianbuilders.example',
+}
+
 // ── Projects ──────────────────────────────────────────────────
 
 export interface DemoProject extends Project {

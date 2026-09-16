@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { AiProcessingSimulator } from '@/components/demo/AiProcessingSimulator'
-import { enableDemo } from '@/lib/demo/mode'
 import { DollarSign } from 'lucide-react'
 
 /**
@@ -16,13 +15,12 @@ export default function DemoPage() {
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    enableDemo()
     setReady(true)
     // Warm the dashboard so the hand-off is instant.
-    router.prefetch('/dashboard')
+    router.prefetch('/demo/dashboard')
   }, [router])
 
-  const goToDashboard = () => router.push('/dashboard')
+  const goToDashboard = () => router.push('/demo/dashboard')
 
   return (
     <div className="min-h-screen bg-warm-white flex flex-col">
@@ -40,8 +38,7 @@ export default function DemoPage() {
             simulation stalls, and a <button> would leave the visitor stranded
             here with no way out. An anchor still works with zero JS. */}
         <Link
-          href="/dashboard"
-          onClick={() => enableDemo()}
+          href="/demo/dashboard"
           className="text-sm font-medium text-slate/55 hover:text-slate-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded px-2 py-1"
         >
           Skip to dashboard →

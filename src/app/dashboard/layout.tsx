@@ -5,7 +5,6 @@ import { useSearchParams } from 'next/navigation'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { CheckCircle, X } from 'lucide-react'
-import { DemoBanner } from '@/components/demo/DemoBanner'
 import { Sidebar } from '@/components/layout/sidebar'
 import { Topbar } from '@/components/layout/topbar'
 
@@ -33,7 +32,6 @@ export default function DashboardLayout({
       <div className="flex-1 min-w-0 flex flex-col min-h-0 ml-[215px]">
         <Topbar />
         <main className="flex-1 overflow-auto p-6 mt-[60px]">
-          <DemoBanner />
           {showWelcome && (
             <Card className="mb-6 border-green-200 bg-green-50">
               <CardContent className="p-4">
